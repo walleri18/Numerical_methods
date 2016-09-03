@@ -69,6 +69,9 @@ public:
 	// Выполнение метода Ньютона
 	void NewtonMethod();
 
+	// Выполнение метода Простых итераций
+	void SimpleIterationMethod();
+
 private:
 
 	/*
@@ -107,6 +110,8 @@ private:
 	/*
 		Необходимый функционал для метода простых итераций
 	*/
+	// Наша новая преобразованная функция
+	double newOurFunction(double argument);
 
 };
 

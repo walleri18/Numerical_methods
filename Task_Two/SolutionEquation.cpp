@@ -28,6 +28,10 @@ SolutionEquation::~SolutionEquation()
 
 void SolutionEquation::NewtonMethod()
 {
+	// Очистка от предыдущих итерациях итераций
+	clearIteration();
+
+	// Проверка на существования корня
 	if (!isRoot())
 	{
 		std::cout << std::endl << "No roots in this interval ["
@@ -61,6 +65,47 @@ void SolutionEquation::NewtonMethod()
 
 		iterationVector->push_back(xNext);
 	}
+
+	// Вывод
+	show();
+}
+
+void SolutionEquation::SimpleIterationMethod()
+{
+	// Очистка от предыдущих итерациях итераций
+	clearIteration();
+
+	// Ищем начальную итерацию
+	xNext = (beginSegment + endSegment) / 2.0;
+
+	do
+	{
+
+		// Заносим данные в вектор
+		iterationVector->push_back(xNext);
+
+		xPrev = xNext;
+
+		// Выполнение итерации
+		xNext = newOurFunction(xPrev);
+
+		// Увеличиваем количество итераций
+		iteration++;
+
+		// Проверка на ошибку
+		if ((xPrev < beginSegment) || (xPrev > endSegment))
+		{
+			std::cout << std::endl << std::endl
+				<< "No roots in this interval ["
+				<< beginSegment << ", " << endSegment
+				<< "] " << std::endl;
+
+			clearIteration();
+
+			return;
+		}
+
+	} while (std::fabs(xPrev - xNext) < precision);
 
 	// Вывод
 	show();
@@ -151,4 +196,15 @@ double SolutionEquation::findStartingPoint()
 		return beginSegment;
 
 	return endSegment;
+}
+
+double SolutionEquation::newOurFunction(double argument)
+{
+	double resultNewOurFunction(0);
+
+	resultNewOurFunction =
+		std::sqrt((1.5 * std::sin(argument) - 0.2)
+				  / (3 * std::cos(argument)));
+
+	return resultNewOurFunction;
 }
