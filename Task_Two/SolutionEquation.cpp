@@ -34,7 +34,8 @@ void SolutionEquation::NewtonMethod()
 	// Проверка на существования корня
 	if (!isRoot())
 	{
-		std::cout << std::endl << "No roots in this interval ["
+		std::cout << std::endl 
+			<< "Нет корней на этом интервале либо их больше одного ["
 			<< beginSegment << ", " << endSegment << "] "
 			<< std::endl;
 
@@ -96,7 +97,7 @@ void SolutionEquation::SimpleIterationMethod()
 		if ((xPrev < beginSegment) || (xPrev > endSegment))
 		{
 			std::cout << std::endl << std::endl
-				<< "No roots in this interval ["
+				<< "Нет корней на этом интервале либо их больше одного ["
 				<< beginSegment << ", " << endSegment
 				<< "] " << std::endl;
 
@@ -106,6 +107,53 @@ void SolutionEquation::SimpleIterationMethod()
 		}
 
 	} while (std::fabs(xPrev - xNext) < precision);
+
+	// Вывод
+	show();
+}
+
+void SolutionEquation::HalfDivisionMethod()
+{
+	// Очистка
+	clearIteration();
+
+	xNext = (beginSegment + endSegment) / 2;
+
+	iteration++;
+
+	iterationVector->push_back(xNext);
+
+	while (std::fabs(ourFunction(xNext)) > precision)
+	{
+		if (ourFunction(xNext) > 0)
+			endSegment = xNext;
+
+		else
+			beginSegment = xNext;
+
+		xNext = (beginSegment + endSegment) / 2;
+
+		iteration++;
+
+		iterationVector->push_back(xNext);
+	}
+
+	// Вывод
+	show();
+}
+
+void SolutionEquation::DichotomyMethod()
+{
+	while (std::fabs(endSegment - beginSegment) > precision)
+	{
+		beginSegment = endSegment - (endSegment - beginSegment) * ourFunction(endSegment) / (ourFunction(endSegment) - ourFunction(beginSegment));
+
+		endSegment = beginSegment + (beginSegment - endSegment) * ourFunction(beginSegment) / (ourFunction(beginSegment) - ourFunction(endSegment));
+
+		iteration++;
+
+		iterationVector->push_back(endSegment);
+	}
 
 	// Вывод
 	show();

@@ -72,6 +72,12 @@ public:
 	// Выполнение метода Простых итераций
 	void SimpleIterationMethod();
 
+	// Выполнение метода Половинного деления
+	void HalfDivisionMethod();
+
+	// Выполнение метода хорд
+	void DichotomyMethod();
+
 private:
 
 	/*
