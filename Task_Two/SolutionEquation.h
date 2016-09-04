@@ -79,7 +79,7 @@ public:
 	void NewtonMethod(Function ourFunction, Function firstDerivativeOurFunction, Function secondDerivativeOurFunction);
 
 	// Выполнение метода Простых итераций
-	void SimpleIterationMethod(Function ourFunction, Function newOurFunction, double argument);
+	void SimpleIterationMethod(Function newOurFunction, double argument);
 
 	// Выполнение метода Половинного деления
 	void HalfDivisionMethod(Function ourFunction);

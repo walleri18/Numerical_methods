@@ -6,6 +6,7 @@ SolutionEquation::SolutionEquation(double beginSegment,
 								   double precision) : 
 	precision(precision), xNext(0), xPrev(0), iteration(0)
 {
+	// Если пользователь перепутал один конец отрезка с другим
 	if (beginSegment > endSegment)
 	{
 		this->beginSegment = endSegment;
@@ -66,46 +67,67 @@ void SolutionEquation::NewtonMethod(Function ourFunction, Function firstDerivati
 		iteration++;
 
 		iterationVector->push_back(xNext);
+
+		if (iteration > 10000)
+			break;
 	}
 
 	// Вывод
 	show();
 }
 
-void SolutionEquation::SimpleIterationMethod(Function ourFunction, Function newOurFunction, double argument)
+void SolutionEquation::SimpleIterationMethod(Function newOurFunction, double argument)
 {
 	// Очистка от предыдущих итерациях итераций
 	clearIteration();
 
 	// Начальное приближение
-	xNext = argument;
+	xPrev = argument;
 
-	do
+	iterationVector->push_back(xPrev);
+
+	iteration++;
+
+	xNext = newOurFunction(xPrev);
+
+	// Заносим данные в вектор
+	iterationVector->push_back(xNext);
+
+	iteration++;
+
+	while (std::fabs(xNext - xPrev) > precision)
 	{
-
-		// Заносим данные в вектор
-		iterationVector->push_back(xNext);
+		xPrev = xNext;
 
 		// Выполнение итерации
-		xNext = newOurFunction(xNext);
+		xNext = newOurFunction(xPrev);
 
 		// Увеличиваем количество итераций
 		iteration++;
 
+		// Заносим данные в вектор
+		iterationVector->push_back(xNext);
+
 		// Проверка на ошибку
-		if ((xNext < beginSegment) || (xNext > endSegment))
+		/*if ((xNext < beginSegment) || (xNext > endSegment))
 		{
 			std::cout << std::endl
 				<< "Нет корней на этом интервале либо их больше одного ["
 				<< beginSegment << ", " << endSegment
 				<< "] " << std::endl;
 
+			show();
+
 			clearIteration();
 
 			return;
-		}
+		}*/
 
-	} while (std::fabs(ourFunction(argument - xNext)) > precision);
+		// Ограничение на количество итераций
+		if (iteration > 10000)
+			break;
+
+	}
 
 	// Вывод
 	show();
@@ -135,6 +157,9 @@ void SolutionEquation::HalfDivisionMethod(Function ourFunction)
 		iteration++;
 
 		iterationVector->push_back(xNext);
+
+		if (iteration > 10000)
+			break;
 	}
 
 	// Вывод
@@ -154,6 +179,9 @@ void SolutionEquation::DichotomyMethod(Function ourFunction)
 		iteration++;
 
 		iterationVector->push_back(endSegment);
+
+		if (iteration > 10000)
+			break;
 	}
 
 	// Вывод
@@ -174,6 +202,14 @@ std::vector<double>* SolutionEquation::getData() const
 
 void SolutionEquation::show()
 {
+	char select('Y');
+
+	std::cout << std::endl << std::endl << "Начать вывод?(Y/N): ";
+	std::cin >> select;
+
+	if (select == 'N')
+		return;
+
 	// Вывод всех операций
 	for (int i = 0; i < iterationVector->size(); i++)
 	{

@@ -47,7 +47,7 @@ int main(void)
 
 	cout << endl << "Выполнение метода Простых итераций: " << endl;
 
-	sol.SimpleIterationMethod(ourFunction, newOurFunction, MINIMUM);
+	sol.SimpleIterationMethod(newOurFunction, MINIMUM);
 
 	cout << endl << "Выполнение метода Половинного деления: " << endl;
 
@@ -68,6 +68,8 @@ double ourFunction(double argument)
 	resultOurFunction = 3 * pow(argument, 2) *
 		cos(argument) - 1.5 * sin(argument) + 0.2;
 
+	//resultOurFunction = pow(argument, 5) - 4 * pow(argument, 4) - 3 * pow(argument, 3) + 2 * argument + 1;
+
 	return resultOurFunction;
 }
 
@@ -80,6 +82,8 @@ double firstDerivativeOurFunction (double argument)
 		cos(argument) + 6 * argument *
 		cos(argument) - 3 * pow(argument, 2)
 		* sin(argument);
+
+	//resultFirstDerivativeOurFunction = 5 * pow(argument, 4) - 16 * pow(argument, 3) - 9 * pow(argument, 2) + 2;
 
 	return resultFirstDerivativeOurFunction;
 }
@@ -94,6 +98,8 @@ double secondDerivativeOurFunction (double argument)
 		* cos(argument) + 1.5 * sin(argument)
 		- 12 * argument * sin(argument);
 
+	//resultSecondDerivativeOurFunction = 20 * pow(argument, 3) - 48 * pow(argument, 2) - 18 * argument;
+
 	return resultSecondDerivativeOurFunction;
 }
 
@@ -103,7 +109,9 @@ double newOurFunction(double argument)
 	double resultNewOurFunction(0);
 
 	resultNewOurFunction =
-		sqrt(1 / (2 * tan(argument)) - 1 / (15 * cos(argument)));
+		pow((1 / (2 * tan(argument)) - 1 / (15 * cos(argument))), (1 / 2.));
+
+	//resultNewOurFunction = argument - ourFunction(argument) / firstDerivativeOurFunction(argument);
 
 	return resultNewOurFunction;
 }
