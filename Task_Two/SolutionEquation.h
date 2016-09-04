@@ -2,19 +2,28 @@
 #include <vector>
 
 /*
+	Новый тип - тип указателя на функцию
+*/
+typedef double(*Function)(double);
+
+/*
 	Этот класс обеспечивает логику работы
 	решений уравнений с помощью численных методов.
 
-	В данном классе реализованно два типа численных метода:
+	В данном классе реализованно четыре типа численных метода:
 	1) Метод Ньютона или метод касательных;
-	2) Метод простых итераций.
+	2) Метод Простых итераций;
+	3) Метод Половинного деления;
+	4) Метод Хорд.
 
 	Публичные методы предоставляемые этим классом являются
 	вызовом выполнения нахождения корня конкретного уравнения
 	с помощью одного из численных методов.
 
-	Некоторые закрытые методы нужно переписывать, так как они
-	являются функцией уравнения либо его производными.
+	Класс был построен таким образом, чтобы его не нужно было переписывать.
+	Для этого были использзованны указатели на функции, которые нужно будет передавать в main.
+
+	Приятного использования моего класса =)
 */
 class SolutionEquation
 {
@@ -67,16 +76,16 @@ public:
 	~SolutionEquation();
 
 	// Выполнение метода Ньютона
-	void NewtonMethod();
+	void NewtonMethod(Function ourFunction, Function firstDerivativeOurFunction, Function secondDerivativeOurFunction);
 
 	// Выполнение метода Простых итераций
-	void SimpleIterationMethod();
+	void SimpleIterationMethod(Function ourFunction, Function newOurFunction, double argument);
 
 	// Выполнение метода Половинного деления
-	void HalfDivisionMethod();
+	void HalfDivisionMethod(Function ourFunction);
 
 	// Выполнение метода хорд
-	void DichotomyMethod();
+	void DichotomyMethod(Function ourFunction);
 
 private:
 
@@ -95,29 +104,10 @@ private:
 	/*
 		Необходимый функционал для метода Ньютона
 	*/
-	// Наша функция (именно её нужно переписывать
-	// при новом уравнении)
-	double ourFunction(double argument);
-
-	// Первая производная нашей функции (тоже нужно переписывать)
-	double firstDerivativeOurFunction(double argument);
-
-	// Вторая производная нашей функции (тоже нужно переписывать)
-	double secondDerivativeOurFunction(double argument);
-
 	// Метод проверящий существует ли корень на данном отрезке
-	bool isRoot();
+	bool isRoot(Function ourFunction);
 
 	// Поиск начальной точки
-	double findStartingPoint();
-
-	// Функция говорящая 
-
-	/*
-		Необходимый функционал для метода простых итераций
-	*/
-	// Наша новая преобразованная функция
-	double newOurFunction(double argument);
+	double findStartingPoint(Function ourFunction, Function secondDerivativeOurFunction);
 
 };
-
