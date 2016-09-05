@@ -43,7 +43,7 @@ int main(void)
 	// Установка кодировки 1251
 	setlocale(LC_ALL, ".1251");
 
-	SolutionEquation sol(MINIMUM, MAXIMUM, 1.E-9);
+	SolutionEquation sol(MINIMUM, MAXIMUM, 1.E-9, 14);
 
 	cout << endl << endl << "Выполнение метода Ньютона: " << endl;
 
@@ -120,6 +120,25 @@ double newOurFunction(double argument)
 	return resultNewOurFunction;
 }
 
+// Первая производная нашей преобразованной функции
+double firstDerivativeNewOurFunction(double argument)
+{
+	// Прототип функции секонса
+	double sec(double);
+
+	double resultFirstDerivativeNewOurFunction(0);
+
+	resultFirstDerivativeNewOurFunction = 
+		(0.288675 * (1.5 + sec(argument) * (0.2 + 1.5 * sin(argument)) * tan(argument))) / (sqrt(sec(argument) * (0.2 + 1.5 * sin(argument))));
+
+	return resultFirstDerivativeNewOurFunction;
+}
+
+/*
+	Побочные функции
+*/
+
+// Функций секонса
 double sec(double argument)
 {
 	double resultSec(0);
@@ -127,15 +146,4 @@ double sec(double argument)
 	resultSec = (1 / cos(argument));
 
 	return resultSec;
-}
-
-// Первая производная нашей преобразованной функции
-double firstDerivativeNewOurFunction(double argument)
-{
-	double resultFirstDerivativeNewOurFunction(0);
-
-	resultFirstDerivativeNewOurFunction = 
-		(0.288675 * (1.5 + sec(argument) * (0.2 + 1.5 * sin(argument)) * tan(argument))) / (sqrt(sec(argument) * (0.2 + 1.5 * sin(argument))));
-
-	return resultFirstDerivativeNewOurFunction;
 }

@@ -74,12 +74,18 @@ private:
 	// Величина отвечающее на вопрос: найденна ли величина Q на отрезке
 	bool isQ;
 
+	/*
+		Дополнительные параметры
+	*/
+	// Количество знаков после точки для приближений и корней
+	int coutNumber;
+
 // Функциональность
 public:
 
 	// Загрузка необходимых данных
 	SolutionEquation(double beginSegment, double endSegment,
-					 double precision);
+					 double precision, int coutNumber);
 
 	// Освобождение ресурсов
 	~SolutionEquation();

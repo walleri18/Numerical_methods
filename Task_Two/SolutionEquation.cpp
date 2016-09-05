@@ -1,11 +1,12 @@
 #include "SolutionEquation.h"
 #include <iostream>
+#include <iomanip>
 
 SolutionEquation::SolutionEquation(double beginSegment,
 								   double endSegment,
-								   double precision) : 
+								   double precision, int coutNumber) : 
 	precision(precision), xNext(0), xPrev(0), iteration(0),
-	QSimpleIterationMethod(0), isQ(false)
+	QSimpleIterationMethod(0), isQ(false), coutNumber(coutNumber)
 {
 	// Если пользователь перепутал один конец отрезка с другим
 	if (beginSegment > endSegment)
@@ -21,6 +22,11 @@ SolutionEquation::SolutionEquation(double beginSegment,
 	}
 
 	iterationVector = new std::vector<double>();
+
+	std::cout << "Интервал [" << this->beginSegment << "; " << this->endSegment << "]" << std::endl
+		<< "Точность " << this->precision << std::endl
+		<< "Количество знаков после точки " << coutNumber << std::endl << std::endl
+		<< "ОТВЕТЫ В ПРЕДЕЛАХ МАШИННОЙ ТОЧНОСТИ!!!";
 }
 
 SolutionEquation::~SolutionEquation()
@@ -229,12 +235,12 @@ void SolutionEquation::show()
 	for (int i = 0; i < iterationVector->size(); i++)
 	{
 		std::cout << std::endl << "Итерация #" << i + 1
-			<< ": " << (*iterationVector)[i];
+			<< ": " << std::setprecision(coutNumber) << (*iterationVector)[i];
 	}
 
 	// Вывод самого корня
 	std::cout << std::endl << std::endl << "Корень = "
-		<< (*iterationVector)[iteration - 1] << std::endl;
+		<< std::setprecision(coutNumber) << (*iterationVector)[iteration - 1] << std::endl;
 }
 
 bool SolutionEquation::isRootNewtonMethod(Function ourFunction)
