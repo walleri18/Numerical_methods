@@ -164,19 +164,40 @@ void SolutionEquation::HalfDivisionMethod(Function ourFunction)
 
 void SolutionEquation::DichotomyMethod(Function ourFunction)
 {
-	while (std::fabs(endSegment - beginSegment) > precision)
+	// Очистка
+	clearIteration();
+
+	// Необходимые переменные для данного метода
+	double begin(beginSegment), end(endSegment), X(0);
+
+	// Проверка на работоспособность данного метода
+	if (!(ourFunction(begin) * ourFunction(end) < 0))
 	{
-		beginSegment = endSegment - (endSegment - beginSegment) 
-			* ourFunction(endSegment) / (ourFunction(endSegment) - ourFunction(beginSegment));
+		std::cout << std::endl << std::endl << "Метод Хорд на данном отрезке [" << beginSegment << "; " << endSegment << "] не сходиться." << std::endl << "Найти корень на данном отрезке для данного уравнения этим методом не представляется возможным.";
 
-		endSegment = beginSegment + (beginSegment - endSegment) 
-			* ourFunction(beginSegment) / (ourFunction(beginSegment) - ourFunction(endSegment));
+		return;
+	}
 
+	do
+	{
+
+		// Выполнение итерации
+		X = begin - (ourFunction(begin) * (end - begin)) / (ourFunction(end) - ourFunction(begin));
+
+		// Увеличение количества итераций
 		iteration++;
 
-		iterationVector->push_back(endSegment);
+		// Сохранение данной итерации
+		iterationVector->push_back(X);
 
-	}
+		if (ourFunction(begin) * ourFunction(X) < 0)
+			end = X;
+
+		else
+			begin = X;
+
+
+	} while ((end - begin) > precision);
 
 	// Вывод
 	show();
