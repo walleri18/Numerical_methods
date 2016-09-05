@@ -13,6 +13,7 @@
 */
 #include "SolutionEquation.h"
 #include <iostream>
+#include <cmath>
 
 using namespace std;
 
@@ -34,6 +35,9 @@ double secondDerivativeOurFunction(double);
 // Преобразованная наша функция для метода простых итераций
 double newOurFunction(double);
 
+// Первая производная нашей преобразованной функции
+double firstDerivativeNewOurFunction(double);
+
 int main(void)
 {
 	// Установка кодировки 1251
@@ -41,19 +45,19 @@ int main(void)
 
 	SolutionEquation sol(MINIMUM, MAXIMUM, 1.E-9);
 
-	cout << endl << "Выполнение метода Ньютона: " << endl;
+	cout << endl << endl << "Выполнение метода Ньютона: " << endl;
 
 	sol.NewtonMethod(ourFunction, firstDerivativeOurFunction, secondDerivativeOurFunction);
 
-	cout << endl << "Выполнение метода Простых итераций: " << endl;
+	cout << endl << endl << "Выполнение метода Простых итераций: " << endl;
 
-	sol.SimpleIterationMethod(newOurFunction, MINIMUM);
+	sol.SimpleIterationMethod(newOurFunction, firstDerivativeNewOurFunction, MINIMUM);
 
-	cout << endl << "Выполнение метода Половинного деления: " << endl;
+	cout << endl << endl << "Выполнение метода Половинного деления: " << endl;
 
 	sol.HalfDivisionMethod(ourFunction);
 
-	cout << endl << "Выполнение метода Хорд: " << endl;
+	cout << endl << endl << "Выполнение метода Хорд: " << endl;
 
 	sol.DichotomyMethod(ourFunction);
 
@@ -114,4 +118,24 @@ double newOurFunction(double argument)
 	//resultNewOurFunction = argument - ourFunction(argument) / firstDerivativeOurFunction(argument);
 
 	return resultNewOurFunction;
+}
+
+double sec(double argument)
+{
+	double resultSec(0);
+
+	resultSec = (1 / cos(argument));
+
+	return resultSec;
+}
+
+// Первая производная нашей преобразованной функции
+double firstDerivativeNewOurFunction(double argument)
+{
+	double resultFirstDerivativeNewOurFunction(0);
+
+	resultFirstDerivativeNewOurFunction = 
+		(0.288675 * (1.5 + sec(argument) * (0.2 + 1.5 * sin(argument)) * tan(argument))) / (sqrt(sec(argument) * (0.2 + 1.5 * sin(argument))));
+
+	return resultFirstDerivativeNewOurFunction;
 }

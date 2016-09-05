@@ -65,6 +65,15 @@ private:
 	*/
 	std::vector<double> *iterationVector;
 
+	/*
+		Необходимое полу для метода Простых итераций
+	*/
+	// Величина Q
+	double QSimpleIterationMethod;
+
+	// Величина отвечающее на вопрос: найденна ли величина Q на отрезке
+	bool isQ;
+
 // Функциональность
 public:
 
@@ -79,7 +88,7 @@ public:
 	void NewtonMethod(Function ourFunction, Function firstDerivativeOurFunction, Function secondDerivativeOurFunction);
 
 	// Выполнение метода Простых итераций
-	void SimpleIterationMethod(Function newOurFunction, double argument);
+	void SimpleIterationMethod(Function newOurFunction, Function firstDerivativeNewOurFunction, double argument);
 
 	// Выполнение метода Половинного деления
 	void HalfDivisionMethod(Function ourFunction);
@@ -104,10 +113,19 @@ private:
 	/*
 		Необходимый функционал для метода Ньютона
 	*/
-	// Метод проверящий существует ли корень на данном отрезке
-	bool isRoot(Function ourFunction);
+	// Метод проверящий существует ли корень на данном отрезке для метода Ньютона
+	bool isRootNewtonMethod(Function ourFunction);
 
 	// Поиск начальной точки
-	double findStartingPoint(Function ourFunction, Function secondDerivativeOurFunction);
+	double findStartingPointNewtonMethod(Function ourFunction, Function secondDerivativeOurFunction);
+
+	/*
+		Необходимый функционал для метода Простых итераций
+	*/
+	// Метод проверящий существует ли корень на данном отрезке для метода Простых итераций
+	bool isJobSimpleIterationMethod(Function firstDerivativeNewOurFunction);
+
+	// Метод поиска Q
+	void findQSimpleIterationMethod(Function firstDerivativeNewOurFunction);
 
 };

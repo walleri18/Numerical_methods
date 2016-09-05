@@ -4,7 +4,8 @@
 SolutionEquation::SolutionEquation(double beginSegment,
 								   double endSegment,
 								   double precision) : 
-	precision(precision), xNext(0), xPrev(0), iteration(0)
+	precision(precision), xNext(0), xPrev(0), iteration(0),
+	QSimpleIterationMethod(0), isQ(false)
 {
 	// Если пользователь перепутал один конец отрезка с другим
 	if (beginSegment > endSegment)
@@ -34,7 +35,7 @@ void SolutionEquation::NewtonMethod(Function ourFunction, Function firstDerivati
 	clearIteration();
 
 	// Проверка на существования корня
-	if (!isRoot(ourFunction))
+	if (!isRootNewtonMethod(ourFunction))
 	{
 		std::cout << std::endl 
 			<< "Нет корней на этом интервале либо их больше одного ["
@@ -45,7 +46,7 @@ void SolutionEquation::NewtonMethod(Function ourFunction, Function firstDerivati
 	}
 
 	// Ищем начальную точку
-	xPrev = findStartingPoint(ourFunction, secondDerivativeOurFunction);
+	xPrev = findStartingPointNewtonMethod(ourFunction, secondDerivativeOurFunction);
 
 	// Считаем первое приближение
 	xNext = xPrev - ourFunction(xPrev) 
@@ -68,18 +69,24 @@ void SolutionEquation::NewtonMethod(Function ourFunction, Function firstDerivati
 
 		iterationVector->push_back(xNext);
 
-		if (iteration > 10000)
-			break;
 	}
 
 	// Вывод
 	show();
 }
 
-void SolutionEquation::SimpleIterationMethod(Function newOurFunction, double argument)
+void SolutionEquation::SimpleIterationMethod(Function newOurFunction, Function firstDerivativeNewOurFunction, double argument)
 {
 	// Очистка от предыдущих итерациях итераций
 	clearIteration();
+
+	// Проверка на работоспособность данного метода
+	if (!isJobSimpleIterationMethod(firstDerivativeNewOurFunction))
+	{
+		std::cout << std::endl << std::endl << "Метод просты итераций на данном отрезке [" << beginSegment << "; " << endSegment << "] не сходиться." << std::endl << "Найти корень на данном отрезке для данного уравнения этим методом не представляется возможным.";
+
+		return;
+	}
 
 	// Начальное приближение
 	xPrev = argument;
@@ -95,7 +102,7 @@ void SolutionEquation::SimpleIterationMethod(Function newOurFunction, double arg
 
 	iteration++;
 
-	while (std::fabs(xNext - xPrev) > precision)
+	while (std::fabs(xNext - xPrev) > (precision * (1 - QSimpleIterationMethod) / QSimpleIterationMethod))
 	{
 		xPrev = xNext;
 
@@ -108,25 +115,6 @@ void SolutionEquation::SimpleIterationMethod(Function newOurFunction, double arg
 		// Заносим данные в вектор
 		iterationVector->push_back(xNext);
 
-		// Проверка на ошибку
-		/*if ((xNext < beginSegment) || (xNext > endSegment))
-		{
-			std::cout << std::endl
-				<< "Нет корней на этом интервале либо их больше одного ["
-				<< beginSegment << ", " << endSegment
-				<< "] " << std::endl;
-
-			show();
-
-			clearIteration();
-
-			return;
-		}*/
-
-		// Ограничение на количество итераций
-		if (iteration > 10000)
-			break;
-
 	}
 
 	// Вывод
@@ -138,29 +126,37 @@ void SolutionEquation::HalfDivisionMethod(Function ourFunction)
 	// Очистка
 	clearIteration();
 
-	xNext = (beginSegment + endSegment) / 2;
+	// Необходимые переменные для данного метода
+	double begin(beginSegment), end(endSegment), X(0);
 
-	iteration++;
-
-	iterationVector->push_back(xNext);
-
-	while (std::fabs(ourFunction(xNext)) > precision)
+	// Проверка на работоспособность данного метода
+	if (!(ourFunction(begin) * ourFunction(end) < 0))
 	{
-		if (ourFunction(xNext) > 0)
-			endSegment = xNext;
+		std::cout << std::endl << std::endl << "Метод Деления на данном отрезке [" << beginSegment << "; " << endSegment << "] не сходиться." << std::endl << "Найти корень на данном отрезке для данного уравнения этим методом не представляется возможным.";
 
-		else
-			beginSegment = xNext;
+		return;
+	}
 
-		xNext = (beginSegment + endSegment) / 2;
+	do
+	{
 
+		// Выполнение итерации
+		X = (begin + end) / 2;
+
+		// Увеличение количества итераций
 		iteration++;
 
-		iterationVector->push_back(xNext);
+		// Сохранение данной итерации
+		iterationVector->push_back(X);
 
-		if (iteration > 10000)
-			break;
-	}
+		if (ourFunction(begin) * ourFunction(X) < 0)
+			end = X;
+
+		else
+			begin = X;
+
+
+	} while ((end - begin) > precision);
 
 	// Вывод
 	show();
@@ -180,8 +176,6 @@ void SolutionEquation::DichotomyMethod(Function ourFunction)
 
 		iterationVector->push_back(endSegment);
 
-		if (iteration > 10000)
-			break;
 	}
 
 	// Вывод
@@ -213,27 +207,72 @@ void SolutionEquation::show()
 	// Вывод всех операций
 	for (int i = 0; i < iterationVector->size(); i++)
 	{
-		std::cout << std::endl << "Iteration #" << i + 1
+		std::cout << std::endl << "Итерация #" << i + 1
 			<< ": " << (*iterationVector)[i];
 	}
 
 	// Вывод самого корня
-	std::cout << std::endl << std::endl << "Root = "
+	std::cout << std::endl << std::endl << "Корень = "
 		<< (*iterationVector)[iteration - 1] << std::endl;
 }
 
-bool SolutionEquation::isRoot(Function ourFunction)
+bool SolutionEquation::isRootNewtonMethod(Function ourFunction)
 {
 	return ((ourFunction(beginSegment)
 			 * ourFunction(endSegment) > 0) ? 
 			false : true);
 }
 
-double SolutionEquation::findStartingPoint(Function ourFunction, Function secondDerivativeOurFunction)
+double SolutionEquation::findStartingPointNewtonMethod(Function ourFunction, Function secondDerivativeOurFunction)
 {
 	if (ourFunction(beginSegment) *
 		secondDerivativeOurFunction(beginSegment) > 0)
 		return beginSegment;
 
-	return endSegment;
+	else if (ourFunction(endSegment) * secondDerivativeOurFunction(endSegment) > 0)
+		return endSegment;
+
+	else
+	{
+		for (double x = beginSegment + 0.1; x < endSegment; x += 0.1)
+			if (ourFunction(x) * secondDerivativeOurFunction(x) > 0)
+				return x;
+	}
+}
+
+bool SolutionEquation::isJobSimpleIterationMethod(Function firstDerivativeNewOurFunction)
+{
+	// Для начала ищем величину Q
+	findQSimpleIterationMethod(firstDerivativeNewOurFunction);
+
+	// Если Q не найденно
+	if (!isQ)
+		return false;
+
+	// Проверяем условие сходимости метода Простых итераций
+	for (double x = beginSegment; x <= endSegment; x += 0.1)
+	{
+		if (std::fabs(firstDerivativeNewOurFunction(x)) > QSimpleIterationMethod)
+			return false;
+	}
+
+	// Если так, то метод работает в данном случае
+	return true;
+}
+
+void SolutionEquation::findQSimpleIterationMethod(Function firstDerivativeNewOurFunction)
+{
+	// Первое значение
+	QSimpleIterationMethod = DBL_MIN;
+
+	// Ищем максимальное значение
+	for (double x = beginSegment; x <= endSegment; x += 0.1)
+	{
+		if ((std::fabs(firstDerivativeNewOurFunction(x)) < 1) > QSimpleIterationMethod)
+		{
+			QSimpleIterationMethod = std::fabs(firstDerivativeNewOurFunction(x));
+
+			isQ = true;
+		}
+	}
 }
