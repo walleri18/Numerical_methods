@@ -17,8 +17,8 @@
 
 using namespace std;
 
-const double MINIMUM = -1.8;
-const double MAXIMUM = 0;
+const double MINIMUM = 1;
+const double MAXIMUM = 2;
 
 /*
 	Прототипы
@@ -43,7 +43,7 @@ int main(void)
 	// Установка кодировки 1251
 	setlocale(LC_ALL, ".1251");
 
-	SolutionEquation sol(MINIMUM, MAXIMUM, 1.E-9, 14);
+	SolutionEquation sol(MINIMUM, MAXIMUM, 1.E-9, 9);
 
 	cout << endl << endl << "Выполнение метода Ньютона: " << endl;
 
@@ -69,7 +69,7 @@ double ourFunction(double argument)
 {
 	double resultOurFunction(0);
 
-	resultOurFunction = 3 * pow(argument, 2) *
+	resultOurFunction = 3 * argument * argument * 
 		cos(argument) - 1.5 * sin(argument) + 0.2;
 
 	//resultOurFunction = pow(argument, 5) - 4 * pow(argument, 4) - 3 * pow(argument, 3) + 2 * argument + 1;
@@ -84,7 +84,7 @@ double firstDerivativeOurFunction (double argument)
 
 	resultFirstDerivativeOurFunction = -1.5 *
 		cos(argument) + 6 * argument *
-		cos(argument) - 3 * pow(argument, 2)
+		cos(argument) - 3 * argument * argument
 		* sin(argument);
 
 	//resultFirstDerivativeOurFunction = 5 * pow(argument, 4) - 16 * pow(argument, 3) - 9 * pow(argument, 2) + 2;
@@ -98,7 +98,7 @@ double secondDerivativeOurFunction (double argument)
 	double resultSecondDerivativeOurFunction(0);
 
 	resultSecondDerivativeOurFunction = 6 *
-		cos(argument) - 3 * pow(argument, 2)
+		cos(argument) - 3 * argument * argument
 		* cos(argument) + 1.5 * sin(argument)
 		- 12 * argument * sin(argument);
 
@@ -112,8 +112,7 @@ double newOurFunction(double argument)
 {
 	double resultNewOurFunction(0);
 
-	resultNewOurFunction =
-		pow((1 / (2 * tan(argument)) - 1 / (15 * cos(argument))), (1 / 2.));
+	resultNewOurFunction = acos((1.5 * sin(argument) - 0.2) / (3 * argument * argument));
 
 	//resultNewOurFunction = argument - ourFunction(argument) / firstDerivativeOurFunction(argument);
 
@@ -129,7 +128,7 @@ double firstDerivativeNewOurFunction(double argument)
 	double resultFirstDerivativeNewOurFunction(0);
 
 	resultFirstDerivativeNewOurFunction = 
-		(0.288675 * (1.5 + sec(argument) * (0.2 + 1.5 * sin(argument)) * tan(argument))) / (sqrt(sec(argument) * (0.2 + 1.5 * sin(argument))));
+		(argument * (4 * cos(argument) - 2 * argument * sin(argument))) / (sqrt(1 - 4 * (0.0666667 + argument * argument * cos(argument)) * (0.0666667 + argument * argument * cos(argument))));
 
 	return resultFirstDerivativeNewOurFunction;
 }

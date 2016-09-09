@@ -87,12 +87,14 @@ void SolutionEquation::SimpleIterationMethod(Function newOurFunction, Function f
 	clearIteration();
 
 	// ѕроверка на работоспособность данного метода
-	if (!isJobSimpleIterationMethod(firstDerivativeNewOurFunction))
+	/*if (!isJobSimpleIterationMethod(firstDerivativeNewOurFunction))
 	{
-		std::cout << std::endl << std::endl << "ћетод просты итераций на данном отрезке [" << beginSegment << "; " << endSegment << "] не сходитьс€." << std::endl << "Ќайти корень на данном отрезке дл€ данного уравнени€ этим методом не представл€етс€ возможным.";
+		std::cout << std::endl << std::endl << "ћетод просты итераций на данном отрезке [" << beginSegment << "; " 
+			<< endSegment << "] не сходитьс€." << std::endl << "Ќайти корень на данном отрезке дл€ данного уравнени€ этим методом не представл€етс€ возможным."
+			<< std::endl << "Q = " << QSimpleIterationMethod;
 
 		return;
-	}
+	}*/
 
 	// Ќачальное приближение
 	xPrev = argument;
@@ -108,7 +110,7 @@ void SolutionEquation::SimpleIterationMethod(Function newOurFunction, Function f
 
 	iteration++;
 
-	while (std::fabs(xNext - xPrev) > (precision * (1 - QSimpleIterationMethod) / QSimpleIterationMethod))
+	while (std::fabs(xNext - xPrev) > (precision /** (1 - QSimpleIterationMethod) / QSimpleIterationMethod*/))
 	{
 		xPrev = xNext;
 
@@ -138,7 +140,8 @@ void SolutionEquation::HalfDivisionMethod(Function ourFunction)
 	// ѕроверка на работоспособность данного метода
 	if (!(ourFunction(begin) * ourFunction(end) < 0))
 	{
-		std::cout << std::endl << std::endl << "ћетод ƒелени€ на данном отрезке [" << beginSegment << "; " << endSegment << "] не сходитьс€." << std::endl << "Ќайти корень на данном отрезке дл€ данного уравнени€ этим методом не представл€етс€ возможным.";
+		std::cout << std::endl << std::endl << "ћетод ƒелени€ на данном отрезке [" << beginSegment << "; " 
+			<< endSegment << "] не сходитьс€." << std::endl << "Ќайти корень на данном отрезке дл€ данного уравнени€ этим методом не представл€етс€ возможным.";
 
 		return;
 	}
@@ -235,12 +238,12 @@ void SolutionEquation::show()
 	for (int i = 0; i < iterationVector->size(); i++)
 	{
 		std::cout << std::endl << "»тераци€ #" << i + 1
-			<< ": " << std::setprecision(coutNumber) << (*iterationVector)[i];
+			<< ": " << std::setprecision(coutNumber + 1) << (*iterationVector)[i];
 	}
 
 	// ¬ывод самого корн€
 	std::cout << std::endl << std::endl << " орень = "
-		<< std::setprecision(coutNumber) << (*iterationVector)[iteration - 1] << std::endl;
+		<< std::setprecision(coutNumber + 1) << (*iterationVector)[iteration - 1] << std::endl;
 }
 
 bool SolutionEquation::isRootNewtonMethod(Function ourFunction)
