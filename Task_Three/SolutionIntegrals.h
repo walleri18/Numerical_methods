@@ -95,4 +95,13 @@ private:
 	*/
 	// Вывод результата
 	void show();
+
+	// Получение данных
+	double getResultSolutionIntegral() const;
+
+	/*
+		Для метода Симпсона
+	*/
+	// Формула Симпсона для вычисления интеграла с определённым разбиением.
+	double SimpsonFormula(Function ourFunction, int N);
 };

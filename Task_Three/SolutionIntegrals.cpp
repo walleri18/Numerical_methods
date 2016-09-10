@@ -52,91 +52,9 @@ SolutionIntegrals::SolutionIntegrals(double beginSegment,
 SolutionIntegrals::~SolutionIntegrals()
 {}
 
+// Метод Симпсона (метод парабол)
 void SolutionIntegrals::SimpsonMethod(Function ourFunction)
 {
-	//// Рассчитаем шаг
-	//countSteps = (endSegment - beginSegment) / numberSplits;
-
-	///*
-	//	Заведём временные переменные для расчёта
-	//*/
-	//// Для позиции
-	//double X(beginSegment);
-
-	//// Для результата вычисления
-	//double F = ourFunction(X);
-
-	//// Для подсчёта номера разбиения
-	//int numberIteration(1);
-
-	//// Первое приближение
-	//resultSolutionIntegral = F;
-
-	//while (true)
-	//{
-	//	// Вычисление в новой позиции
-	//	X += countSteps;
-
-	//	// Вычисление функции в новой позиции
-	//	F = ourFunction(X);
-
-	//	// Следующее вычисление приближения
-	//	resultSolutionIntegral += 4 * F;
-
-	//	// Следующее разбиение
-	//	numberIteration += 2;
-
-	//	if (numberIteration >= numberSplits)
-	//		break;
-
-	//	else
-	//	{
-	//		// Следующая позиция
-	//		X += countSteps;
-
-	//		// Вычисление функции в новой позиции
-	//		F = ourFunction(X);
-
-	//		// Следующее вычисление приближения
-	//		resultSolutionIntegral += 2 * F;
-	//	}
-	//}
-
-	///*
-	//	Конечные расчёты
-	//*/
-	//// Последняя позиция
-	//X = endSegment;
-
-	//// Последнее вычисление функции
-	//F = ourFunction(X);
-
-	//// Последнее вычисление приближения
-	//resultSolutionIntegral = (resultSolutionIntegral + F)
-	//	* (countSteps / 3);
-
-	/*
-		Альтернативное решение
-	*/
-	/*countSteps = (endSegment - beginSegment) / numberSplits;
-
-	resultSolutionIntegral = 0;
-
-	double x0 = beginSegment;
-	double x1 = endSegment + countSteps;
-
-	for (unsigned i = 0; i <= numberSplits - 1; i++) {
-		resultSolutionIntegral += ourFunction(x0) + 4 * ourFunction(x0 + countSteps / 2) + ourFunction(x1);
-
-		x0 += countSteps;
-		x1 += countSteps;
-	}
-
-	resultSolutionIntegral = (countSteps / 6) * resultSolutionIntegral;*/
-
-	/*
-		Второе альтернативное решение
-	*/
 	// Первоначальное разбиение (n)
 	numberSplits = 4;
 
@@ -157,38 +75,8 @@ void SolutionIntegrals::SimpsonMethod(Function ourFunction)
 
 	do
 	{
-		// Начальная установка
-		IPrev = INext;
-		INext = 0;
-
-		// Вычисляем сумму на концах отрезка
-		INext = (ourFunction(beginSegment)
-				 + ourFunction(endSegment));
-
-		// Вычисляем первую сумму
-		for (int i = 1; i <= (numberSplits / 2); i++)
-		{
-			tmpSum += ourFunction(beginSegment
-								  + countSteps * (2 * i - 1));
-		}
-
-		// Заканчиваем вычислять второе слагаемое
-		tmpSum *= 4;
-		INext += tmpSum;
-
-		// Вычисляем третье слагаемое
-		tmpSum = 0;
-
-		for (int i = 2; i <= (numberSplits / 2); i++)
-		{
-			tmpSum += ourFunction(beginSegment + countSteps * (2 * i - 2));
-		}
-
-		// Заканчиваем вычислять третье слагаемое
-		tmpSum *= 2;
-		INext += tmpSum;
-
-		INext *= (countSteps / 3);
+		IPrev = SimpsonFormula(ourFunction, numberSplits);
+		INext = SimpsonFormula(ourFunction, numberSplits * 2);
 
 		std::cout << std::endl << std::endl
 			<< "------------------------------" << std::endl
@@ -200,10 +88,10 @@ void SolutionIntegrals::SimpsonMethod(Function ourFunction)
 		// Увеличиваем количество разбиений в два раза
 		numberSplits *= 2;
 
-		// Вычисляем шаг новый шаг (h)
+		// Вычисляем новый шаг (h)
 		countSteps = (endSegment - beginSegment) / numberSplits;
 
-	} while (std::fabs(INext - IPrev) < precision);
+	} while ((std::fabs(INext - IPrev) / 15.) > precision);
 
 	std::cout << std::endl << "------------------------------";
 
@@ -214,15 +102,18 @@ void SolutionIntegrals::SimpsonMethod(Function ourFunction)
 	show();
 }
 
+// Метод Гаусса
 void SolutionIntegrals::GaussMethod(Function ourFunction)
 {
 	// Временные переменные
 	double tmpSum(0);
 
+	// Суммирование
 	for (int i = 0; i < A.size(); i++)
 	{
 		tmpSum += A[i] * ourFunction((beginSegment + endSegment) / 2 + ((endSegment - beginSegment) / 2) * t[i]);
 	}
+
 
 	tmpSum *= (endSegment - beginSegment) / 2;
 
@@ -248,4 +139,51 @@ void SolutionIntegrals::show()
 		<< resultSolutionIntegral << std::endl
 		<< std::endl;
 
+}
+
+double SolutionIntegrals::getResultSolutionIntegral() const
+{
+	return resultSolutionIntegral;
+}
+
+// Формула Симпсона
+double SolutionIntegrals::SimpsonFormula(Function ourFunction, int N)
+{
+	// Переменная результата работы формулы Симпсона
+	double resultSimpsonFormula(0);
+
+	// Временная переменная суммы
+	double tmpSum(0);
+
+	// Переменная шага
+	double h = (endSegment - beginSegment) / N;
+
+	// Вычисляем сумму на концах отрезка
+	resultSimpsonFormula = (ourFunction(beginSegment) + ourFunction(endSegment));
+
+	// Вычисляем первую сумму
+	for (int i = 1; i <= (N / 2); i++)
+	{
+		tmpSum += ourFunction(beginSegment + h * (2 * i - 1));
+	}
+
+	// Заканчиваем вычислять второе слагаемое
+	tmpSum *= 4;
+	resultSimpsonFormula += tmpSum;
+
+	// Вычисляем третье слагаемое
+	tmpSum = 0;
+
+	for (int i = 2; i <= (N / 2); i++)
+	{
+		tmpSum += ourFunction(beginSegment + h * (2 * i - 2));
+	}
+
+	// Заканчиваем вычислять третье слагаемое
+	tmpSum *= 2;
+	resultSimpsonFormula += tmpSum;
+
+	resultSimpsonFormula *= (h / 3.);
+
+	return resultSimpsonFormula;
 }

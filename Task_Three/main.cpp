@@ -17,8 +17,8 @@
 
 using namespace std;
 
-const double MINIMUM = -10;
-const double MAXIMUM = 10;
+const double MINIMUM = 1;
+const double MAXIMUM = 2;
 
 /*
 	Прототипы
@@ -39,11 +39,17 @@ int main(void)
 	
 	SolutionIntegrals sol(MINIMUM, MAXIMUM, 1.E-4, 4);
 
+	cout << endl << endl << "Метод Симпсона: ";
+
 	// Выполнение метода Симпсона (парабол)
 	sol.SimpsonMethod(ourFunction);
 
+	cout << endl << endl << "Метод Гаусса: ";
+
 	// Выполнение метода Гаусса
 	sol.GaussMethod(ourFunction);
+
+	cout << endl;
 
 	return 0;
 }
