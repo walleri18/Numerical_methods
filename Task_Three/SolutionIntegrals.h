@@ -71,6 +71,12 @@ private:
 	// Количество знаков после точки для приближений
 	int coutNumber;
 
+	// Количество разбиений
+	std::vector<int> *countSplit;
+
+	// Результат для этого разбиения
+	std::vector<double> *resultSplit;
+
 // Функциональность
 public:
 
@@ -88,6 +94,15 @@ public:
 	// Метод Гаусса
 	void GaussMethod(Function ourFunction);
 
+	// Получение результата
+	double getResultSolutionIntegral() const;
+
+	// Получение разбиений
+	std::vector<int>* getCountSplit() const;
+
+	// Получение результатов данных разбиений
+	std::vector<double>* getResultSplit() const;
+
 private:
 
 	/*
@@ -96,12 +111,18 @@ private:
 	// Вывод результата
 	void show();
 
-	// Получение данных
-	double getResultSolutionIntegral() const;
+	// Очистка дополнительных параметрах
+	void clear();
 
 	/*
 		Для метода Симпсона
 	*/
 	// Формула Симпсона для вычисления интеграла с определённым разбиением.
 	double SimpsonFormula(Function ourFunction, int N);
+
+	/*
+		Для метода Гаусса
+	*/
+	// Формула Гаусса
+	double GaussFormula(Function ourFunction, int N);
 };

@@ -47,16 +47,27 @@ SolutionIntegrals::SolutionIntegrals(double beginSegment,
 	t.push_back(0.52553242);
 	t.push_back(0.79666648);
 	t.push_back(0.96028986);
+
+	// Создание наших дополнительных параметров
+	countSplit = new std::vector<int>;
+	resultSplit = new std::vector<double>;
 }
 
 SolutionIntegrals::~SolutionIntegrals()
-{}
+{
+	// Очистка памяти
+	delete countSplit;
+	delete resultSplit;
+}
 
 // Метод Симпсона (метод парабол)
 void SolutionIntegrals::SimpsonMethod(Function ourFunction)
 {
+	// Очистка дополнительных параметров
+	clear();
+
 	// Первоначальное разбиение (n)
-	numberSplits = 4;
+	numberSplits = 2;
 
 	if (beginSegment == endSegment)
 	{
@@ -71,7 +82,7 @@ void SolutionIntegrals::SimpsonMethod(Function ourFunction)
 	countSteps = (endSegment - beginSegment) / numberSplits;
 
 	// Временные переменные
-	double IPrev(0), INext(0), tmpSum(0);
+	double IPrev(0), INext(0);
 
 	do
 	{
@@ -80,10 +91,14 @@ void SolutionIntegrals::SimpsonMethod(Function ourFunction)
 
 		std::cout << std::endl << std::endl
 			<< "------------------------------" << std::endl
-			<< "Количество разбиений: " << numberSplits
+			<< "Количество разбиений: " << numberSplits * 2
 			<< std::endl << std::endl
 			<< "Результат для этого количества разбиений: "
 			<< std::setprecision(coutNumber) << INext;
+
+		// Записываем дополнительные параметры
+		countSplit->push_back(numberSplits);
+		resultSplit->push_back(INext);
 
 		// Увеличиваем количество разбиений в два раза
 		numberSplits *= 2;
@@ -105,33 +120,56 @@ void SolutionIntegrals::SimpsonMethod(Function ourFunction)
 // Метод Гаусса
 void SolutionIntegrals::GaussMethod(Function ourFunction)
 {
-	// Временные переменные
-	double tmpSum(0);
+	// Очистка дополнительных параметров
+	clear();
 
-	// Суммирование
-	for (int i = 0; i < A.size(); i++)
+	// Первоначальное разбиение (n)
+	numberSplits = 2;
+
+	if (beginSegment == endSegment)
 	{
-		tmpSum += A[i] * ourFunction((beginSegment + endSegment) / 2 + ((endSegment - beginSegment) / 2) * t[i]);
+		resultSolutionIntegral = 0;
+
+		show();
+
+		return;
 	}
 
+	// Временные переменные
+	double IPrev(0), INext(0);
 
-	tmpSum *= (endSegment - beginSegment) / 2;
+	do
+	{
+		IPrev = GaussFormula(ourFunction, numberSplits);
+		INext = GaussFormula(ourFunction, numberSplits * 2);
 
-	resultSolutionIntegral = tmpSum;
+		std::cout << std::endl << std::endl
+			<< "------------------------------" << std::endl
+			<< "Количество разбиений: " << numberSplits * 2
+			<< std::endl << std::endl
+			<< "Результат для этого количества разбиений: "
+			<< std::setprecision(coutNumber) << INext;
 
-	// Вывод
+		// Записываем дополнительные параметры
+		countSplit->push_back(numberSplits);
+		resultSplit->push_back(INext);
+
+		// Увеличиваем количество разбиений в два раза
+		numberSplits *= 2;
+
+	} while (((std::fabs(INext - IPrev) / 15.) > precision) && numberSplits * 2 <= 8);
+
+	std::cout << std::endl << "------------------------------";
+
+	// Присвоение нового результата
+	resultSolutionIntegral = INext;
+
+	// Вывод результатов
 	show();
 }
 
 void SolutionIntegrals::show()
 {
-	/*char select('Y');
-
-	std::cout << std::endl << std::endl << "Начать вывод?(Y/N): ";
-	std::cin >> select;
-
-	if (select == 'N')
-		return;*/
 
 	std::cout << std::endl << std::endl
 		<< "Окончательный результат численного интегрирования: "
@@ -141,9 +179,25 @@ void SolutionIntegrals::show()
 
 }
 
+void SolutionIntegrals::clear()
+{
+	countSplit->clear();
+	resultSplit->clear();
+}
+
 double SolutionIntegrals::getResultSolutionIntegral() const
 {
 	return resultSolutionIntegral;
+}
+
+std::vector<int>* SolutionIntegrals::getCountSplit() const
+{
+	return countSplit;
+}
+
+std::vector<double>* SolutionIntegrals::getResultSplit() const
+{
+	return resultSplit;
 }
 
 // Формула Симпсона
@@ -186,4 +240,21 @@ double SolutionIntegrals::SimpsonFormula(Function ourFunction, int N)
 	resultSimpsonFormula *= (h / 3.);
 
 	return resultSimpsonFormula;
+}
+
+double SolutionIntegrals::GaussFormula(Function ourFunction, int N)
+{
+	// Временные переменные
+	double resultGaussFormula(0);
+
+	// Суммирование
+	for (int i = 0; i < N; i++)
+	{
+		resultGaussFormula += A[i] * ourFunction((beginSegment + endSegment) / 2 + ((endSegment - beginSegment) / 2) * t[i]);
+	}
+
+
+	resultGaussFormula *= (endSegment - beginSegment) / 2;
+
+	return resultGaussFormula;
 }

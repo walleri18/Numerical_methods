@@ -17,8 +17,8 @@
 
 using namespace std;
 
-const double MINIMUM = 1;
-const double MAXIMUM = 2;
+const double MINIMUM = -1;
+const double MAXIMUM = 1;
 
 /*
 	Прототипы
@@ -26,18 +26,14 @@ const double MAXIMUM = 2;
 // Наша исходная функция
 double ourFunction(double);
 
-// Первая производная нашей функции
-double firstDerivativeOurFunction(double);
-
-// Вторая производная нашей функции
-double secondDerivativeOurFunction(double);
-
 int main(void)
 {
 	// Установка кодировки 1251
 	setlocale(LC_ALL, ".1251");
 	
-	SolutionIntegrals sol(MINIMUM, MAXIMUM, 1.E-4, 4);
+	cout << "Наша подынтегральная функция: exp(t)/t" << endl << endl;
+
+	SolutionIntegrals sol(MINIMUM, MAXIMUM, 1.E-4, 8);
 
 	cout << endl << endl << "Метод Симпсона: ";
 
@@ -63,24 +59,4 @@ double ourFunction(double argument)
 		resultOurFunction = exp(argument) / argument;
 
 	return resultOurFunction;
-}
-
-// Первая производная нашей функции
-double firstDerivativeOurFunction (double argument)
-{
-	double resultFirstDerivativeOurFunction(0);
-
-
-
-	return resultFirstDerivativeOurFunction;
-}
-
-// Вторая производная нашей функции
-double secondDerivativeOurFunction (double argument)
-{
-	double resultSecondDerivativeOurFunction(0);
-
-
-
-	return resultSecondDerivativeOurFunction;
 }
