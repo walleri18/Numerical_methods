@@ -1,4 +1,5 @@
 #pragma once
+#define RELEASE
 #include <vector>
 
 /*
@@ -54,7 +55,7 @@ private:
 	double countSteps;
 
 	// Число разбиений (n)
-	int numberSplits;
+	unsigned int numberSplits;
 
 	/*
 		Необходимые параметры для метода Гаусса
@@ -70,6 +71,9 @@ private:
 	*/
 	// Количество знаков после точки для приближений
 	int coutNumber;
+
+	// Константа Эйлера
+	const double C = 0.577215665;
 
 	// Количество разбиений
 	std::vector<int> *countSplit;
@@ -103,6 +107,9 @@ public:
 	// Получение результатов данных разбиений
 	std::vector<double>* getResultSplit() const;
 
+	// Сеттер конца отрезка
+	void setEndSegment(double newEndSegment);
+
 private:
 
 	/*
@@ -118,11 +125,16 @@ private:
 		Для метода Симпсона
 	*/
 	// Формула Симпсона для вычисления интеграла с определённым разбиением.
-	double SimpsonFormula(Function ourFunction, int N);
+	double SimpsonFormula(Function ourFunction, unsigned int N);
 
 	/*
 		Для метода Гаусса
 	*/
 	// Формула Гаусса
-	double GaussFormula(Function ourFunction, int N);
+	double GaussFormula(Function ourFunction, unsigned int N);
+
+	/*
+		Для точной проверки
+	*/
+	public: double ExpIntegrateEi(double X);
 };

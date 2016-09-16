@@ -24,9 +24,13 @@ SolutionIntegrals::SolutionIntegrals(double beginSegment,
 		this->endSegment = endSegment;
 	}
 
+#ifdef DEBUG
+
 	std::cout << "Интервал [" << this->beginSegment << "; " << this->endSegment << "]" << std::endl
 		<< "Количество знаков после точки " << coutNumber << std::endl << std::endl
 		<< "ОТВЕТЫ В ПРЕДЕЛАХ МАШИННОЙ ТОЧНОСТИ!!!";
+
+#endif // DEBUG
 
 	// Установление коэффициентов квадратурной формулы
 	A.push_back(0.10122854);
@@ -67,7 +71,7 @@ void SolutionIntegrals::SimpsonMethod(Function ourFunction)
 	clear();
 
 	// Первоначальное разбиение (n)
-	numberSplits = 2;
+	numberSplits = 4;
 
 	if (beginSegment == endSegment)
 	{
@@ -78,16 +82,25 @@ void SolutionIntegrals::SimpsonMethod(Function ourFunction)
 		return;
 	}
 
-	// Вычисляем шаг (h)
-	countSteps = (endSegment - beginSegment) / numberSplits;
-
 	// Временные переменные
 	double IPrev(0), INext(0);
 
+	// Флаг говорящий что мы только вошли в цикл
+	bool first(true);
+
 	do
 	{
-		IPrev = SimpsonFormula(ourFunction, numberSplits);
+		if (first)
+		{
+			IPrev = SimpsonFormula(ourFunction, numberSplits);
+			first = false;
+		}
+		else
+			IPrev = INext;
+
 		INext = SimpsonFormula(ourFunction, numberSplits * 2);
+
+#ifdef DEBUG
 
 		std::cout << std::endl << std::endl
 			<< "------------------------------" << std::endl
@@ -96,19 +109,22 @@ void SolutionIntegrals::SimpsonMethod(Function ourFunction)
 			<< "Результат для этого количества разбиений: "
 			<< std::setprecision(coutNumber) << INext;
 
+#endif // DEBUG
+
 		// Записываем дополнительные параметры
-		countSplit->push_back(numberSplits);
+		countSplit->push_back(numberSplits * 2);
 		resultSplit->push_back(INext);
 
 		// Увеличиваем количество разбиений в два раза
 		numberSplits *= 2;
 
-		// Вычисляем новый шаг (h)
-		countSteps = (endSegment - beginSegment) / numberSplits;
+		// Ограничение в количестве разбиений
+		if (numberSplits >= INT_MAX)
+			break;
 
 	} while ((std::fabs(INext - IPrev) / 15.) > precision);
 
-	std::cout << std::endl << "------------------------------";
+	//std::cout << std::endl << "------------------------------";
 
 	// Присвоение нового результата
 	resultSolutionIntegral = INext;
@@ -124,7 +140,7 @@ void SolutionIntegrals::GaussMethod(Function ourFunction)
 	clear();
 
 	// Первоначальное разбиение (n)
-	numberSplits = 2;
+	numberSplits = 8;
 
 	if (beginSegment == endSegment)
 	{
@@ -135,34 +151,8 @@ void SolutionIntegrals::GaussMethod(Function ourFunction)
 		return;
 	}
 
-	// Временные переменные
-	double IPrev(0), INext(0);
-
-	do
-	{
-		IPrev = GaussFormula(ourFunction, numberSplits);
-		INext = GaussFormula(ourFunction, numberSplits * 2);
-
-		std::cout << std::endl << std::endl
-			<< "------------------------------" << std::endl
-			<< "Количество разбиений: " << numberSplits * 2
-			<< std::endl << std::endl
-			<< "Результат для этого количества разбиений: "
-			<< std::setprecision(coutNumber) << INext;
-
-		// Записываем дополнительные параметры
-		countSplit->push_back(numberSplits);
-		resultSplit->push_back(INext);
-
-		// Увеличиваем количество разбиений в два раза
-		numberSplits *= 2;
-
-	} while (((std::fabs(INext - IPrev) / 15.) > precision) && numberSplits * 2 <= 8);
-
-	std::cout << std::endl << "------------------------------";
-
 	// Присвоение нового результата
-	resultSolutionIntegral = INext;
+	resultSolutionIntegral = GaussFormula(ourFunction, numberSplits);
 
 	// Вывод результатов
 	show();
@@ -170,13 +160,13 @@ void SolutionIntegrals::GaussMethod(Function ourFunction)
 
 void SolutionIntegrals::show()
 {
-
+#ifdef DEBUG
 	std::cout << std::endl << std::endl
 		<< "Окончательный результат численного интегрирования: "
 		<< std::setprecision(coutNumber)
 		<< resultSolutionIntegral << std::endl
 		<< std::endl;
-
+#endif // DEBUG
 }
 
 void SolutionIntegrals::clear()
@@ -200,8 +190,14 @@ std::vector<double>* SolutionIntegrals::getResultSplit() const
 	return resultSplit;
 }
 
+// Сеттер
+void SolutionIntegrals::setEndSegment(double newEndSegment)
+{
+	this->endSegment = newEndSegment;
+}
+
 // Формула Симпсона
-double SolutionIntegrals::SimpsonFormula(Function ourFunction, int N)
+double SolutionIntegrals::SimpsonFormula(Function ourFunction, unsigned int N)
 {
 	// Переменная результата работы формулы Симпсона
 	double resultSimpsonFormula(0);
@@ -216,7 +212,7 @@ double SolutionIntegrals::SimpsonFormula(Function ourFunction, int N)
 	resultSimpsonFormula = (ourFunction(beginSegment) + ourFunction(endSegment));
 
 	// Вычисляем первую сумму
-	for (int i = 1; i <= (N / 2); i++)
+	for (unsigned int i = 1; i <= (N / 2); i++)
 	{
 		tmpSum += ourFunction(beginSegment + h * (2 * i - 1));
 	}
@@ -228,7 +224,7 @@ double SolutionIntegrals::SimpsonFormula(Function ourFunction, int N)
 	// Вычисляем третье слагаемое
 	tmpSum = 0;
 
-	for (int i = 2; i <= (N / 2); i++)
+	for (unsigned int i = 2; i <= (N / 2); i++)
 	{
 		tmpSum += ourFunction(beginSegment + h * (2 * i - 2));
 	}
@@ -242,19 +238,62 @@ double SolutionIntegrals::SimpsonFormula(Function ourFunction, int N)
 	return resultSimpsonFormula;
 }
 
-double SolutionIntegrals::GaussFormula(Function ourFunction, int N)
+double SolutionIntegrals::GaussFormula(Function ourFunction, unsigned int N)
 {
 	// Временные переменные
 	double resultGaussFormula(0);
 
 	// Суммирование
-	for (int i = 0; i < N; i++)
+	for (unsigned int i = 0; i < N; i++)
 	{
-		resultGaussFormula += A[i] * ourFunction((beginSegment + endSegment) / 2 + ((endSegment - beginSegment) / 2) * t[i]);
+		resultGaussFormula += A[i] * ourFunction((beginSegment + endSegment)
+												 / 2 + ((endSegment - beginSegment) / 2) * t[i]);
 	}
 
 
 	resultGaussFormula *= (endSegment - beginSegment) / 2;
 
 	return resultGaussFormula;
+}
+
+// Функция проверки 
+double SolutionIntegrals::ExpIntegrateEi(double X)
+{
+	// Функция факториала
+	long double Factorial(int n);
+
+	double resultExpIntegrateEi(1);
+
+	resultExpIntegrateEi = C + log(X);
+
+	// Временная переменная суммы
+	long double tmpSum(0);
+
+	for (int n = 1; n <= 5 * (int)((X / 2) + 0.5); n++)
+	{
+		tmpSum += (pow(X, n)) / (Factorial(n) * (long double)(n));
+	}
+
+	resultExpIntegrateEi += tmpSum;
+
+	return resultExpIntegrateEi;
+}
+
+// Функция факториала
+long double Factorial(int n)
+{
+	long double tmpResult(1);
+
+	if (n == 0)
+		return tmpResult;
+
+	else
+	{
+		for (int i = n; i >= 1; i--)
+		{
+			tmpResult *= i;
+		}
+
+		return tmpResult;
+	}
 }
