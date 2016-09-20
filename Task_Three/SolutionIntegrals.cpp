@@ -70,64 +70,75 @@ void SolutionIntegrals::SimpsonMethod(Function ourFunction)
 	// Очистка дополнительных параметров
 	clear();
 
-	// Первоначальное разбиение (n)
-	numberSplits = 4;
+	// Вектор результатов
+	std::vector<double> resultIntegral(vectorSegment.size());
 
-	if (beginSegment == endSegment)
+	// Считаем резульататы
+	for (int i = 0; i < vectorSegment.size(); ++i)
 	{
-		resultSolutionIntegral = 0;
 
-		show();
+		// Первоначальное разбиение (n)
+		numberSplits = 4;
+		
+		// Временные переменные
+		double IPrev(0), INext(0);
 
-		return;
-	}
+		// Флаг говорящий что мы только вошли в цикл
+		bool first(true);
 
-	// Временные переменные
-	double IPrev(0), INext(0);
-
-	// Флаг говорящий что мы только вошли в цикл
-	bool first(true);
-
-	do
-	{
-		if (first)
+		do
 		{
-			IPrev = SimpsonFormula(ourFunction, numberSplits);
-			first = false;
-		}
-		else
-			IPrev = INext;
+			if (first)
+			{
+				IPrev = SimpsonFormula(ourFunction, numberSplits, vectorSegment[i].beginSegment, vectorSegment[i].endSegment);
+				first = false;
+			}
+			else
+				IPrev = INext;
 
-		INext = SimpsonFormula(ourFunction, numberSplits * 2);
+			INext = SimpsonFormula(ourFunction, numberSplits * 2, vectorSegment[i].beginSegment, vectorSegment[i].endSegment);
 
 #ifdef DEBUG
 
-		std::cout << std::endl << std::endl
-			<< "------------------------------" << std::endl
-			<< "Количество разбиений: " << numberSplits * 2
-			<< std::endl << std::endl
-			<< "Результат для этого количества разбиений: "
-			<< std::setprecision(coutNumber) << INext;
+			std::cout << std::endl << std::endl
+				<< "------------------------------" << std::endl
+				<< "Количество разбиений: " << numberSplits * 2
+				<< std::endl << std::endl
+				<< "Результат для этого количества разбиений: "
+				<< std::setprecision(coutNumber) << INext;
+
+			// Записываем дополнительные параметры
+			countSplit->push_back(numberSplits * 2);
+			resultSplit->push_back(INext);
 
 #endif // DEBUG
 
-		// Записываем дополнительные параметры
-		countSplit->push_back(numberSplits * 2);
-		resultSplit->push_back(INext);
+			// Увеличиваем количество разбиений в два раза
+			numberSplits *= 2;
 
-		// Увеличиваем количество разбиений в два раза
-		numberSplits *= 2;
+			// Ограничение в количестве разбиений
+			if (numberSplits >= INT_MAX)
+				break;
 
-		// Ограничение в количестве разбиений
-		if (numberSplits >= INT_MAX)
-			break;
+		} while ((std::fabs(INext - IPrev) / 15.) > precision);
 
-	} while ((std::fabs(INext - IPrev) / 15.) > precision);
+		//std::cout << std::endl << "------------------------------";
 
-	//std::cout << std::endl << "------------------------------";
+		// Присвоение нового результата
+		resultIntegral.push_back(INext);
 
-	// Присвоение нового результата
-	resultSolutionIntegral = INext;
+	}
+
+	// Временная сумма интегралов
+	double tmpSumIntegral(0);
+
+	// Суммируем
+	for (int i = 0; i < resultIntegral.size(); i++)
+	{
+		tmpSumIntegral += resultIntegral[i];
+	}
+
+	resultSolutionIntegral = tmpSumIntegral;
 
 	// Вывод результатов
 	show();
@@ -142,17 +153,28 @@ void SolutionIntegrals::GaussMethod(Function ourFunction)
 	// Первоначальное разбиение (n)
 	numberSplits = 8;
 
-	if (beginSegment == endSegment)
+	// Вектор результатов интегралов
+	std::vector<double> resultIntegral;
+
+	int tmp = vectorSegment.size();
+
+	// Подсчёт интегралов
+	for (int i = 0; i < vectorSegment.size(); ++i)
 	{
-		resultSolutionIntegral = 0;
-
-		show();
-
-		return;
+		resultIntegral.push_back(GaussFormula(ourFunction, numberSplits, vectorSegment[i].beginSegment, vectorSegment[i].endSegment));
 	}
 
-	// Присвоение нового результата
-	resultSolutionIntegral = GaussFormula(ourFunction, numberSplits);
+	// Временная переменная суммы интегралов
+	double tmpSumIntegral(0);
+
+	// Получаем сумму интегрлов
+	for (int i = 0; i < resultIntegral.size(); i++)
+	{
+		tmpSumIntegral += resultIntegral[i];
+	}
+	
+	// Присвоение результата объекту
+	resultSolutionIntegral = tmpSumIntegral;
 
 	// Вывод результатов
 	show();
@@ -173,6 +195,19 @@ void SolutionIntegrals::clear()
 {
 	countSplit->clear();
 	resultSplit->clear();
+	resultSolutionIntegral = 0;
+
+	// Очистка
+	vectorSegment.clear();
+
+	// Разбиение на несколько отрезков
+	vectorSegment.push_back(Segment(beginSegment, -0.5));
+	vectorSegment.push_back(Segment(-0.5, -0.3));
+	vectorSegment.push_back(Segment(-0.3, -0.1));
+	vectorSegment.push_back(Segment(-0.1, -0.01));
+	vectorSegment.push_back(Segment(0.01, 0.1));
+	vectorSegment.push_back(Segment(0.1, 0.5));
+	vectorSegment.push_back(Segment(0.5, endSegment));
 }
 
 double SolutionIntegrals::getResultSolutionIntegral() const
@@ -197,7 +232,7 @@ void SolutionIntegrals::setEndSegment(double newEndSegment)
 }
 
 // Формула Симпсона
-double SolutionIntegrals::SimpsonFormula(Function ourFunction, unsigned int N)
+double SolutionIntegrals::SimpsonFormula(Function ourFunction, unsigned int N, double beginSegment, double endSegment)
 {
 	// Переменная результата работы формулы Симпсона
 	double resultSimpsonFormula(0);
@@ -238,7 +273,7 @@ double SolutionIntegrals::SimpsonFormula(Function ourFunction, unsigned int N)
 	return resultSimpsonFormula;
 }
 
-double SolutionIntegrals::GaussFormula(Function ourFunction, unsigned int N)
+double SolutionIntegrals::GaussFormula(Function ourFunction, unsigned int N, double beginSegment, double endSegment)
 {
 	// Временные переменные
 	double resultGaussFormula(0);

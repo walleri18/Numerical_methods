@@ -1,5 +1,5 @@
 #pragma once
-#define RELEASE
+#define RELIESE
 #include <vector>
 
 /*
@@ -26,6 +26,21 @@ typedef double(*Function)(double);
 */
 class SolutionIntegrals
 {
+	/*
+		Структура отрезков
+	*/
+	struct Segment
+	{
+	public:
+		// Начало отрезка
+		double beginSegment;
+
+		// Конец отрезка
+		double endSegment;
+
+		// Конструктор
+		Segment(double beginSegment, double endSegment) : beginSegment(beginSegment), endSegment(endSegment) {}
+	};
 // Данные
 private:
 
@@ -37,6 +52,9 @@ private:
 
 	// Конец отрезка
 	double endSegment;
+
+	// Отрезки рабиения на несколько интегралов
+	std::vector<Segment> vectorSegment;
 
 	/*
 		Точность вычислений
@@ -125,13 +143,13 @@ private:
 		Для метода Симпсона
 	*/
 	// Формула Симпсона для вычисления интеграла с определённым разбиением.
-	double SimpsonFormula(Function ourFunction, unsigned int N);
+	double SimpsonFormula(Function ourFunction, unsigned int N, double beginSegment, double endSegment);
 
 	/*
 		Для метода Гаусса
 	*/
 	// Формула Гаусса
-	double GaussFormula(Function ourFunction, unsigned int N);
+	double GaussFormula(Function ourFunction, unsigned int N, double beginSegment, double endSegment);
 
 	/*
 		Для точной проверки
