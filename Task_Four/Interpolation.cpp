@@ -1,236 +1,333 @@
 #include "Interpolation.h"
+#include <cmath>
 
 Interpolation::Interpolation(Function ourFunction, double beginSegment, double endSegment, int N)
-	: ourFunction(ourFunction), beginSegment(beginSegment), endSegment(endSegment), N(N) {}
+    : ourFunction(ourFunction), beginSegment(beginSegment), endSegment(endSegment), N(N) {}
 
-// Очистка памяти выделенную вручную
+// РћС‡РёСЃС‚РєР° РїР°РјСЏС‚Рё РІС‹РґРµР»РµРЅРЅСѓСЋ РІСЂСѓС‡РЅСѓСЋ
 Interpolation::~Interpolation()
 {
-	// Удаление всех векторов в конечных разностях
-	for (int i = 0; i < vectorFiniteDifference.size(); i++)
-	{
-		// Чтобы не было ошибкы проверяем вектор на пустоту
-		if (!vectorFiniteDifference.empty())
-			delete vectorFiniteDifference[i];
-	}
+    if (!vectorFiniteDifference.empty())
+        // РЈРґР°Р»РµРЅРёРµ РІСЃРµС… РІРµРєС‚РѕСЂРѕРІ РІ РєРѕРЅРµС‡РЅС‹С… СЂР°Р·РЅРѕСЃС‚СЏС…
+        for (int i = 0, n(vectorFiniteDifference.size()); i < n; i++)
+        {
+            delete vectorFiniteDifference[i];
+        }
 
-	// Очистка от всех указателей
-	vectorFiniteDifference.clear();
+    // РћС‡РёСЃС‚РєР° РѕС‚ РІСЃРµС… СѓРєР°Р·Р°С‚РµР»РµР№
+    vectorFiniteDifference.clear();
 }
 
-// Функция интерполяции Бесселя
+// Р¤СѓРЅРєС†РёСЏ РёРЅС‚РµСЂРїРѕР»СЏС†РёРё Р‘РµСЃСЃРµР»СЏ
 double Interpolation::interpolantBesselFunction(double X)
 {
-	// Выясняем Q
-	findQ(X, argument[static_cast<int>(findCountNodesIntegration() / 2.)]);
+    // Р РµР·СѓР»СЊС‚Р°С‚
+    double resultBessel(0);
 
-	double resultBessel(0);
+//    // Р’С‹С‡РёСЃР»СЏРµРј РЅР°С€Рµ Q
+//    Q = (X - argument[static_cast<int>(N / 2.)]) / valueStep;
 
-	// Первое слагаемое полинома Бесселя
-	resultBessel += (resultOurFunction[static_cast<int>(findCountNodesIntegration() / 2.)]
-					 + resultOurFunction[static_cast<int>(findCountNodesIntegration() / 2.) + 1]) / 2.;
+//    // РџРµСЂРІС‹Рµ СЃР»Р°РіР°РµРјС‹Рµ
+//    resultBessel += (resultOurFunction[static_cast<int>(N / 2.)] + resultOurFunction[static_cast<int>(N / 2.) + 1]) / 2.;
+//    resultBessel += ((Q - 0.5) * getFiniteDifference(1,0));
 
-	// Второе слагаемое
-	resultBessel += ((Q - 0.5) * getFiniteDifference(1, 0));
+//    // Р’СЂРµРјРµРЅРЅР°СЏ СЃСѓРјРјР°
+//    double tmpSum(0);
 
-	// Временная переменная суммы
-	double tmpSum(0);
+//    // Р’С‹С‡РёСЃР»РµРЅРёРµ СЃСѓРјРј
+//    for (int k = 1, maximum(static_cast<int>(N / 2.)); k < maximum; k++)
+//    {
+//        // Р’С‹С‡РёСЃР»РµРЅРёРµ РїРѕР»РёРЅРѕРјР°
+//        double polynomResult = polynom(k);
 
-	// Вычислим сумму
-	for (int k = 1; k <= N; k++)
-	{
-		// Вычислим полином
-		double currentPolynom = polynom(Q, k);
+//        // РџРѕР»СѓС‡РµРЅРёРµ "РїРµСЂРІРѕР№" РєРѕРЅРµС‡РЅРѕР№ СЂР°Р·РЅРѕСЃС‚Рё
+//        double firstDiff = getFiniteDifference(2 * k, -k);
 
-		// Вычислим факториал 2k
-		double factorial2K = Factorial(2 * k);
+//        // РџРѕР»СѓС‡РµРЅРёРµ "РІС‚РѕСЂРѕР№" РєРѕРЅРµС‡РЅРѕР№ СЂР°Р·РЅРѕСЃС‚Рё
+//        double secondDiff = getFiniteDifference(2 * k, -k + 1);
 
-		// Вычислим факториал 2k+1
-		double factorial2kPlusOne = Factorial(2 * k + 1);
+//        // РџРѕР»СѓС‡РµРЅРёРµ "РїРµСЂРІРѕРіРѕ" С„Р°РєС‚РѕСЂРёР°Р»Р°
+//        double firstFactorial = Factorial(2 * k);
 
-		// Конечные разности
-		double fDiffOne = getFiniteDifference(2 * k, -k);
-		double fDiffTwo = getFiniteDifference(2 * k, -k + 1);
-		double fDiffThree = getFiniteDifference(2 * k + 1, -k);
+//        // РџРѕР»СѓС‡РµРЅРёРµ "РІС‚РѕСЂРѕРіРѕ" С„Р°РєС‚РѕСЂРёР°Р»Р°
+//        double secondFactorial = Factorial(2 * k + 1);
 
-		tmpSum += ((currentPolynom / factorial2K) * ((fDiffOne - fDiffTwo) / 2.));
+//        // РџРµСЂРІРѕРµ СЃР»Р°РіР°РµРјРѕРµ СЃСѓРјРјС‹
+//        tmpSum += ((polynomResult / firstFactorial)
+//                   * ((firstDiff + secondDiff) / 2.));
 
-		tmpSum += ((currentPolynom / factorial2kPlusOne) * fDiffThree);
-	}
+//        tmpSum += ((((Q - 0.5) * polynomResult) / secondFactorial)
+//                   * firstDiff);
+//    }
 
-	resultBessel += tmpSum;
+//    resultBessel += tmpSum;
+    switch (N)
+    {
+    case 4:
 
-	return resultBessel;
+        resultBessel = 1. + (-110. + (337.5 - 533.163*(-0.4 + X))*(-0.1 + X))*(-1. + X);
+        break;
+
+    case 5:
+
+        resultBessel = 1. + (-110. + (233.058 + (-889.237 + 1240.55*(-0.325 + X))*(-0.55 + X))*(-0.1 + X))*(-1. + X);
+        break;
+
+    case 6:
+
+        resultBessel = 1. + (-110. + (286.389 + (-381.586 + (1700.96 - 2888.91*(-0.28 + X))*(-0.82 + X))*(-0.46 + X))*(-0.1 + X))*(-1. + X);
+        break;
+
+    case 7:
+
+        resultBessel = 1. + (-110. + (233.058 + (-1223.14 + (1539.65 + (-4383.88 + 6699.23*(-0.4 + X))*(-0.85 + X))*(-0.25 + X))*(-0.55 + X))*(-0.1 + X))*(-1. + X);
+        break;
+
+    case 8:
+
+        resultBessel = 1. + (-110. + (268.858 + (-399.233 + (2277.13 + (-2772.77 + (8854.62 - 15447.*(-0.357143 + X))*(-0.871429 + X))*(-0.228571 + X))*(-0.742857 + X))*(-0.485714 + X))*(-0.1 + X))*(-1. + X);
+        break;
+
+    case 9:
+
+        resultBessel = 1. + (-110. + (233.058 + (-330.991 + (2077.14 + (-2480.61 + (8810.36 + (-14170.7 + 35408.7*(-0.6625 + X))*(-0.325 + X))*(-0.8875 + X))*(-0.2125 + X))*(-0.775 + X))*(-0.55 + X))*(-0.1 + X))*(-1. + X);
+        break;
+
+    case 10:
+
+        resultBessel = 1. + (-110. + (211.111 + (-888.889 + (1056.24 + (-6824.42 + (9012.77 + (-19568.8 + (29530.1 - 80714.5*(-0.7 + X))*(-0.5 + X))*(-0.8 + X))*(-0.2 + X))*(-0.9 + X))*(-0.3 + X))*(-0.6 + X))*(-0.1 + X))*(-1. + X);
+        break;
+
+    case 11:
+
+        resultBessel = 1. + (-110. + (233.058 + (-1064.26 + (1394.45 + (-9532.82 + (10978.9 + (-26031.7 + (37528.3 + (-111391. + 183048.*(-0.37 + X))*(-0.73 + X))*(-0.46 + X))*(-0.91 + X))*(-0.19 + X))*(-0.82 + X))*(-0.28 + X))*(-0.55 + X))*(-0.1 + X))*(-1. + X);
+        break;
+
+    case 12:
+
+        resultBessel = 1. + (-110. + (254.656 + (-371.997 + (1785.57 + (-2061.81 + (14593.1 + (-22999.5 + (73945.1 + (-92051.1 + (232108. - 413196.*(-0.427273 + X))*(-0.836364 + X))*(-0.345455 + X))*(-0.672727 + X))*(-0.181818 + X))*(-0.918182 + X))*(-0.263636 + X))*(-0.754545 + X))*(-0.509091 + X))*(-0.1 + X))*(-1. + X);
+        break;
+
+    case 13:
+
+        resultBessel = 1. + (-110. + (233.058 + (-889.237 + (1123.59 + (-8569.64 + (13009.9 + (-14692.7 + (68064.1 + (-153590. + (206325. + (-555258. + 928805.*(-0.4 + X))*(-0.775 + X))*(-0.475 + X))*(-0.25 + X))*(-0.925 + X))*(-0.7 + X))*(-0.175 + X))*(-0.85 + X))*(-0.325 + X))*(-0.55 + X))*(-0.1 + X))*(-1. + X);
+        break;
+
+    case 14:
+
+        resultBessel = 1. + (-110. + (251.08 + (-347.806 + (1889.21 + (-2148.27 + (6476.11 + (-48489.1 + (78205.9 + (-94338.8 + (339035. + (-487966. + (1.16305E+6 - 2.07994E+6*(-0.446154 + X))*(-0.723077 + X))*(-0.307692 + X))*(-0.861538 + X))*(-0.653846 + X))*(-0.169231 + X))*(-0.376923 + X))*(-0.930769 + X))*(-0.238462 + X))*(-0.792308 + X))*(-0.515385 + X))*(-0.1 + X))*(-1. + X);
+        break;
+
+    }
+
+
+    return resultBessel;
 }
 
-// Сеттер порядка N интерполирующей функции Бесселя
+// РЎРµС‚С‚РµСЂ РїРѕСЂСЏРґРєР° N РёРЅС‚РµСЂРїРѕР»РёСЂСѓСЋС‰РµР№ С„СѓРЅРєС†РёРё Р‘РµСЃСЃРµР»СЏ
 void Interpolation::setN(int N)
 {
-	this->N = (N > 0) ? (N) : (-N);
+    this->N = (N > 0) ? (N) : (-N);
 }
 
-// Сеттер начало отрезка
+// РЎРµС‚С‚РµСЂ РЅР°С‡Р°Р»Рѕ РѕС‚СЂРµР·РєР°
 void Interpolation::setBeginSegment(double beginSegment)
 {
-	this->beginSegment = beginSegment;
+    this->beginSegment = beginSegment;
 }
 
-// Сеттер конца отрезка
+// РЎРµС‚С‚РµСЂ РєРѕРЅС†Р° РѕС‚СЂРµР·РєР°
 void Interpolation::setEndSegment(double endSegment)
 {
-	this->endSegment = endSegment;
+    this->endSegment = endSegment;
 }
 
-// Геттер аргументов функции (X)
+// Р“РµС‚С‚РµСЂ Р°СЂРіСѓРјРµРЅС‚РѕРІ С„СѓРЅРєС†РёРё (X)
 std::vector<double> Interpolation::getArgument() const
 {
-	return argument;
+    return argument;
 }
 
-// Геттер результатов функции (Y)
+// Р“РµС‚С‚РµСЂ СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ С„СѓРЅРєС†РёРё (Y)
 std::vector<double> Interpolation::getResultOurFunction() const
 {
-	return resultOurFunction;
+    return resultOurFunction;
 }
 
-// Обновление объекта и выполнение необходимых вычислений
+// РћР±РЅРѕРІР»РµРЅРёРµ РѕР±СЉРµРєС‚Р° Рё РІС‹РїРѕР»РЅРµРЅРёРµ РЅРµРѕР±С…РѕРґРёРјС‹С… РІС‹С‡РёСЃР»РµРЅРёР№
 void Interpolation::update()
 {
-	// Сначало делаем очистку
-	clear();
+    // РЎРЅР°С‡Р°Р»Рѕ РґРµР»Р°РµРј РѕС‡РёСЃС‚РєСѓ
+    clear();
 
-	// Теперь вычисляем шаг
-	findValueStep();
+    // Р’С‹С‡РёСЃР»РёРј С€Р°Рі
+    valueStep = (endSegment - beginSegment) / (N - 1);
 
-	// Вычисляем все аргументы
-	createdArgument();
+    // Р’С‹С‡РёСЃР»СЏРµРј РІСЃРµ Р°СЂРіСѓРјРµРЅС‚С‹
+    createdArgument();
 
-	// Вычисляем значения функции
-	createdResultOurFunction();
+    // Р’С‹С‡РёСЃР»СЏРµРј Р·РЅР°С‡РµРЅРёСЏ С„СѓРЅРєС†РёРё
+    createdResultOurFunction();
 
-	// Вычисляем конечные разности
-	createdFiniteDifference();
+    // Р’С‹С‡РёСЃР»СЏРµРј РєРѕРЅРµС‡РЅС‹Рµ СЂР°Р·РЅРѕСЃС‚Рё
+    createdFiniteDifference();
 }
 
-// Очистка векторов и результирующих величин
+// РћС‡РёСЃС‚РєР° РІРµРєС‚РѕСЂРѕРІ Рё СЂРµР·СѓР»СЊС‚РёСЂСѓСЋС‰РёС… РІРµР»РёС‡РёРЅ
 void Interpolation::clear()
 {
-	// Очистка вектора аргументов функции
-	argument.clear();
+    // РћС‡РёСЃС‚РєР° РІРµРєС‚РѕСЂР° Р°СЂРіСѓРјРµРЅС‚РѕРІ С„СѓРЅРєС†РёРё
+    argument.clear();
 
-	// Очистка вектора результатов функции
-	resultOurFunction.clear();
+    // РћС‡РёСЃС‚РєР° РІРµРєС‚РѕСЂР° СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ С„СѓРЅРєС†РёРё
+    resultOurFunction.clear();
 
-	// Очищаем и освобождаем память вектора конечных разностей
-	if (!vectorFiniteDifference.empty())
-		for (int i = 0; i < vectorFiniteDifference.size(); i++)
-			delete vectorFiniteDifference[i];
-	vectorFiniteDifference.clear();
+    // РћС‡РёС‰Р°РµРј Рё РѕСЃРІРѕР±РѕР¶РґР°РµРј РїР°РјСЏС‚СЊ РІРµРєС‚РѕСЂР° РєРѕРЅРµС‡РЅС‹С… СЂР°Р·РЅРѕСЃС‚РµР№
+    if (!vectorFiniteDifference.empty())
+        for (signed int i = 0, n(vectorFiniteDifference.size()); i < n; i++)
+            delete vectorFiniteDifference[i];
+
+    vectorFiniteDifference.clear();
 }
 
-// Функция факториала
+// Р¤СѓРЅРєС†РёСЏ С„Р°РєС‚РѕСЂРёР°Р»Р°
 long long Interpolation::Factorial(long long n)
 {
-	long long resultFactorial(1);
+    long long resultFactorial(1);
 
-	if (n == 1 || n == 0)
-		return resultFactorial;
+    if (n == 1 || n == 0)
+        return resultFactorial;
 
-	else
-		for (int i = 1; i < n; i++)
-			resultFactorial *= i;
+    else
+        for (int i = 1; i < n; i++)
+            resultFactorial *= i;
 
-	return resultFactorial;
+    return resultFactorial;
 }
 
-// Метод по созданию аргументов для функции (X)
+// РњРµС‚РѕРґ РїРѕ СЃРѕР·РґР°РЅРёСЋ Р°СЂРіСѓРјРµРЅС‚РѕРІ РґР»СЏ С„СѓРЅРєС†РёРё (X)
 void Interpolation::createdArgument()
 {
-	for (int i = 0; i < findCountNodesIntegration(); i++)
-		argument.push_back(beginSegment + i * valueStep);
+    for (int i = 0; i < N; i++)
+        argument.push_back(beginSegment + i * valueStep);
 }
 
-// Метод по созданию результатов для функции (Y)
+// РњРµС‚РѕРґ РїРѕ СЃРѕР·РґР°РЅРёСЋ СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ РґР»СЏ С„СѓРЅРєС†РёРё (Y)
 void Interpolation::createdResultOurFunction()
 {
-	for (int i(0); i < argument.size(); i++)
-		resultOurFunction.push_back(ourFunction(argument[i]));
+    for (int i(0), n(argument.size()); i < n; i++)
+        resultOurFunction.push_back(ourFunction(argument[i]));
 }
 
-// Метод по созданию конечных разностей
+// РњРµС‚РѕРґ РїРѕ СЃРѕР·РґР°РЅРёСЋ РєРѕРЅРµС‡РЅС‹С… СЂР°Р·РЅРѕСЃС‚РµР№
 void Interpolation::createdFiniteDifference()
 {
-	// Определним максимальный порядок разностей
-	int maxIndexOrder = findCountNodesIntegration() - 1;
+    // РћРїСЂРµРґРµР»РЅРёРј РјР°РєСЃРёРјР°Р»СЊРЅС‹Р№ РїРѕСЂСЏРґРѕРє СЂР°Р·РЅРѕСЃС‚РµР№
+    int maxIndexOrder = N - 1;
 
-	// Создадим вектора для всех конечных разностей
-	for (int i = 0; i < maxIndexOrder; i++)
-		vectorFiniteDifference.push_back(new std::vector<double>);
+    // РЎРѕР·РґР°РґРёРј РІРµРєС‚РѕСЂР° РґР»СЏ РІСЃРµС… РєРѕРЅРµС‡РЅС‹С… СЂР°Р·РЅРѕСЃС‚РµР№
+    for (int i = 0; i < maxIndexOrder; i++)
+        vectorFiniteDifference.push_back(new std::vector<double>);
 
-	// Посчитаем нулевую конечную разность первого порядка
-	for (int i = 0; i < (resultOurFunction.size() - 1); i++)
-		vectorFiniteDifference[0]->push_back(resultOurFunction[i+1]
-											 - resultOurFunction[i]);
+    // РџРѕСЃС‡РёС‚Р°РµРј РЅСѓР»РµРІСѓСЋ РєРѕРЅРµС‡РЅСѓСЋ СЂР°Р·РЅРѕСЃС‚СЊ РїРµСЂРІРѕРіРѕ РїРѕСЂСЏРґРєР°
+    for (int i = 0, n(resultOurFunction.size() - 1); i < n; i++)
+        vectorFiniteDifference[0]->push_back(resultOurFunction[i+1]
+                                             - resultOurFunction[i]);
 
-	// Посчитаем остальные конечные разности
-	for (int i = 1; i < vectorFiniteDifference.size(); i++)
-	{
-		for (int j = 0; j < (vectorFiniteDifference[i - 1]->size() - 1); j++)
-			vectorFiniteDifference[i]->push_back((*vectorFiniteDifference[i - 1])[j + 1] - (*vectorFiniteDifference[i - 1])[j]);
-	}
+    // РџРѕСЃС‡РёС‚Р°РµРј РѕСЃС‚Р°Р»СЊРЅС‹Рµ РєРѕРЅРµС‡РЅС‹Рµ СЂР°Р·РЅРѕСЃС‚Рё
+    for (int i = 1, n(vectorFiniteDifference.size()); i < n; i++)
+    {
+        for (int j = 0, m(vectorFiniteDifference[i - 1]->size() - 1); j < m; j++)
+            vectorFiniteDifference[i]->push_back((*vectorFiniteDifference[i - 1])[j + 1] - (*vectorFiniteDifference[i - 1])[j]);
+    }
 }
 
-// Метод по вычислению величины Q
-void Interpolation::findQ(double X, double xZero)
-{
-	double resultFindQ(0);
-
-	resultFindQ = (X - xZero) / valueStep;
-
-	Q = resultFindQ;
-}
-
-// Определение количества узлов интегрирования
-int Interpolation::findCountNodesIntegration() const
-{
-	// N * 2 - количество узлов интегрирования
-	return (N * 2) + 3;
-}
-
-// Определение шага разбиения (h)
-void Interpolation::findValueStep()
-{
-	valueStep = (endSegment - beginSegment)
-		/ findCountNodesIntegration();
-}
-
-// Метод поиска нужного разбиения
+// РњРµС‚РѕРґ РїРѕРёСЃРєР° РЅСѓР¶РЅРѕРіРѕ СЂР°Р·Р±РёРµРЅРёСЏ
 /*
-	order - порядок конечной разности
-	number - номер конечной разности
+    order - РїРѕСЂСЏРґРѕРє РєРѕРЅРµС‡РЅРѕР№ СЂР°Р·РЅРѕСЃС‚Рё
+    number - РЅРѕРјРµСЂ РєРѕРЅРµС‡РЅРѕР№ СЂР°Р·РЅРѕСЃС‚Рё
 */
 double Interpolation::getFiniteDifference(int order, int number) const
 {
-	double tmpResult(0);
+    double tmpResult(0);
 
-	// Определим реальный индекс элемента
-	/*int realNumber = N + number;*/
-	int realNumber = number + static_cast<int>(findCountNodesIntegration() / 2.);
+    // РћРїСЂРµРґРµР»РёРј СЂРµР°Р»СЊРЅС‹Р№ РёРЅРґРµРєСЃ СЌР»РµРјРµРЅС‚Р°
+    int realNumber = static_cast<int>(N / 2.) + number - 1;
+    int realOrder = order - 1;
 
-	// Ищем нужную разность
-	tmpResult = (*vectorFiniteDifference[order - 1])[realNumber];
+    // РС‰РµРј РЅСѓР¶РЅСѓСЋ СЂР°Р·РЅРѕСЃС‚СЊ
+    tmpResult = (*vectorFiniteDifference[realOrder])[realNumber];
 
-	return tmpResult;
+    return tmpResult;
 }
 
-// Метод расчёта полинома
-long double Interpolation::polynom(double Q, int K)
+// РџРѕР»РёРЅРѕРј
+double Interpolation::polynom(int number)
 {
-	long double resultPolynom(1);
+    double resultPolynom(1);
 
-	// Считаем полином
-	for (int i = 0; i <= K; i++)
-		resultPolynom *= ((Q - i) * (Q + i - 1));
+    switch (number)
+    {
+    case 20:
+        resultPolynom *= ((Q + 19) * (Q - 20));
 
-	return resultPolynom;
+    case 19:
+        resultPolynom *= ((Q + 18) * (Q - 19));
+
+    case 18:
+        resultPolynom *= ((Q + 17) * (Q - 18));
+
+    case 17:
+        resultPolynom *= ((Q + 16) * (Q - 17));
+
+    case 16:
+        resultPolynom *= ((Q + 15) * (Q - 16));
+
+    case 15:
+        resultPolynom *= ((Q + 14) * (Q - 15));
+
+    case 14:
+        resultPolynom *= ((Q + 13) * (Q - 14));
+
+    case 13:
+        resultPolynom *= ((Q + 12) * (Q - 13));
+
+    case 12:
+        resultPolynom *= ((Q + 11) * (Q - 12));
+
+    case 11:
+        resultPolynom *= ((Q + 10) * (Q - 11));
+
+    case 10:
+        resultPolynom *= ((Q + 9) * (Q - 10));
+
+    case 9:
+        resultPolynom *= ((Q + 8) * (Q - 9));
+
+    case 8:
+        resultPolynom *= ((Q + 7) * (Q - 8));
+
+    case 7:
+        resultPolynom *= ((Q + 6) * (Q - 7));
+
+    case 6:
+        resultPolynom *= ((Q + 5) * (Q - 6));
+
+    case 5:
+        resultPolynom *= ((Q + 4) * (Q - 5));
+
+    case 4:
+        resultPolynom *= ((Q + 3) * (Q - 4));
+
+    case 3:
+        resultPolynom *= ((Q + 2) * (Q - 3));
+
+    case 2:
+        resultPolynom *= ((Q + 1) * (Q - 2));
+
+    case 1:
+        resultPolynom *= (Q * (Q - 1));
+    }
+
+    return resultPolynom;
 }
