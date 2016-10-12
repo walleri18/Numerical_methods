@@ -29,10 +29,10 @@ private:
 	/*
 		Порядок аппроксимирующей функции (n)
 	*/
-	int orderApproximatFunction;
+	int n;
 
 	/*
-		Величина (m)
+		Количество узлов аппроксимирования (m)
 	*/
 	int m;
 
@@ -52,9 +52,16 @@ private:
 	std::vector<double> vectorF_i;
 
 	/*
-		Матрица для использования в системе линейных уравнений
+		Для системы решений линейных уравнений
 	*/
+	// Расширенная матрица
 	std::vector< std::vector<double> > matrix;
+
+	// Вектор коэффициентов апроксимирующего полинома
+	std::vector<double> polynomialCoefficients;
+
+	// Вектор невязок
+	std::vector<double> residuals;
 
 // Функционал
 public:
@@ -63,14 +70,10 @@ public:
 	SolutionApproximation(Function ourFunction,
 						  double beginSegment,
 						  double endSegment,
-						  int orderApproximatFunction,
-						  int m, int c);
-
-	// Тестирующий конструктор
-	SolutionApproximation();
+						  int n, int m, int c);
 
 	/*
-		Интерфес для работы с объектом из вне (API)
+		Интерфейс для работы с объектом из вне (API)
 	*/
 	// Сеттер ourFunction
 	void setOurFunction(Function ourFunction);
@@ -90,11 +93,11 @@ public:
 	// Геттер Конца отрезка (b)
 	double getEndSegment() const;
 
-	// Сеттер Порядка аппроксимирующей функции (n)
-	void setOrderApproximatFunction(int orderApproximatFunction);
+	// Сеттер величины (n)
+	void setValueN(int n);
 
-	// Геттер Порядка аппроксимирующей функции (n)
-	int getOrderApproximatFunction() const;
+	// Геттер величины (n)
+	int getValueN() const;
 
 	// Сеттер Величины (m)
 	void setValueM(int m);
@@ -114,14 +117,14 @@ public:
 	// Геттер Вектора значений F_i
 	std::vector<double> getVectorF_i() const;
 
-	// Сеттер матрицы
-	void setMatrix(std::vector< std::vector<double> > matrix);
-
-	// Геттер матрицы
-	std::vector< std::vector<double> > getMatrix() const;
+	// Геттер Вектора невязок
+	std::vector<double> getResiduals() const;
 
 	// Обновление аппроксимирующей функции и её данных
 	void update();
+
+	// Результат аппроксимирующего полинома
+	double ApproximationPolynom(double X);
 
 private:
 
@@ -134,12 +137,15 @@ private:
 	// Создание вектора значений F_i
 	void createdVectorF_i();
 
+	// Создание расширенной матрицы
+	void createdMatrix();
+
 	// Подсчёт детерминанта методом Гаусса
 	double GaussDeterminant();
 
-	//// Нахождение коэффициентов (решение системы линейных уравнений методом Гаусса)
-	//std::vector<double> GaussSolve(std::vector< std::vector<double> > matrix);
-
 	// Нахождение коэффициентов (решение системы линейных уравнений методом Крамера)
-	std::vector<double> KramerSolve();
+	void KramerSolve();
+
+	// Нахождение невязок
+	void searchResiduals();
 };

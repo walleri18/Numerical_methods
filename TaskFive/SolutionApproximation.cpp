@@ -1,14 +1,13 @@
 #include "SolutionApproximation.h"
 #include <time.h>
+#include <stdlib.h>
 
 // Конструктор
 SolutionApproximation::SolutionApproximation(Function ourFunction, double beginSegment, double endSegment, int orderApproximatFunction, int m, int c) :
 	ourFunction(ourFunction), beginSegment(beginSegment),
 	endSegment(endSegment),
-	orderApproximatFunction(orderApproximatFunction), m(m), c(c)
+	n(n), m(m), c(c)
 {}
-
-SolutionApproximation::SolutionApproximation(){}
 
 // Сеттер ourFunction
 void SolutionApproximation::setOurFunction(Function ourFunction)
@@ -47,15 +46,15 @@ double SolutionApproximation::getEndSegment() const
 }
 
 // Сеттер Порядка аппроксимирующей функции (n)
-void SolutionApproximation::setOrderApproximatFunction(int orderApproximatFunction)
+void SolutionApproximation::setValueN(int n)
 {
-	this->orderApproximatFunction = orderApproximatFunction;
+	this->n = n;
 }
 
 // Геттер Порядка аппроксимирующей функции (n)
-int SolutionApproximation::getOrderApproximatFunction() const
+int SolutionApproximation::getValueN() const
 {
-	return this->orderApproximatFunction;
+	return this->n;
 }
 
 // Сеттер Величины (m)
@@ -94,16 +93,10 @@ std::vector<double> SolutionApproximation::getVectorF_i() const
 	return this->vectorF_i;
 }
 
-// Сеттер матрицы
-void SolutionApproximation::setMatrix(std::vector<std::vector<double>> matrix)
+// Геттер Вектора невязок
+std::vector<double> SolutionApproximation::getResiduals() const
 {
-	this->matrix = matrix;
-}
-
-// Геттер матрицы
-std::vector<std::vector<double>> SolutionApproximation::getMatrix() const
-{
-	return this->matrix;
+	return this->residuals;
 }
 
 // Обновление аппроксимирующей функции и её данных
@@ -112,11 +105,33 @@ void SolutionApproximation::update()
 	// Очистка
 	clear();
 
-	// Генерирование x_i
+	// Генерирование X_i
 	createdVectorX_i();
 
 	// Генерирование F_i
 	createdVectorF_i();
+
+	// Генерирование расширенной матрицы
+	createdMatrix();
+
+	// Нахождение коэффициентом
+	KramerSolve();
+
+	// Нахождение невязок
+	searchResiduals();
+}
+
+// Результат аппроксимирующего полинома
+double SolutionApproximation::ApproximationPolynom(double X)
+{
+	double resultAppPolynom(0);
+
+	for (int i = 0; i < polynomialCoefficients.size(); ++i)
+	{
+		resultAppPolynom += (polynomialCoefficients[i] * pow(X, i));
+	}
+
+	return resultAppPolynom;
 }
 
 // Очистка всех векторов от старых данных
@@ -127,6 +142,10 @@ void SolutionApproximation::clear()
 	this->vectorX_i.clear();
 
 	matrix.clear();
+
+	polynomialCoefficients.clear();
+
+	residuals.clear();
 }
 
 // Создание вектора значений X_i
@@ -143,7 +162,7 @@ void SolutionApproximation::createdVectorX_i()
 void SolutionApproximation::createdVectorF_i()
 {
 	// Зерно рандома
-    //srand(time(NULL));
+    srand(time(NULL));
 
 	// Случайное число в интервале [0 ; 1]
 	double z_i(0);
@@ -151,22 +170,101 @@ void SolutionApproximation::createdVectorF_i()
 	// Какая та величина (k)
 	int k(0);
 
-//	for (int i = 0; i < vectorX_i.size(); ++i)
-//	{
-//		// Генерируем случайное число в пределах [0 ; 1]
-//		z_i = rand() % 2;
+	for (int i = 0; i < vectorX_i.size(); ++i)
+	{
+		// Генерируем случайное число в пределах [0 ; 1]
+		z_i = rand() % 2;
 
-//		// Смотри страницу 22 в методичке в самом внизу и всё поймёшь
-//		if (z_i < 0.5)
-//			k = -1;
-//		else
-//			k = 1;
+		// Смотри страницу 22 в методичке в самом внизу и всё поймёшь
+		if (z_i < 0.5)
+			k = -1;
+		else
+			k = 1;
 
-//		// Аналогично смотри страницу 22 в методичке и всё поймёшь.
-//		// Может быть
-//		vectorF_i.push_back(ourFunction(vectorX_i[i]) * (1
-//													   + k * z_i / c));
-//	}
+		// Аналогично смотри страницу 22 в методичке и всё поймёшь.
+		// Может быть
+		vectorF_i.push_back(ourFunction(vectorX_i[i]) * (1
+													   + k * z_i / c));
+	}
+}
+
+// Создание расширенной матрицы
+void SolutionApproximation::createdMatrix()
+{
+	// Максимальное количество коэффициентов
+	int maxCountK = n + 1;
+
+	/*
+		Нулевая строка
+	*/
+	// Создание нулевой строки
+	std::vector<double> rowZero(maxCountK + 1);
+
+	// Заполнение нулевой строки
+	rowZero[0] = n;
+
+	// Левая часть системы линейных уравнений
+	for (int i = 1; i < maxCountK; ++i)
+	{
+		rowZero[i] = 0;
+
+		for (int j = 1; j < vectorX_i.size(); ++j)
+		{
+			rowZero[i] += pow(vectorX_i[j], i);
+		}
+	}
+
+	// Правая часть системы линейных уравнений
+	rowZero[rowZero.size() - 1] = 0;
+
+	for (int i = 1; i < vectorF_i.size(); ++i)
+	{
+		rowZero[rowZero.size() - 1] += vectorF_i[i];
+	}
+
+	/*
+		Пост-нулевые строки
+	*/
+	// Вектор пост-нулевых строк
+	std::vector< std::vector<double> > postRow(maxCountK - 1);
+
+	// Заполнение пост-нулевых строк
+	for (int k = 1; k < (maxCountK - 1); ++k)
+	{
+		// Создание строки
+		std::vector<double> row(maxCountK + 1);
+
+		// Левая часть системы линейных уравнений
+		for (int j = 0; j < maxCountK; ++j)
+		{
+			row[j] = 0;
+
+			for (int i = 1; i < vectorX_i.size(); ++i)
+			{
+				row[j] += pow(vectorX_i[i], j + k);
+			}
+		}
+
+		// Правая часть системы линейных уравнений
+		row[postRow.size() - 1] = 0;
+
+		for (int i = 1; i < vectorF_i.size(); ++i)
+		{
+			row[postRow.size() - 1] 
+				+= (vectorF_i[i] * pow(vectorX_i[i], k));
+		}
+
+		// Отправка строки
+		postRow.push_back(row);
+	}
+
+	// Заполнение расширенной матрицы
+	matrix.push_back(rowZero);
+
+	for (int i = 0; i < postRow.size(); ++i)
+	{
+		matrix.push_back(postRow[i]);
+	}
 }
 
 // Подсчёт детерминанта методом Гаусса
@@ -203,45 +301,8 @@ double SolutionApproximation::GaussDeterminant()
 	return resultDeterminant;
 }
 
-//
-//// Нахождение коэффициентов (решение системы линейных уравнений методом Гаусса)
-//std::vector<double> SolutionApproximation::GaussSolve(std::vector< std::vector<double> > matrix)
-//{
-//	// Вектор неизвестных
-//	std::vector<double> X(matrix.size() - 1);
-//
-//	// Прямой ход
-//	for (int i = 0; i < (matrix.size() - 1); ++i)
-//	{
-//		double a = matrix[i][i];
-//
-//		for (int j = i + 1; j < (matrix.size() - 1); ++j)
-//		{
-//			double b = matrix[j][i];
-//
-//			for (int k = i; k < matrix.size(); ++k)
-//				matrix[j][k] = matrix[i][k] * b - matrix[j][k] * a;
-//		}
-//	}
-//
-//	// Обратный ход
-//	for (int i = (matrix.size() - 2); i >= 0; --i)
-//	{
-//		double summ(0);
-//
-//		for (int j = (i + 1); j < (matrix.size() - 1); ++j)
-//			summ += matrix[i][j] * X[j];
-//
-//		summ = matrix[i][(matrix.size() - 1)] - summ;
-//
-//		X[i] = summ / matrix[i][i];
-//	}
-//
-//	return X;
-//}
-
 // Нахождение коэффициентов (решение системы линейных уравнений методом Крамера)
-std::vector<double> SolutionApproximation::KramerSolve()
+void SolutionApproximation::KramerSolve()
 {
 	// Неизвестные коэффициенты
 	std::vector<double> X;
@@ -275,5 +336,44 @@ std::vector<double> SolutionApproximation::KramerSolve()
 	for (int i = 1; i < (matrix.size() + 1); ++i)
 		X.push_back(vectorDeterminant[i] / vectorDeterminant[0]);
 
-	return X;
+	polynomialCoefficients = X;
+}
+
+// Нахождение невязок
+void SolutionApproximation::searchResiduals()
+{
+	/*
+		Формула нахождения невязок
+		
+		e = b - A * k,
+
+		где  e - вектор невязок,
+		b - вектор свободных членов
+		A - матрица коэффициентов системы линейных уравнений(без свободных членов)
+		k - вектор найденных коэффициентов апроксимирующего полинома
+	*/
+	// Вектор невязок
+	std::vector<double> eps(polynomialCoefficients.size());
+
+	// Вектор результата умножения матрицы (A) на (k)
+	std::vector<double> resultMulti(polynomialCoefficients.size());
+
+	// Перемножение матрицы (A) на (k)
+	for (int i = 0; i < matrix.size(); ++i)
+	{
+		resultMulti[i] = 0;
+
+		for (int j = 0; j < polynomialCoefficients.size(); ++j)
+		{
+			resultMulti[i] += (matrix[i][j] * polynomialCoefficients[j]);
+		}
+	}
+
+	// Вычисление вектора невязок
+	for (int i = 0; i < eps.size(); ++i)
+	{
+		eps[i] = matrix[i][matrix.size() - 1] - resultMulti[i];
+	}
+
+	residuals = eps;
 }

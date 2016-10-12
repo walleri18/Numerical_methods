@@ -1,3 +1,9 @@
+/*
+	Работу выполнил:
+	Туров Виталий Александрович
+	Группа: 05154
+	Задание №5. Вариант №16.
+*/
 #include <iostream>
 #include "SolutionApproximation.h"
 
@@ -23,7 +29,7 @@ double ourFunction(double argument)
 {
 	double resultOurFunction(0);
 
-	resultOurFunction;
+	resultOurFunction = exp(-argument) * cos(argument);
 
 	return resultOurFunction;
 }
