@@ -1,35 +1,32 @@
-/*
-	Работу выполнил:
-	Туров Виталий Александрович
-	Группа: 05154
-	Задание №5. Вариант №16.
-*/
-#include <iostream>
-#include "SolutionApproximation.h"
+#include "mainwindow.h"
+#include <QApplication>
+#include <cmath>
+#include <QDebug>
 
 using namespace std;
 
-/*
-	Прототипы
-*/
-// Наша функция
-double ourFunction(double);
+// РџСЂРѕС‚РѕС‚РёРї РЅР°С€РµР№ С„СѓРЅРєС†РёРё
+double ourFunction(double argument);
 
-int main(void)
+int main(int argc, char *argv[])
 {
-	setlocale(LC_ALL, ".1251");
-	
-	return 0;
+    QApplication a(argc, argv);
+
+    a.setStyle(QStyleFactory::create("Fusion"));
+
+    MainWindow w(ourFunction);
+    w.show();
+
+    return a.exec();
 }
-/*
-	Реализации
-*/
-// Наша функция
+
+// Р РµР°Р»РёР·Р°С†РёСЏ РЅР°С€РµР№ С„СѓРЅРєС†РёРё
 double ourFunction(double argument)
 {
-	double resultOurFunction(0);
+    double result(0);
 
-	resultOurFunction = exp(-argument) * cos(argument);
+    result = exp(-argument) * cos(argument);
+//    result = pow(argument, 5) - pow(argument, 4) - argument * argument + argument - 1;
 
-	return resultOurFunction;
+    return result;
 }

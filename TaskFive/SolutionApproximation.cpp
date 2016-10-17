@@ -1,145 +1,162 @@
-#include "SolutionApproximation.h"
+п»ї#include "SolutionApproximation.h"
 #include <time.h>
 #include <stdlib.h>
+#include <cmath>
 
-// Конструктор
-SolutionApproximation::SolutionApproximation(Function ourFunction, double beginSegment, double endSegment, int orderApproximatFunction, int m, int c) :
+// РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
+SolutionApproximation::SolutionApproximation(Function ourFunction, double beginSegment, double endSegment, int n, int m, int c) :
 	ourFunction(ourFunction), beginSegment(beginSegment),
 	endSegment(endSegment),
 	n(n), m(m), c(c)
 {}
 
-// Сеттер ourFunction
+// РЎРµС‚С‚РµСЂ ourFunction
 void SolutionApproximation::setOurFunction(Function ourFunction)
 {
 	this->ourFunction = ourFunction;
 }
 
-// Геттер ourFunction
+// Р“РµС‚С‚РµСЂ ourFunction
 Function SolutionApproximation::getOurFunction() const
 {
 	return this->ourFunction;
 }
 
-// Сеттер Начала отрезка (a)
+// РЎРµС‚С‚РµСЂ РќР°С‡Р°Р»Р° РѕС‚СЂРµР·РєР° (a)
 void SolutionApproximation::setBeginSegment(double beginSegment)
 {
 	this->beginSegment = beginSegment;
 }
 
-// Геттер Начала отрезка (a)
+// Р“РµС‚С‚РµСЂ РќР°С‡Р°Р»Р° РѕС‚СЂРµР·РєР° (a)
 double SolutionApproximation::getBeginSegment() const
 {
 	return this->beginSegment;
 }
 
-// Сеттер Конца отрезка (b)
+// РЎРµС‚С‚РµСЂ РљРѕРЅС†Р° РѕС‚СЂРµР·РєР° (b)
 void SolutionApproximation::setEndSegment(double endSegment)
 {
 	this->endSegment = endSegment;
 }
 
-// Геттер Конца отрезка (b)
+// Р“РµС‚С‚РµСЂ РљРѕРЅС†Р° РѕС‚СЂРµР·РєР° (b)
 double SolutionApproximation::getEndSegment() const
 {
 	return this->endSegment;
 }
 
-// Сеттер Порядка аппроксимирующей функции (n)
+// РЎРµС‚С‚РµСЂ РџРѕСЂСЏРґРєР° Р°РїРїСЂРѕРєСЃРёРјРёСЂСѓСЋС‰РµР№ С„СѓРЅРєС†РёРё (n)
 void SolutionApproximation::setValueN(int n)
 {
 	this->n = n;
 }
 
-// Геттер Порядка аппроксимирующей функции (n)
+// Р“РµС‚С‚РµСЂ РџРѕСЂСЏРґРєР° Р°РїРїСЂРѕРєСЃРёРјРёСЂСѓСЋС‰РµР№ С„СѓРЅРєС†РёРё (n)
 int SolutionApproximation::getValueN() const
 {
 	return this->n;
 }
 
-// Сеттер Величины (m)
+// РЎРµС‚С‚РµСЂ Р’РµР»РёС‡РёРЅС‹ (m)
 void SolutionApproximation::setValueM(int m)
 {
 	this->m = m;
 }
 
-// Геттер Величины (m)
+// Р“РµС‚С‚РµСЂ Р’РµР»РёС‡РёРЅС‹ (m)
 int SolutionApproximation::getValueM() const
 {
 	return this->m;
 }
 
-// Сеттер величины (c)
+// РЎРµС‚С‚РµСЂ РІРµР»РёС‡РёРЅС‹ (c)
 void SolutionApproximation::setValueC(int c)
 {
 	this->c = c;
 }
 
-// Геттер величины (c)
+// Р“РµС‚С‚РµСЂ РІРµР»РёС‡РёРЅС‹ (c)
 int SolutionApproximation::getValueC() const
 {
 	return this->c;
 }
 
-// Геттер Вектора значений X_i
+// Р“РµС‚С‚РµСЂ Р’РµРєС‚РѕСЂР° Р·РЅР°С‡РµРЅРёР№ X_i
 std::vector<double> SolutionApproximation::getVectorX_i() const
 {
 	return this->vectorX_i;
 }
 
-// Геттер Вектора значений F_i
+// Р“РµС‚С‚РµСЂ Р’РµРєС‚РѕСЂР° Р·РЅР°С‡РµРЅРёР№ F_i
 std::vector<double> SolutionApproximation::getVectorF_i() const
 {
 	return this->vectorF_i;
 }
 
-// Геттер Вектора невязок
+// Р“РµС‚С‚РµСЂ Р’РµРєС‚РѕСЂР° РїРѕР»РёРЅРѕРјРёРЅР°Р»СЊРЅС‹С… РєРѕСЌС„С„РёС†РёРµРЅС‚РѕРІ
+std::vector<double> SolutionApproximation::getPolynomialCoefficients() const
+{
+	return this->polynomialCoefficients;
+}
+
+// Р“РµС‚С‚РµСЂ Р’РµРєС‚РѕСЂР° РЅРµРІСЏР·РѕРє
 std::vector<double> SolutionApproximation::getResiduals() const
 {
 	return this->residuals;
 }
 
-// Обновление аппроксимирующей функции и её данных
-void SolutionApproximation::update()
+// РћР±РЅРѕРІР»РµРЅРёРµ Р°РїРїСЂРѕРєСЃРёРјРёСЂСѓСЋС‰РµР№ С„СѓРЅРєС†РёРё Рё РµС‘ РґР°РЅРЅС‹С…
+void SolutionApproximation::update(const bool isGeneratePoint)
 {
-	// Очистка
-	clear();
+	// РћС‡РёСЃС‚РєР°
+    clear(isGeneratePoint);
 
-	// Генерирование X_i
-	createdVectorX_i();
+    if (isGeneratePoint)
+    {
 
-	// Генерирование F_i
-	createdVectorF_i();
+        // Р“РµРЅРµСЂРёСЂРѕРІР°РЅРёРµ X_i
+        createdVectorX_i();
 
-	// Генерирование расширенной матрицы
+        // Р“РµРЅРµСЂРёСЂРѕРІР°РЅРёРµ F_i
+        createdVectorF_i();
+
+    }
+
+	// Р“РµРЅРµСЂРёСЂРѕРІР°РЅРёРµ СЂР°СЃС€РёСЂРµРЅРЅРѕР№ РјР°С‚СЂРёС†С‹
 	createdMatrix();
 
-	// Нахождение коэффициентом
+	// РќР°С…РѕР¶РґРµРЅРёРµ РєРѕСЌС„С„РёС†РёРµРЅС‚РѕРј
 	KramerSolve();
 
-	// Нахождение невязок
+	// РќР°С…РѕР¶РґРµРЅРёРµ РЅРµРІСЏР·РѕРє
 	searchResiduals();
 }
 
-// Результат аппроксимирующего полинома
+// Р РµР·СѓР»СЊС‚Р°С‚ Р°РїРїСЂРѕРєСЃРёРјРёСЂСѓСЋС‰РµРіРѕ РїРѕР»РёРЅРѕРјР°
 double SolutionApproximation::ApproximationPolynom(double X)
 {
 	double resultAppPolynom(0);
 
-	for (int i = 0; i < polynomialCoefficients.size(); ++i)
+    for (size_t i = 0, maxI(polynomialCoefficients.size()); i < maxI; ++i)
 	{
-		resultAppPolynom += (polynomialCoefficients[i] * pow(X, i));
+        resultAppPolynom += (polynomialCoefficients[i] * std::pow(X, i));
 	}
 
 	return resultAppPolynom;
 }
 
-// Очистка всех векторов от старых данных
-void SolutionApproximation::clear()
+// РћС‡РёСЃС‚РєР° РІСЃРµС… РІРµРєС‚РѕСЂРѕРІ РѕС‚ СЃС‚Р°СЂС‹С… РґР°РЅРЅС‹С…
+void SolutionApproximation::clear(const bool isGeneratePoint)
 {
-	this->vectorF_i.clear();
+    if (isGeneratePoint)
+    {
 
-	this->vectorX_i.clear();
+        this->vectorF_i.clear();
+
+        this->vectorX_i.clear();
+
+    }
 
 	matrix.clear();
 
@@ -148,138 +165,140 @@ void SolutionApproximation::clear()
 	residuals.clear();
 }
 
-// Создание вектора значений X_i
+// РЎРѕР·РґР°РЅРёРµ РІРµРєС‚РѕСЂР° Р·РЅР°С‡РµРЅРёР№ X_i
 void SolutionApproximation::createdVectorX_i()
 {
-	for (int i = 0; i <= m; ++i)
+    for (int i = 0; i < m; ++i)
 	{
 		vectorX_i.push_back(beginSegment
 							+ i * (endSegment - beginSegment) / m);
 	}
 }
 
-// Создание вектора значений F_i
+// РЎРѕР·РґР°РЅРёРµ РІРµРєС‚РѕСЂР° Р·РЅР°С‡РµРЅРёР№ F_i
 void SolutionApproximation::createdVectorF_i()
 {
-	// Зерно рандома
+	// Р—РµСЂРЅРѕ СЂР°РЅРґРѕРјР°
     srand(time(NULL));
 
-	// Случайное число в интервале [0 ; 1]
+	// РЎР»СѓС‡Р°Р№РЅРѕРµ С‡РёСЃР»Рѕ РІ РёРЅС‚РµСЂРІР°Р»Рµ [0 ; 1]
 	double z_i(0);
 	
-	// Какая та величина (k)
+	// РљР°РєР°СЏ С‚Р° РІРµР»РёС‡РёРЅР° (k)
 	int k(0);
 
-	for (int i = 0; i < vectorX_i.size(); ++i)
+    for (size_t i = 0, maxI(vectorX_i.size()); i < maxI; ++i)
 	{
-		// Генерируем случайное число в пределах [0 ; 1]
-		z_i = rand() % 2;
+        // Р“РµРЅРµСЂРёСЂСѓРµРј СЃР»СѓС‡Р°Р№РЅРѕРµ С‡РёСЃР»Рѕ РІ РїСЂРµРґРµР»Р°С… [0 ; 1]
+        z_i = rand() % (1 - 0 + 1) + 0.1;
 
-		// Смотри страницу 22 в методичке в самом внизу и всё поймёшь
+		// РЎРјРѕС‚СЂРё СЃС‚СЂР°РЅРёС†Сѓ 22 РІ РјРµС‚РѕРґРёС‡РєРµ РІ СЃР°РјРѕРј РІРЅРёР·Сѓ Рё РІСЃС‘ РїРѕР№РјС‘С€СЊ
 		if (z_i < 0.5)
 			k = -1;
 		else
 			k = 1;
 
-		// Аналогично смотри страницу 22 в методичке и всё поймёшь.
-		// Может быть
-		vectorF_i.push_back(ourFunction(vectorX_i[i]) * (1
-													   + k * z_i / c));
+		// РђРЅР°Р»РѕРіРёС‡РЅРѕ СЃРјРѕС‚СЂРё СЃС‚СЂР°РЅРёС†Сѓ 22 РІ РјРµС‚РѕРґРёС‡РєРµ Рё РІСЃС‘ РїРѕР№РјС‘С€СЊ.
+		// РњРѕР¶РµС‚ Р±С‹С‚СЊ
+        if (c != 0)
+            vectorF_i.push_back(ourFunction(vectorX_i[i]) * (1 + k * z_i / c));
+        else
+            vectorF_i.push_back(ourFunction(vectorX_i[i]));
 	}
 }
 
-// Создание расширенной матрицы
+// РЎРѕР·РґР°РЅРёРµ СЂР°СЃС€РёСЂРµРЅРЅРѕР№ РјР°С‚СЂРёС†С‹
 void SolutionApproximation::createdMatrix()
 {
-	// Максимальное количество коэффициентов
+	// РњР°РєСЃРёРјР°Р»СЊРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ РєРѕСЌС„С„РёС†РёРµРЅС‚РѕРІ
 	int maxCountK = n + 1;
 
 	/*
-		Нулевая строка
+		РќСѓР»РµРІР°СЏ СЃС‚СЂРѕРєР°
 	*/
-	// Создание нулевой строки
+	// РЎРѕР·РґР°РЅРёРµ РЅСѓР»РµРІРѕР№ СЃС‚СЂРѕРєРё
 	std::vector<double> rowZero(maxCountK + 1);
 
-	// Заполнение нулевой строки
-	rowZero[0] = n;
+	// Р—Р°РїРѕР»РЅРµРЅРёРµ РЅСѓР»РµРІРѕР№ СЃС‚СЂРѕРєРё
+    rowZero[0] = m;
 
-	// Левая часть системы линейных уравнений
+	// Р›РµРІР°СЏ С‡Р°СЃС‚СЊ СЃРёСЃС‚РµРјС‹ Р»РёРЅРµР№РЅС‹С… СѓСЂР°РІРЅРµРЅРёР№
 	for (int i = 1; i < maxCountK; ++i)
 	{
 		rowZero[i] = 0;
 
-		for (int j = 1; j < vectorX_i.size(); ++j)
+        for (size_t j = 0, maxJ(vectorX_i.size()); j < maxJ; ++j)
 		{
-			rowZero[i] += pow(vectorX_i[j], i);
+            rowZero[i] += std::pow(vectorX_i[j], i);
 		}
 	}
 
-	// Правая часть системы линейных уравнений
+	// РџСЂР°РІР°СЏ С‡Р°СЃС‚СЊ СЃРёСЃС‚РµРјС‹ Р»РёРЅРµР№РЅС‹С… СѓСЂР°РІРЅРµРЅРёР№
 	rowZero[rowZero.size() - 1] = 0;
 
-	for (int i = 1; i < vectorF_i.size(); ++i)
+    for (size_t i = 0, maxI(vectorF_i.size()); i < maxI; ++i)
 	{
 		rowZero[rowZero.size() - 1] += vectorF_i[i];
 	}
 
 	/*
-		Пост-нулевые строки
+		РџРѕСЃС‚-РЅСѓР»РµРІС‹Рµ СЃС‚СЂРѕРєРё
 	*/
-	// Вектор пост-нулевых строк
-	std::vector< std::vector<double> > postRow(maxCountK - 1);
+	// Р’РµРєС‚РѕСЂ РїРѕСЃС‚-РЅСѓР»РµРІС‹С… СЃС‚СЂРѕРє
+    std::vector< std::vector<double>* > postRow;
 
-	// Заполнение пост-нулевых строк
-	for (int k = 1; k < (maxCountK - 1); ++k)
+    // РЎРѕР·РґР°РЅРёРµ РїРѕСЃС‚-РЅСѓР»РµРІС‹С… СЃС‚СЂРѕРє
+    for (int i = 1; i < maxCountK; ++i)
+    {
+        postRow.push_back(new std::vector<double>(maxCountK + 1));
+    }
+
+	// Р—Р°РїРѕР»РЅРµРЅРёРµ РїРѕСЃС‚-РЅСѓР»РµРІС‹С… СЃС‚СЂРѕРє
+    for (int k = 1; k < maxCountK; ++k)
 	{
-		// Создание строки
-		std::vector<double> row(maxCountK + 1);
-
-		// Левая часть системы линейных уравнений
+		// Р›РµРІР°СЏ С‡Р°СЃС‚СЊ СЃРёСЃС‚РµРјС‹ Р»РёРЅРµР№РЅС‹С… СѓСЂР°РІРЅРµРЅРёР№
 		for (int j = 0; j < maxCountK; ++j)
 		{
-			row[j] = 0;
+            (*postRow[k - 1])[j] = 0;
 
-			for (int i = 1; i < vectorX_i.size(); ++i)
+            for (size_t i = 0, maxI(vectorX_i.size()); i < maxI; ++i)
 			{
-				row[j] += pow(vectorX_i[i], j + k);
+                (*postRow[k - 1])[j] += std::pow(vectorX_i[i], j + k);
 			}
 		}
 
-		// Правая часть системы линейных уравнений
-		row[postRow.size() - 1] = 0;
+		// РџСЂР°РІР°СЏ С‡Р°СЃС‚СЊ СЃРёСЃС‚РµРјС‹ Р»РёРЅРµР№РЅС‹С… СѓСЂР°РІРЅРµРЅРёР№
+        (*postRow[k - 1])[maxCountK] = 0;
 
-		for (int i = 1; i < vectorF_i.size(); ++i)
+        for (int i = 0; i < m; ++i)
 		{
-			row[postRow.size() - 1] 
-				+= (vectorF_i[i] * pow(vectorX_i[i], k));
+            (*postRow[k - 1])[maxCountK]
+                += (vectorF_i[i] * std::pow(vectorX_i[i], k));
 		}
-
-		// Отправка строки
-		postRow.push_back(row);
 	}
 
-	// Заполнение расширенной матрицы
+	// Р—Р°РїРѕР»РЅРµРЅРёРµ СЂР°СЃС€РёСЂРµРЅРЅРѕР№ РјР°С‚СЂРёС†С‹
 	matrix.push_back(rowZero);
 
-	for (int i = 0; i < postRow.size(); ++i)
+    for (size_t i = 0, maxI(postRow.size()); i < maxI; ++i)
 	{
-		matrix.push_back(postRow[i]);
+        matrix.push_back(*postRow[i]);
 	}
 }
 
-// Подсчёт детерминанта методом Гаусса
-double SolutionApproximation::GaussDeterminant()
+// РџРѕРґСЃС‡С‘С‚ РґРµС‚РµСЂРјРёРЅР°РЅС‚Р° РјРµС‚РѕРґРѕРј Р“Р°СѓСЃСЃР°
+double SolutionApproximation::GaussDeterminant(std::vector< std::vector<double> > matrix)
 {
-	// Детерминант
+	// Р”РµС‚РµСЂРјРёРЅР°РЅС‚
 	double resultDeterminant(1);
 
-	// Количество строк в матрице
+	// РљРѕР»РёС‡РµСЃС‚РІРѕ СЃС‚СЂРѕРє РІ РјР°С‚СЂРёС†Рµ
 	int countRow = matrix.size();
 
-    // Копирование матрицы
+    // РљРѕРїРёСЂРѕРІР°РЅРёРµ РјР°С‚СЂРёС†С‹
     std::vector< std::vector<double> > copyMatrix = matrix;
 
-	// Прямой ход метода Гаусса
+	// РџСЂСЏРјРѕР№ С…РѕРґ РјРµС‚РѕРґР° Р“Р°СѓСЃСЃР°
 	for (int i = 0; i < countRow; ++i)
 	{
 		for (int j = i + 1; j < countRow; ++j)
@@ -294,85 +313,96 @@ double SolutionApproximation::GaussDeterminant()
 				- copyMatrix[i][k] * b;
 		}
 
-		// Вычисление детерминанта
+		// Р’С‹С‡РёСЃР»РµРЅРёРµ РґРµС‚РµСЂРјРёРЅР°РЅС‚Р°
 		resultDeterminant *= copyMatrix[i][i];
 	}
 
 	return resultDeterminant;
 }
 
-// Нахождение коэффициентов (решение системы линейных уравнений методом Крамера)
+// РќР°С…РѕР¶РґРµРЅРёРµ РєРѕСЌС„С„РёС†РёРµРЅС‚РѕРІ (СЂРµС€РµРЅРёРµ СЃРёСЃС‚РµРјС‹ Р»РёРЅРµР№РЅС‹С… СѓСЂР°РІРЅРµРЅРёР№ РјРµС‚РѕРґРѕРј РљСЂР°РјРµСЂР°)
 void SolutionApproximation::KramerSolve()
 {
-	// Неизвестные коэффициенты
+	// РќРµРёР·РІРµСЃС‚РЅС‹Рµ РєРѕСЌС„С„РёС†РёРµРЅС‚С‹
 	std::vector<double> X;
 
-	// Вектор определителей
-	std::vector<double> vectorDeterminant(matrix.size());
+    // РљРѕРїРёСЏ РјР°С‚СЂРёС†С‹
+    std::vector< std::vector<double> > copyMatrix = matrix;
 
-	// Временный вектор для хранения столбца матрицы
-	std::vector<double> tmpColumn(matrix.size());
+	// Р’РµРєС‚РѕСЂ РѕРїСЂРµРґРµР»РёС‚РµР»РµР№
+    std::vector<double> vectorDeterminant(copyMatrix.size() + 1);
 
-	for (int i = 0; i < (matrix.size() + 1); ++i)
+	// Р’СЂРµРјРµРЅРЅС‹Р№ РІРµРєС‚РѕСЂ РґР»СЏ С…СЂР°РЅРµРЅРёСЏ СЃС‚РѕР»Р±С†Р° РјР°С‚СЂРёС†С‹
+    std::vector<double> tmpColumn(copyMatrix.size());
+
+    for (size_t i = 0, maxI(copyMatrix.size() + 1); i < maxI; ++i)
 	{
-        vectorDeterminant[i] = GaussDeterminant();
+        vectorDeterminant[i] = GaussDeterminant(copyMatrix);
 
-		// Последовательная замена столбцов матрицы
-		for (int j = 0; j < matrix.size(); j++)
+		// РџРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅР°СЏ Р·Р°РјРµРЅР° СЃС‚РѕР»Р±С†РѕРІ РјР°С‚СЂРёС†С‹
+        for (size_t j = 0, maxJ(copyMatrix.size()); j < maxJ; j++)
 		{
 			if (i > 0)
-				// Восстанавливаем значение стобца
-				matrix[j][i - 1] = tmpColumn[j];
+				// Р’РѕСЃСЃС‚Р°РЅР°РІР»РёРІР°РµРј Р·РЅР°С‡РµРЅРёРµ СЃС‚РѕР±С†Р°
+                copyMatrix[j][i - 1] = tmpColumn[j];
 
-			// Сохраняем значение i - столбца матрицы в переменной tmpColumn
-			tmpColumn[j] = matrix[j][i];
+			// РЎРѕС…СЂР°РЅСЏРµРј Р·РЅР°С‡РµРЅРёРµ i - СЃС‚РѕР»Р±С†Р° РјР°С‚СЂРёС†С‹ РІ РїРµСЂРµРјРµРЅРЅРѕР№ tmpColumn
+            tmpColumn[j] = copyMatrix[j][i];
 
-			// В i - столбец матрицы записываем столбец свободных членов
-			matrix[j][i] = matrix[j][matrix.size()];
+			// Р’ i - СЃС‚РѕР»Р±РµС† РјР°С‚СЂРёС†С‹ Р·Р°РїРёСЃС‹РІР°РµРј СЃС‚РѕР»Р±РµС† СЃРІРѕР±РѕРґРЅС‹С… С‡Р»РµРЅРѕРІ
+            copyMatrix[j][i] = copyMatrix[j][copyMatrix.size()];
 		}
 	}
 
-	// Заполнение результата
-	for (int i = 1; i < (matrix.size() + 1); ++i)
+	// Р—Р°РїРѕР»РЅРµРЅРёРµ СЂРµР·СѓР»СЊС‚Р°С‚Р°
+    for (size_t i = 1, maxI(copyMatrix.size() + 1); i < maxI; ++i)
 		X.push_back(vectorDeterminant[i] / vectorDeterminant[0]);
 
 	polynomialCoefficients = X;
 }
 
-// Нахождение невязок
+// РќР°С…РѕР¶РґРµРЅРёРµ РЅРµРІСЏР·РѕРє
 void SolutionApproximation::searchResiduals()
 {
 	/*
-		Формула нахождения невязок
+		Р¤РѕСЂРјСѓР»Р° РЅР°С…РѕР¶РґРµРЅРёСЏ РЅРµРІСЏР·РѕРє
 		
 		e = b - A * k,
 
-		где  e - вектор невязок,
-		b - вектор свободных членов
-		A - матрица коэффициентов системы линейных уравнений(без свободных членов)
-		k - вектор найденных коэффициентов апроксимирующего полинома
+		РіРґРµ  e - РІРµРєС‚РѕСЂ РЅРµРІСЏР·РѕРє,
+		b - РІРµРєС‚РѕСЂ СЃРІРѕР±РѕРґРЅС‹С… С‡Р»РµРЅРѕРІ
+		A - РјР°С‚СЂРёС†Р° РєРѕСЌС„С„РёС†РёРµРЅС‚РѕРІ СЃРёСЃС‚РµРјС‹ Р»РёРЅРµР№РЅС‹С… СѓСЂР°РІРЅРµРЅРёР№(Р±РµР· СЃРІРѕР±РѕРґРЅС‹С… С‡Р»РµРЅРѕРІ)
+		k - РІРµРєС‚РѕСЂ РЅР°Р№РґРµРЅРЅС‹С… РєРѕСЌС„С„РёС†РёРµРЅС‚РѕРІ Р°РїСЂРѕРєСЃРёРјРёСЂСѓСЋС‰РµРіРѕ РїРѕР»РёРЅРѕРјР°
 	*/
-	// Вектор невязок
+	// Р’РµРєС‚РѕСЂ РЅРµРІСЏР·РѕРє
 	std::vector<double> eps(polynomialCoefficients.size());
 
-	// Вектор результата умножения матрицы (A) на (k)
-	std::vector<double> resultMulti(polynomialCoefficients.size());
+    // Р’РµРєС‚РѕСЂ СЃРІРѕР±РѕРґРЅС‹С… С‡Р»РµРЅРѕРІ
+    std::vector<double> b(polynomialCoefficients.size());
 
-	// Перемножение матрицы (A) на (k)
-	for (int i = 0; i < matrix.size(); ++i)
+    for (int i = 0, maxI(b.size()); i < maxI; ++i)
+    {
+        b[i] = matrix[i][matrix.size()];
+    }
+
+	// Р’РµРєС‚РѕСЂ СЂРµР·СѓР»СЊС‚Р°С‚Р° СѓРјРЅРѕР¶РµРЅРёСЏ РјР°С‚СЂРёС†С‹ (A) РЅР° (k)
+    std::vector<double> resultMulti;
+
+	// РџРµСЂРµРјРЅРѕР¶РµРЅРёРµ РјР°С‚СЂРёС†С‹ (A) РЅР° (k)
+    for (size_t i = 0, maxI(matrix.size()); i < maxI; ++i)
 	{
-		resultMulti[i] = 0;
+        resultMulti.push_back(0);
 
-		for (int j = 0; j < polynomialCoefficients.size(); ++j)
+        for (size_t j = 0, maxJ(polynomialCoefficients.size()); j < maxJ; ++j)
 		{
 			resultMulti[i] += (matrix[i][j] * polynomialCoefficients[j]);
 		}
 	}
 
-	// Вычисление вектора невязок
-	for (int i = 0; i < eps.size(); ++i)
+	// Р’С‹С‡РёСЃР»РµРЅРёРµ РІРµРєС‚РѕСЂР° РЅРµРІСЏР·РѕРє
+    for (size_t i = 0, maxI(eps.size()); i < maxI; ++i)
 	{
-		eps[i] = matrix[i][matrix.size() - 1] - resultMulti[i];
+        eps[i] = b[i] - resultMulti[i];
 	}
 
 	residuals = eps;
