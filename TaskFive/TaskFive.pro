@@ -15,16 +15,13 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     SolutionApproximation.cpp \
-    aboutqcustomplots.cpp \
     qcustomplot.cpp
 
 HEADERS  += mainwindow.h \
     SolutionApproximation.h \
-    aboutqcustomplots.h \
     qcustomplot.h
 
-FORMS    += mainwindow.ui \
-    aboutqcustomplots.ui
+FORMS    += mainwindow.ui
 
 RESOURCES += \
-    myresourse.qrc
+    res.qrc

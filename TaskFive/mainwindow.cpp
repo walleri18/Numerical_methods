@@ -1,7 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "SolutionApproximation.h"
-#include "aboutqcustomplots.h"
 
 MainWindow::MainWindow(Function ourFunction, QWidget *parent) :
     QMainWindow(parent),
@@ -19,9 +18,19 @@ MainWindow::MainWindow(Function ourFunction, QWidget *parent) :
     // Первоначальное построение
     updateApproximat();
 
-    // Задаём название столбцов таблицы
+    // Задаём название столбцов таблицы с коэффициентами и невязками
     ui->tableWidget->setHorizontalHeaderLabels(QStringList() << tr("Коэффициенты полинома: %1").arg(QChar(945))
                                                << tr("Невязки: %1").arg(QChar(949)) << tr("S"));
+
+    // Добавление пункта в контексное меню
+    ui->customPlot->addAction(ui->actionGenerationNewPoints);
+    ui->customPlot->addAction(ui->actionReset);
+    ui->customPlot->addAction(ui->action_N_increment);
+    ui->customPlot->addAction(ui->action_N_decrement);
+    ui->customPlot->addAction(ui->action_M_increment);
+    ui->customPlot->addAction(ui->action_M_decrement);
+    ui->customPlot->addAction(ui->action_C_increment);
+    ui->customPlot->addAction(ui->action_C_decrement);
 }
 
 MainWindow::~MainWindow()
@@ -111,7 +120,12 @@ void MainWindow::createDateTable()
                 continue;
 
             else
+            {
+                if (i == (kPolynom.size() - 1))
+                    formylaApproximate.push_back(tr("%1 * %2^%3 ").arg(tr("%1").arg(kPolynom[i])).arg("x").arg(i));
+
                 formylaApproximate.push_back(tr("%1 * %2^%3 ").arg(tr("%1%2").arg('+').arg(kPolynom[i])).arg("x").arg(i));
+            }
 
         else if (i == 1)
 
@@ -156,6 +170,8 @@ void MainWindow::createDateTable()
 
         S += ((tmpOne - tmpTwo) * (tmpOne - tmpTwo));
     }
+
+    this->S = S;
 
     /*
         Заполнение таблицы
@@ -205,6 +221,7 @@ void MainWindow::settingAndPushDateGraf()
     ui->customPlot->addGraph();
     ui->customPlot->addGraph();
     ui->customPlot->addGraph();
+    ui->customPlot->addGraph();
 
     // Передаём данные в графопостроитель
     ui->customPlot->graph(0)->setData(vectorArgumentOurFunctionGrafic, vectorResultOurFunctionGrafic);
@@ -215,6 +232,7 @@ void MainWindow::settingAndPushDateGraf()
     ui->customPlot->graph(0)->setName(tr("exp(-x) * cos(x)"));
     ui->customPlot->graph(1)->setName(tr("Аппроксимирующий полином"));
     ui->customPlot->graph(2)->setName(tr("Узлы аппроксимирования"));
+    ui->customPlot->graph(3)->setName(tr("S = %1").arg(this->S));
 
     // Стили графиков
     QPen *penOne = new QPen();
@@ -232,6 +250,7 @@ void MainWindow::settingAndPushDateGraf()
     ui->customPlot->graph(1)->setPen(*penTwo);
     ui->customPlot->graph(2)->setLineStyle(QCPGraph::lsNone);
     ui->customPlot->graph(2)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCircle, 6));
+    ui->customPlot->graph(3)->setLineStyle(QCPGraph::lsNone);
 
     // Границы отрисовки графика
     ui->customPlot->xAxis->setRange(ui->doubleSpinBoxBeginPlotsX->value(), ui->doubleSpinBoxEndPlotsX->value());
@@ -267,6 +286,11 @@ void MainWindow::updateApproximat()
     solutionApproximation->setValueM(ui->spinBoxValueM->value());
     solutionApproximation->setValueN(ui->spinBoxValueN->value());
 
+    ui->spinBoxCurrentMaxN->setRange(1, ui->spinBoxValueM->value());
+    ui->spinBoxCurrentMaxN->setValue(ui->spinBoxValueM->value());
+    ui->spinBoxCurrentMaxM->setRange(1, ui->spinBoxValueM->value());
+    ui->spinBoxCurrentMaxM->setValue(ui->spinBoxValueM->value());
+
     // Очистка и расчёт новых данных
     clearData();
 
@@ -287,11 +311,9 @@ void MainWindow::updateApproximat()
                               "\nЗначение величины C: %5")
                            .arg(ui->doubleSpinBoxBeginSegment->value())
                            .arg(ui->doubleSpinBoxEndSegment->value())
-                           .arg(ui->spinBoxValueM->value() - 1)
+                           .arg(ui->spinBoxValueM->value() + 1)
                            .arg(ui->spinBoxValueN->value())
                            .arg(ui->spinBoxValueC->value()));
-
-    ui->spinBoxCurrentMaxN->setRange(1, ui->spinBoxValueM->value() - 1);
 
     // Исследование зависимости величины S(n)
     studyDependence();
@@ -303,6 +325,9 @@ void MainWindow::studyDependence()
     /*
         Генерация данных для исследования
     */
+    // Установление нужной величины (m) для ислледования зависимости
+    solutionApproximation->setValueM(ui->spinBoxCurrentMaxM->value());
+
     // Вектор величины (x_i)
     QVector<double> x_i = QVector<double>::fromStdVector(solutionApproximation->getVectorX_i());
 
@@ -315,6 +340,9 @@ void MainWindow::studyDependence()
     // Вектор величины (n)
     QVector<double> vectorN(vectorS.size());
 
+    // Вектор векоров невязок
+    QVector< QVector<double> > reduse;
+
     for (size_t i = 1, maxI(vectorS.size() + 1); i < maxI; ++i)
     {
         // Передача нужного (n) в класса по расчёту Аппроксимического полинома
@@ -322,6 +350,9 @@ void MainWindow::studyDependence()
 
         // Обновление аппроксимического полинома
         solutionApproximation->update(false);
+
+        // Получение векторов невязок
+        reduse.push_back(QVector<double>::fromStdVector(solutionApproximation->getResiduals()));
 
         // Зануление (на всякий случай =) )
         vectorS[i - 1] = 0;
@@ -354,88 +385,22 @@ void MainWindow::studyDependence()
             maxS = vectorS[i];
     }
 
-    // Настройка и заполнение графика зависимости S(n)
-    ui->customPlotS_n->clearGraphs();
-
-    ui->customPlotS_n->addGraph();
-
-    ui->customPlotS_n->graph(0)->setData(vectorN, vectorS);
-
-    ui->customPlotS_n->graph(0)->setLineStyle(QCPGraph::lsNone);
-    ui->customPlotS_n->graph(0)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCircle, 6));
-
-    ui->customPlotS_n->xAxis->setRange(0.9, vectorN.size() + 1);
-    ui->customPlotS_n->yAxis->setRange(minS - 0.1, maxS + 0.1);
-
-    ui->customPlotS_n->xAxis->setLabel("n - порядок аппроксимирующего полинома");
-    ui->customPlotS_n->yAxis->setLabel("S - исследуемая величина");
-
-    ui->customPlotS_n->xAxis->setAutoTickStep(false);
-    ui->customPlotS_n->xAxis->setTickStep(1);
-    ui->customPlotS_n->yAxis->setAutoTickStep(false);
-    ui->customPlotS_n->yAxis->setTickStep(0.02);
-
-    ui->customPlotS_n->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
-
-    ui->customPlotS_n->repaint();
-
     // Настройка и заполнение таблицы
     ui->tableWidgetS_n->clearContents();
-    ui->tableWidgetS_n->setColumnCount(x_i.size() + 1);
-    ui->tableWidgetS_n->setRowCount(vectorN.size() + 4);
 
-    QTableWidgetItem *itemX = new QTableWidgetItem(tr("%1").arg("X_i:"));
+    ui->tableWidgetS_n->setRowCount(reduse[reduse.size() - 1].size());
+    ui->tableWidgetS_n->setColumnCount(vectorN.size() + 3);
 
-    itemX->setTextColor(Qt::blue);
+    QStringList listHeaderLabels;
+    listHeaderLabels << "n:" << "s:" << "Max & min:";
 
-    ui->tableWidgetS_n->setItem(0, 0, itemX);
-
-    QTableWidgetItem *itemY = new QTableWidgetItem(tr("%1").arg("F_i"));
-
-    itemY->setTextColor(Qt::red);
-
-    ui->tableWidgetS_n->setItem(1, 0, itemY);
-
-    for (size_t i = 0, maxI(x_i.size()); i < maxI; ++i)
+    // Заполнение заголовков невязок какого порядка
+    for (int i = 0, maxI(reduse.size()); i < maxI; ++i)
     {
-        QTableWidgetItem *itemX = new QTableWidgetItem(tr("%1").arg(x_i[i]));
-
-        ui->tableWidgetS_n->setItem(0, i + 1, itemX);
-
-        QTableWidgetItem *itemY = new QTableWidgetItem(tr("%1").arg(f_i[i]));
-
-        ui->tableWidgetS_n->setItem(1, i + 1, itemY);
-
-        if (i % 2 == 0)
-        {
-            itemX->setBackgroundColor(Qt::cyan);
-            itemY->setBackgroundColor(Qt::red);
-
-            itemX->setTextColor(Qt::black);
-            itemY->setTextColor(Qt::black);
-        }
-
-        else
-        {
-            itemX->setBackgroundColor(Qt::darkCyan);
-            itemY->setBackgroundColor(Qt::darkRed);
-
-            itemX->setTextColor(Qt::white);
-            itemY->setTextColor(Qt::white);
-        }
+        listHeaderLabels.push_back(tr("%1(n = %2):").arg(QChar(949)).arg(i + 1));
     }
 
-    QTableWidgetItem *itemN = new QTableWidgetItem(tr("%1").arg("n:"));
-
-    itemN->setTextColor(Qt::darkGreen);
-
-    ui->tableWidgetS_n->setItem(3, 0, itemN);
-
-    QTableWidgetItem *itemS = new QTableWidgetItem(tr("%1").arg("S:"));
-
-    itemS->setTextColor(Qt::darkMagenta);
-
-    ui->tableWidgetS_n->setItem(3, 1, itemS);
+    ui->tableWidgetS_n->setHorizontalHeaderLabels(listHeaderLabels);
 
     QTableWidgetItem *itemSMin = new QTableWidgetItem(tr("%1").arg("<-min S"));
     QTableWidgetItem *itemSMax = new QTableWidgetItem(tr("%1").arg("<-max S"));
@@ -443,15 +408,16 @@ void MainWindow::studyDependence()
     itemSMin->setTextColor(Qt::red);
     itemSMax->setTextColor(Qt::red);
 
+    // Заполнение таблицы значениями
     for (size_t i = 0, maxI(vectorN.size()); i < maxI; ++i)
     {
         QTableWidgetItem *itemN = new QTableWidgetItem(tr("%1").arg(vectorN[i]));
 
-        ui->tableWidgetS_n->setItem(i + 4, 0, itemN);
+        ui->tableWidgetS_n->setItem(i, 0, itemN);
 
         QTableWidgetItem *itemS = new QTableWidgetItem(tr("%1").arg(vectorS[i]));
 
-        ui->tableWidgetS_n->setItem(i + 4, 1, itemS);
+        ui->tableWidgetS_n->setItem(i, 1, itemS);
 
         if (i % 2 == 0)
         {
@@ -472,10 +438,20 @@ void MainWindow::studyDependence()
         }
 
         if (vectorS[i] == minS)
-            ui->tableWidgetS_n->setItem(i + 4, 2, itemSMin);
+            ui->tableWidgetS_n->setItem(i, 2, itemSMin);
 
         else if (vectorS[i] == maxS)
-            ui->tableWidgetS_n->setItem(i + 4, 2, itemSMax);
+            ui->tableWidgetS_n->setItem(i, 2, itemSMax);
+    }
+
+    for (size_t i = 0, maxI(reduse.size()); i < maxI; ++i)
+    {
+        for (size_t j = 0, maxJ(reduse[i].size()); j < maxJ; ++j)
+        {
+            QTableWidgetItem *itemReduse = new QTableWidgetItem(tr("%1").arg(reduse[i][j]));
+
+            ui->tableWidgetS_n->setItem(j, i + 3, itemReduse);
+        }
     }
 }
 
@@ -483,16 +459,6 @@ void MainWindow::studyDependence()
 void MainWindow::on_action_Qt_triggered()
 {
     qApp->aboutQt();
-}
-
-// Вызов окна справки об библиотеке построения
-void MainWindow::on_action_QCustomPlot_triggered()
-{
-    AboutQCustomPlots *aboutqcustomplots = new AboutQCustomPlots(this);
-
-    aboutqcustomplots->exec();
-
-    delete aboutqcustomplots;
 }
 
 // Сброс значений настроек
@@ -510,5 +476,54 @@ void MainWindow::on_actionReset_triggered()
     ui->spinBoxValueM->setValue(10);
     ui->spinBoxValueC->setValue(2);
 
+    updateApproximat();
+}
+
+void MainWindow::on_actionGenerationNewPoints_triggered()
+{
+    updateApproximat();
+
+    this->repaint();
+}
+
+void MainWindow::on_action_N_increment_triggered()
+{
+    ui->spinBoxValueN->setValue(ui->spinBoxValueN->value() + 1);
+    updateApproximat();
+}
+
+void MainWindow::on_action_N_decrement_triggered()
+{
+    if (ui->spinBoxValueN->value() > 1)
+    {
+        ui->spinBoxValueN->setValue(ui->spinBoxValueN->value() - 1);
+        updateApproximat();
+    }
+}
+
+void MainWindow::on_action_M_increment_triggered()
+{
+    ui->spinBoxValueM->setValue(ui->spinBoxValueM->value() + 1);
+    updateApproximat();
+}
+
+void MainWindow::on_action_M_decrement_triggered()
+{
+    if (ui->spinBoxValueM->value() > 2)
+    {
+        ui->spinBoxValueM->setValue(ui->spinBoxValueM->value() - 1);
+        updateApproximat();
+    }
+}
+
+void MainWindow::on_action_C_increment_triggered()
+{
+    ui->spinBoxValueC->setValue(ui->spinBoxValueC->value() + 1);
+    updateApproximat();
+}
+
+void MainWindow::on_action_C_decrement_triggered()
+{
+    ui->spinBoxValueC->setValue(ui->spinBoxValueC->value() - 1);
     updateApproximat();
 }

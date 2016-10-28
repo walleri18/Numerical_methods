@@ -2,13 +2,29 @@
 #include <time.h>
 #include <stdlib.h>
 #include <cmath>
+#include <QDebug>
 
 // Конструктор
 SolutionApproximation::SolutionApproximation(Function ourFunction, double beginSegment, double endSegment, int n, int m, int c) :
 	ourFunction(ourFunction), beginSegment(beginSegment),
 	endSegment(endSegment),
-	n(n), m(m), c(c)
-{}
+    n(n), m(m), c(c)
+{
+    matrix = NULL;
+}
+
+// Деструктор
+SolutionApproximation::~SolutionApproximation()
+{
+	if (matrix != nullptr)
+	{
+		for (int i = 0; i < n + 1; ++i)
+			if (matrix[i] != nullptr)
+				delete[] matrix[i];
+
+		delete[] matrix;
+	}
+}
 
 // Сеттер ourFunction
 void SolutionApproximation::setOurFunction(Function ourFunction)
@@ -127,10 +143,10 @@ void SolutionApproximation::update(const bool isGeneratePoint)
 	createdMatrix();
 
 	// Нахождение коэффициентом
-	KramerSolve();
+    GaussSolve();
 
 	// Нахождение невязок
-	searchResiduals();
+    searchResiduals();
 }
 
 // Результат аппроксимирующего полинома
@@ -158,7 +174,14 @@ void SolutionApproximation::clear(const bool isGeneratePoint)
 
     }
 
-	matrix.clear();
+//    if (matrix != NULL)
+//	{
+//		for (int i = 0; i < n + 1; ++i)
+//			if (matrix[i] != nullptr)
+//				delete[] matrix[i];
+
+//		delete[] matrix;
+//	}
 
 	polynomialCoefficients.clear();
 
@@ -168,7 +191,7 @@ void SolutionApproximation::clear(const bool isGeneratePoint)
 // Создание вектора значений X_i
 void SolutionApproximation::createdVectorX_i()
 {
-    for (int i = 0; i < m; ++i)
+    for (int i = 0; i < (m + 1); ++i)
 	{
 		vectorX_i.push_back(beginSegment
 							+ i * (endSegment - beginSegment) / m);
@@ -190,8 +213,8 @@ void SolutionApproximation::createdVectorF_i()
     for (size_t i = 0, maxI(vectorX_i.size()); i < maxI; ++i)
 	{
         // Генерируем случайное число в пределах [0 ; 1]
-        z_i = rand() % (1 - 0 + 1) + 0.1;
-
+        z_i = rand() / static_cast<double>(RAND_MAX);
+		
 		// Смотри страницу 22 в методичке в самом внизу и всё поймёшь
 		if (z_i < 0.5)
 			k = -1;
@@ -210,155 +233,197 @@ void SolutionApproximation::createdVectorF_i()
 // Создание расширенной матрицы
 void SolutionApproximation::createdMatrix()
 {
-	// Максимальное количество коэффициентов
-	int maxCountK = n + 1;
+	// Создание матрицы
+    matrix = new long double*[n + 1];
 
-	/*
-		Нулевая строка
-	*/
-	// Создание нулевой строки
-	std::vector<double> rowZero(maxCountK + 1);
-
-	// Заполнение нулевой строки
-    rowZero[0] = m;
-
-	// Левая часть системы линейных уравнений
-	for (int i = 1; i < maxCountK; ++i)
+    for (int i = 0; i <= n; ++i)
 	{
-		rowZero[i] = 0;
+        matrix[i] = new long double[n + 2];
+	}
 
-        for (size_t j = 0, maxJ(vectorX_i.size()); j < maxJ; ++j)
+    // Заполнение строк
+    for (int k = 0; k <= n; ++k)
+    {
+        // Нулевая строка или (первая строка)
+        if (k == 0)
+        {
+            /*
+                Левая часть
+            */
+
+            // Нулевой элемент нулевой строки (первой строки)
+            matrix[0][0] = m + 1;
+
+            // Остальные элементы нулевой строки (первой строки)
+            for (int i = 1; i <= n; ++i)
+            {
+                // Обнуляем элемент перед его заполнением
+                matrix[0][i] = 0;
+
+                for (int j = 0, maxJ(m + 1); j < maxJ; ++j)
+                {
+                    matrix[0][i] += std::pow(vectorX_i[j], i);
+                }
+            }
+
+            /*
+                Правая часть
+            */
+            // Элемент принадлежащий к столбцу свободных членов
+            matrix[0][n + 1] = 0;
+
+            for (int j = 0, maxJ(m + 1); j < maxJ; ++j)
+            {
+                matrix[0][n + 1] += vectorF_i[j];
+            }
+
+            continue;
+        }
+
+        /*
+            Левая часть
+        */
+
+        for (int j = 0; j <= n; ++j)
+        {
+            matrix[k][j] = 0;
+
+            for (size_t i = 0, maxI(m + 1); i < maxI; ++i)
+            {
+                matrix[k][j] += std::pow(vectorX_i[i], j + k);
+            }
+        }
+
+        /*
+            Правая часть
+        */
+        matrix[k][n + 1] = 0;
+
+        for (int i = 0, maxI(m + 1); i < maxI; ++i)
+        {
+            matrix[k][n + 1]
+                += (vectorF_i[i] * std::pow(vectorX_i[i], k));
+        }
+    }
+}
+
+// Нахождение коэффициентов (решение системы линейных уравнений матодом Гаусса)
+void SolutionApproximation::GaussSolve()
+{
+	// Копирование исходного массива
+    long double **matrix = new long double*[n+1];
+
+	for (int i = 0; i < n + 1; ++i)
+	{
+        matrix[i] = new long double[n + 2];
+
+		for (int j = 0; j < n + 2; ++j)
 		{
-            rowZero[i] += std::pow(vectorX_i[j], i);
+			matrix[i][j] = this->matrix[i][j];
 		}
 	}
 
-	// Правая часть системы линейных уравнений
-	rowZero[rowZero.size() - 1] = 0;
+    // Метод Гаусса с выбором максимального элемента
+    long double *x = new long double[n+1];
 
-    for (size_t i = 0, maxI(vectorF_i.size()); i < maxI; ++i)
-	{
-		rowZero[rowZero.size() - 1] += vectorF_i[i];
-	}
-
-	/*
-		Пост-нулевые строки
-	*/
-	// Вектор пост-нулевых строк
-    std::vector< std::vector<double>* > postRow;
-
-    // Создание пост-нулевых строк
-    for (int i = 1; i < maxCountK; ++i)
+    for (int k = 0; k < n; ++k)
     {
-        postRow.push_back(new std::vector<double>(maxCountK + 1));
+        long double matrix_max = std::fabs(matrix[k][k]);
+
+        int p=k;
+
+        for (int i = k + 1; i < n + 1; ++i)
+        {
+            if (matrix_max < std::fabs(matrix[i][k]))
+            {
+                matrix_max=std::fabs(matrix[i][k]);
+
+                p=i;
+            }
+        }
+
+        for (int j = k; j < n + 2; ++j)
+        {
+            long double c = matrix[k][j];
+            matrix[k][j] = matrix[p][j];
+            matrix[p][j] = c;
+        }
+
+        for (int i = k + 1; i < n + 1; ++i)
+        {
+            for (int j = k + 1; j < n + 2; ++j)
+            {
+                matrix[i][j] = matrix[i][j] - matrix[i][k] * matrix[k][j] / matrix[k][k];
+            }
+        }
     }
 
-	// Заполнение пост-нулевых строк
-    for (int k = 1; k < maxCountK; ++k)
+    x[n] = matrix[n][n+1] / matrix[n][n];
+
+    for (int i = n - 1;i >= 0; --i)
+    {
+        long double s = matrix[i][n+1];
+
+        for (int j = n; j >= i + 1; --j)
+        {
+            s = s - matrix[i][j] * x[j];
+        }
+
+        x[i] = s / matrix[i][i];
+    }
+
+    // Обычный метод Гаусса
+//	// Временные переменные
+//	int i, j, k;
+
+//	// Выделения места для неизвестных
+//    long double *x = new long double[n + 1];
+
+//	// Прямой ход
+//	for (i = 0; i < n + 1; ++i)
+//	{
+//        long double a = matrix[i][i];
+
+//		for (j = i + 1; j < n + 1; j++)
+//		{
+//            long double b = matrix[j][i];
+
+//			for (k = i; k < n + 2; ++k)
+//			{
+//				matrix[j][k] = matrix[i][k] * b - matrix[j][k] * a;
+//			}
+//		}
+//	}
+
+//	// Обратный ход
+//	for (i = n; i >= 0; --i)
+//	{
+//        long double summ(0.);
+
+//		for (j = i + 1; j < n + 1; ++j)
+//		{
+//			summ += matrix[i][j] * x[j];
+//		}
+
+//		summ = matrix[i][n + 1] - summ;
+
+//		x[i] = summ / matrix[i][i];
+//	}
+
+    // Копирование коэффициентов
+    for (int i = 0; i < n + 1; ++i)
+    {
+        polynomialCoefficients.push_back(x[i]);
+    }
+
+	if (matrix != nullptr)
 	{
-		// Левая часть системы линейных уравнений
-		for (int j = 0; j < maxCountK; ++j)
-		{
-            (*postRow[k - 1])[j] = 0;
+		for (int i = 0; i < n + 1; ++i)
+			if (matrix[i] != nullptr)
+				delete[] matrix[i];
 
-            for (size_t i = 0, maxI(vectorX_i.size()); i < maxI; ++i)
-			{
-                (*postRow[k - 1])[j] += std::pow(vectorX_i[i], j + k);
-			}
-		}
-
-		// Правая часть системы линейных уравнений
-        (*postRow[k - 1])[maxCountK] = 0;
-
-        for (int i = 0; i < m; ++i)
-		{
-            (*postRow[k - 1])[maxCountK]
-                += (vectorF_i[i] * std::pow(vectorX_i[i], k));
-		}
+		delete[] matrix;
 	}
-
-	// Заполнение расширенной матрицы
-	matrix.push_back(rowZero);
-
-    for (size_t i = 0, maxI(postRow.size()); i < maxI; ++i)
-	{
-        matrix.push_back(*postRow[i]);
-	}
-}
-
-// Подсчёт детерминанта методом Гаусса
-double SolutionApproximation::GaussDeterminant(std::vector< std::vector<double> > matrix)
-{
-	// Детерминант
-	double resultDeterminant(1);
-
-	// Количество строк в матрице
-	int countRow = matrix.size();
-
-    // Копирование матрицы
-    std::vector< std::vector<double> > copyMatrix = matrix;
-
-	// Прямой ход метода Гаусса
-	for (int i = 0; i < countRow; ++i)
-	{
-		for (int j = i + 1; j < countRow; ++j)
-		{
-			if (copyMatrix[i][i] == 0)
-				throw new int;
-
-			double b = copyMatrix[j][i] / copyMatrix[i][i];
-
-			for (int k = i; k < countRow; ++k)
-				copyMatrix[j][k] = copyMatrix[j][k]
-				- copyMatrix[i][k] * b;
-		}
-
-		// Вычисление детерминанта
-		resultDeterminant *= copyMatrix[i][i];
-	}
-
-	return resultDeterminant;
-}
-
-// Нахождение коэффициентов (решение системы линейных уравнений методом Крамера)
-void SolutionApproximation::KramerSolve()
-{
-	// Неизвестные коэффициенты
-	std::vector<double> X;
-
-    // Копия матрицы
-    std::vector< std::vector<double> > copyMatrix = matrix;
-
-	// Вектор определителей
-    std::vector<double> vectorDeterminant(copyMatrix.size() + 1);
-
-	// Временный вектор для хранения столбца матрицы
-    std::vector<double> tmpColumn(copyMatrix.size());
-
-    for (size_t i = 0, maxI(copyMatrix.size() + 1); i < maxI; ++i)
-	{
-        vectorDeterminant[i] = GaussDeterminant(copyMatrix);
-
-		// Последовательная замена столбцов матрицы
-        for (size_t j = 0, maxJ(copyMatrix.size()); j < maxJ; j++)
-		{
-			if (i > 0)
-				// Восстанавливаем значение стобца
-                copyMatrix[j][i - 1] = tmpColumn[j];
-
-			// Сохраняем значение i - столбца матрицы в переменной tmpColumn
-            tmpColumn[j] = copyMatrix[j][i];
-
-			// В i - столбец матрицы записываем столбец свободных членов
-            copyMatrix[j][i] = copyMatrix[j][copyMatrix.size()];
-		}
-	}
-
-	// Заполнение результата
-    for (size_t i = 1, maxI(copyMatrix.size() + 1); i < maxI; ++i)
-		X.push_back(vectorDeterminant[i] / vectorDeterminant[0]);
-
-	polynomialCoefficients = X;
 }
 
 // Нахождение невязок
@@ -375,21 +440,21 @@ void SolutionApproximation::searchResiduals()
 		k - вектор найденных коэффициентов апроксимирующего полинома
 	*/
 	// Вектор невязок
-	std::vector<double> eps(polynomialCoefficients.size());
+	residuals.assign(polynomialCoefficients.size(), 0);
 
     // Вектор свободных членов
     std::vector<double> b(polynomialCoefficients.size());
 
     for (int i = 0, maxI(b.size()); i < maxI; ++i)
     {
-        b[i] = matrix[i][matrix.size()];
+        b[i] = matrix[i][n + 1];
     }
 
 	// Вектор результата умножения матрицы (A) на (k)
     std::vector<double> resultMulti;
 
 	// Перемножение матрицы (A) на (k)
-    for (size_t i = 0, maxI(matrix.size()); i < maxI; ++i)
+    for (size_t i = 0, maxI(n+1); i < maxI; ++i)
 	{
         resultMulti.push_back(0);
 
@@ -400,10 +465,8 @@ void SolutionApproximation::searchResiduals()
 	}
 
 	// Вычисление вектора невязок
-    for (size_t i = 0, maxI(eps.size()); i < maxI; ++i)
+    for (size_t i = 0, maxI(residuals.size()); i < maxI; ++i)
 	{
-        eps[i] = b[i] - resultMulti[i];
+		residuals[i] = b[i] - resultMulti[i];
 	}
-
-	residuals = eps;
 }

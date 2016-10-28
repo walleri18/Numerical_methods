@@ -52,13 +52,25 @@ private slots:
     // Вызов окна справки об Qt
     void on_action_Qt_triggered();
 
-    // Вызов окна справки об библиотеке построения
-    void on_action_QCustomPlot_triggered();
-
     // Сброс значений настроек
     void on_actionReset_triggered();
 
+    // Генерирование новых точек
+    void on_actionGenerationNewPoints_triggered();
+
 // Данные
+    void on_action_N_increment_triggered();
+
+    void on_action_N_decrement_triggered();
+
+    void on_action_M_increment_triggered();
+
+    void on_action_M_decrement_triggered();
+
+    void on_action_C_increment_triggered();
+
+    void on_action_C_decrement_triggered();
+
 private:
 
     // Графический интерфейс
@@ -84,6 +96,9 @@ private:
 
     // Вектор значений полинома аппроксиманта (для отображения графика полинома аппроксиманта)
     QVector<double> vectorResultApproxinFunctionGrafic;
+
+    // Величина S
+    double S;
 
 };
 

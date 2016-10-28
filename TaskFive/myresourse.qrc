@@ -1,8 +1,6 @@
 <RCC>
     <qresource prefix="/img">
         <file>img/icon.ico</file>
-        <file>img/graphics.ico</file>
-        <file>img/me.ico</file>
         <file>img/qcustomplot.ico</file>
         <file>img/qt.ico</file>
         <file>img/graphics_box.ico</file>

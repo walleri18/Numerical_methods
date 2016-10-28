@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/img">
+        <file>img/graphics_box.ico</file>
+        <file>img/I.jpg</file>
+        <file>img/icon.ico</file>
+        <file>img/line_chart.ico</file>
+        <file>img/qt.ico</file>
+        <file>img/reset.ico</file>
+        <file>img/setting.ico</file>
+        <file>img/table.ico</file>
+    </qresource>
+</RCC>

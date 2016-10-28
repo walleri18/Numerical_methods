@@ -7,14 +7,14 @@
     <x>0</x>
     <y>0</y>
     <width>1510</width>
-    <height>831</height>
+    <height>708</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Задание №5. Аппроксимация</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="myresourse.qrc">
+   <iconset resource="res.qrc">
     <normaloff>:/img/img/icon.ico</normaloff>:/img/img/icon.ico</iconset>
   </property>
   <property name="styleSheet">
@@ -107,7 +107,43 @@ QTableView {
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
-   <layout class="QGridLayout" name="gridLayout_4">
+   <layout class="QGridLayout" name="gridLayout_5">
+    <item row="0" column="0">
+     <widget class="QLabel" name="labelInfo">
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+        <weight>75</weight>
+        <italic>true</italic>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Информация</string>
+      </property>
+      <property name="textFormat">
+       <enum>Qt::PlainText</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QLabel" name="labelApproximant">
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+        <weight>75</weight>
+        <italic>true</italic>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Аппроксимант</string>
+      </property>
+      <property name="wordWrap">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
     <item row="2" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
@@ -115,21 +151,31 @@ QTableView {
       </property>
       <widget class="QWidget" name="tab_3">
        <attribute name="icon">
-        <iconset resource="myresourse.qrc">
+        <iconset resource="res.qrc">
          <normaloff>:/img/img/graphics_box.ico</normaloff>:/img/img/graphics_box.ico</iconset>
        </attribute>
        <attribute name="title">
         <string>Графики</string>
        </attribute>
-       <layout class="QGridLayout" name="gridLayout_5">
+       <layout class="QGridLayout" name="gridLayout_4">
         <item row="0" column="0">
-         <widget class="QCustomPlot" name="customPlot" native="true"/>
+         <widget class="QCustomPlot" name="customPlot" native="true">
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="contextMenuPolicy">
+           <enum>Qt::ActionsContextMenu</enum>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
       <widget class="QWidget" name="tab_4">
        <attribute name="icon">
-        <iconset resource="myresourse.qrc">
+        <iconset resource="res.qrc">
          <normaloff>:/img/img/table.ico</normaloff>:/img/img/table.ico</iconset>
        </attribute>
        <attribute name="title">
@@ -176,80 +222,119 @@ QTableView {
       </widget>
       <widget class="QWidget" name="tab">
        <attribute name="icon">
-        <iconset resource="myresourse.qrc">
+        <iconset resource="res.qrc">
          <normaloff>:/img/img/line_chart.ico</normaloff>:/img/img/line_chart.ico</iconset>
        </attribute>
        <attribute name="title">
         <string>Зависимость S(n)</string>
        </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_6">
-        <item>
-         <widget class="QCustomPlot" name="customPlotS_n" native="true"/>
-        </item>
+       <layout class="QVBoxLayout" name="verticalLayout_7">
         <item>
          <widget class="QTableWidget" name="tableWidgetS_n">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="font">
-           <font>
-            <pointsize>-1</pointsize>
-           </font>
-          </property>
           <property name="editTriggers">
            <set>QAbstractItemView::NoEditTriggers</set>
           </property>
-          <attribute name="horizontalHeaderVisible">
-           <bool>false</bool>
-          </attribute>
+          <property name="columnCount">
+           <number>3</number>
+          </property>
           <attribute name="horizontalHeaderDefaultSectionSize">
-           <number>130</number>
+           <number>150</number>
           </attribute>
           <attribute name="verticalHeaderVisible">
            <bool>false</bool>
           </attribute>
+          <column/>
+          <column/>
+          <column/>
          </widget>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_11">
+         <layout class="QVBoxLayout" name="verticalLayout_6">
           <item>
-           <widget class="QLabel" name="label_9">
-            <property name="font">
-             <font>
-              <pointsize>10</pointsize>
-              <weight>75</weight>
-              <italic>true</italic>
-              <bold>true</bold>
-             </font>
-            </property>
-            <property name="text">
-             <string>Введите значение порядка полинома до которого будет проводиться исследование зависимости S(n):</string>
-            </property>
-           </widget>
+           <layout class="QHBoxLayout" name="horizontalLayout_11">
+            <item>
+             <widget class="QLabel" name="label_9">
+              <property name="font">
+               <font>
+                <pointsize>10</pointsize>
+                <weight>75</weight>
+                <italic>true</italic>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Введите значение порядка полинома до которого будет проводиться исследование зависимости S(n):</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="spinBoxCurrentMaxN">
+              <property name="font">
+               <font>
+                <pointsize>10</pointsize>
+                <weight>75</weight>
+                <italic>true</italic>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="minimum">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <number>1000</number>
+              </property>
+              <property name="value">
+               <number>10</number>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
           <item>
-           <widget class="QSpinBox" name="spinBoxCurrentMaxN">
-            <property name="font">
-             <font>
-              <pointsize>10</pointsize>
-              <weight>75</weight>
-              <italic>true</italic>
-              <bold>true</bold>
-             </font>
-            </property>
-            <property name="minimum">
-             <number>1</number>
-            </property>
-            <property name="maximum">
-             <number>1000</number>
-            </property>
-            <property name="value">
-             <number>9</number>
-            </property>
-           </widget>
+           <layout class="QHBoxLayout" name="horizontalLayout_12">
+            <item>
+             <widget class="QLabel" name="label_10">
+              <property name="font">
+               <font>
+                <pointsize>10</pointsize>
+                <weight>75</weight>
+                <italic>true</italic>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Введите значение m:</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="spinBoxCurrentMaxM">
+              <property name="font">
+               <font>
+                <pointsize>10</pointsize>
+                <weight>75</weight>
+                <italic>true</italic>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="minimum">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <number>1000</number>
+              </property>
+              <property name="value">
+               <number>10</number>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
          </layout>
         </item>
@@ -257,7 +342,7 @@ QTableView {
       </widget>
       <widget class="QWidget" name="tab_5">
        <attribute name="icon">
-        <iconset resource="myresourse.qrc">
+        <iconset resource="res.qrc">
          <normaloff>:/img/img/setting.ico</normaloff>:/img/img/setting.ico</iconset>
        </attribute>
        <attribute name="title">
@@ -311,6 +396,9 @@ QTableView {
                       <property name="text">
                        <string>Введите конец отрезка: (b)</string>
                       </property>
+                      <property name="alignment">
+                       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                      </property>
                      </widget>
                     </item>
                     <item>
@@ -361,8 +449,14 @@ QTableView {
                         <bold>true</bold>
                        </font>
                       </property>
+                      <property name="layoutDirection">
+                       <enum>Qt::LeftToRight</enum>
+                      </property>
                       <property name="text">
                        <string>Введите начало отрезка: (a)</string>
+                      </property>
+                      <property name="alignment">
+                       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                       </property>
                      </widget>
                     </item>
@@ -405,6 +499,14 @@ QTableView {
              </item>
              <item row="1" column="0">
               <widget class="QGroupBox" name="groupBox_3">
+               <property name="font">
+                <font>
+                 <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <italic>true</italic>
+                 <bold>true</bold>
+                </font>
+               </property>
                <property name="title">
                 <string>Отрезок построения графика</string>
                </property>
@@ -413,8 +515,19 @@ QTableView {
                  <layout class="QHBoxLayout" name="horizontalLayout_5">
                   <item>
                    <widget class="QLabel" name="label">
+                    <property name="font">
+                     <font>
+                      <pointsize>10</pointsize>
+                      <weight>75</weight>
+                      <italic>true</italic>
+                      <bold>true</bold>
+                     </font>
+                    </property>
                     <property name="text">
                      <string>Начало построения по X:</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                     </property>
                    </widget>
                   </item>
@@ -422,6 +535,14 @@ QTableView {
                    <widget class="QDoubleSpinBox" name="doubleSpinBoxBeginPlotsX">
                     <property name="enabled">
                      <bool>true</bool>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <pointsize>10</pointsize>
+                      <weight>75</weight>
+                      <italic>true</italic>
+                      <bold>true</bold>
+                     </font>
                     </property>
                     <property name="minimum">
                      <double>-101.000000000000000</double>
@@ -433,7 +554,7 @@ QTableView {
                      <double>0.100000000000000</double>
                     </property>
                     <property name="value">
-                     <double>-0.400000000000000</double>
+                     <double>-0.200000000000000</double>
                     </property>
                    </widget>
                   </item>
@@ -443,8 +564,19 @@ QTableView {
                  <layout class="QHBoxLayout" name="horizontalLayout_6">
                   <item>
                    <widget class="QLabel" name="label_2">
+                    <property name="font">
+                     <font>
+                      <pointsize>10</pointsize>
+                      <weight>75</weight>
+                      <italic>true</italic>
+                      <bold>true</bold>
+                     </font>
+                    </property>
                     <property name="text">
                      <string>Конец построения по X:</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                     </property>
                    </widget>
                   </item>
@@ -452,6 +584,14 @@ QTableView {
                    <widget class="QDoubleSpinBox" name="doubleSpinBoxEndPlotsX">
                     <property name="enabled">
                      <bool>true</bool>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <pointsize>10</pointsize>
+                      <weight>75</weight>
+                      <italic>true</italic>
+                      <bold>true</bold>
+                     </font>
                     </property>
                     <property name="minimum">
                      <double>1.000000000000000</double>
@@ -463,7 +603,7 @@ QTableView {
                      <double>0.100000000000000</double>
                     </property>
                     <property name="value">
-                     <double>2.000000000000000</double>
+                     <double>2.200000000000000</double>
                     </property>
                    </widget>
                   </item>
@@ -473,8 +613,19 @@ QTableView {
                  <layout class="QHBoxLayout" name="horizontalLayout_7">
                   <item>
                    <widget class="QLabel" name="label_3">
+                    <property name="font">
+                     <font>
+                      <pointsize>10</pointsize>
+                      <weight>75</weight>
+                      <italic>true</italic>
+                      <bold>true</bold>
+                     </font>
+                    </property>
                     <property name="text">
                      <string>Начало построения по Y:</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                     </property>
                    </widget>
                   </item>
@@ -482,6 +633,14 @@ QTableView {
                    <widget class="QDoubleSpinBox" name="doubleSpinBoxBeginPlotsY">
                     <property name="enabled">
                      <bool>true</bool>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <pointsize>10</pointsize>
+                      <weight>75</weight>
+                      <italic>true</italic>
+                      <bold>true</bold>
+                     </font>
                     </property>
                     <property name="minimum">
                      <double>-1001.000000000000000</double>
@@ -503,8 +662,19 @@ QTableView {
                  <layout class="QHBoxLayout" name="horizontalLayout_8">
                   <item>
                    <widget class="QLabel" name="label_4">
+                    <property name="font">
+                     <font>
+                      <pointsize>10</pointsize>
+                      <weight>75</weight>
+                      <italic>true</italic>
+                      <bold>true</bold>
+                     </font>
+                    </property>
                     <property name="text">
                      <string>Конец построения по Y:</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                     </property>
                    </widget>
                   </item>
@@ -512,6 +682,14 @@ QTableView {
                    <widget class="QDoubleSpinBox" name="doubleSpinBoxEndPlotsY">
                     <property name="enabled">
                      <bool>true</bool>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <pointsize>10</pointsize>
+                      <weight>75</weight>
+                      <italic>true</italic>
+                      <bold>true</bold>
+                     </font>
                     </property>
                     <property name="minimum">
                      <double>1.000000000000000</double>
@@ -534,6 +712,14 @@ QTableView {
              </item>
              <item row="2" column="0">
               <widget class="QGroupBox" name="groupBox_4">
+               <property name="font">
+                <font>
+                 <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <italic>true</italic>
+                 <bold>true</bold>
+                </font>
+               </property>
                <property name="title">
                 <string>Прочие параметры</string>
                </property>
@@ -542,18 +728,40 @@ QTableView {
                  <layout class="QHBoxLayout" name="horizontalLayout">
                   <item>
                    <widget class="QLabel" name="label_5">
+                    <property name="font">
+                     <font>
+                      <pointsize>10</pointsize>
+                      <weight>75</weight>
+                      <italic>true</italic>
+                      <bold>true</bold>
+                     </font>
+                    </property>
                     <property name="text">
                      <string>Степень полинома: (n)</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                     </property>
                    </widget>
                   </item>
                   <item>
                    <widget class="QSpinBox" name="spinBoxValueN">
+                    <property name="font">
+                     <font>
+                      <pointsize>10</pointsize>
+                      <weight>75</weight>
+                      <italic>true</italic>
+                      <bold>true</bold>
+                     </font>
+                    </property>
                     <property name="minimum">
                      <number>1</number>
                     </property>
                     <property name="maximum">
                      <number>10000</number>
+                    </property>
+                    <property name="value">
+                     <number>1</number>
                     </property>
                    </widget>
                   </item>
@@ -563,13 +771,32 @@ QTableView {
                  <layout class="QHBoxLayout" name="horizontalLayout_9">
                   <item>
                    <widget class="QLabel" name="label_6">
+                    <property name="font">
+                     <font>
+                      <pointsize>10</pointsize>
+                      <weight>75</weight>
+                      <italic>true</italic>
+                      <bold>true</bold>
+                     </font>
+                    </property>
                     <property name="text">
                      <string>Величина m: (m)</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                     </property>
                    </widget>
                   </item>
                   <item>
                    <widget class="QSpinBox" name="spinBoxValueM">
+                    <property name="font">
+                     <font>
+                      <pointsize>10</pointsize>
+                      <weight>75</weight>
+                      <italic>true</italic>
+                      <bold>true</bold>
+                     </font>
+                    </property>
                     <property name="minimum">
                      <number>2</number>
                     </property>
@@ -587,13 +814,32 @@ QTableView {
                  <layout class="QHBoxLayout" name="horizontalLayout_10">
                   <item>
                    <widget class="QLabel" name="label_7">
+                    <property name="font">
+                     <font>
+                      <pointsize>10</pointsize>
+                      <weight>75</weight>
+                      <italic>true</italic>
+                      <bold>true</bold>
+                     </font>
+                    </property>
                     <property name="text">
                      <string>Величина (c) из интервала [2, 20](желательно):</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                     </property>
                    </widget>
                   </item>
                   <item>
                    <widget class="QSpinBox" name="spinBoxValueC">
+                    <property name="font">
+                     <font>
+                      <pointsize>10</pointsize>
+                      <weight>75</weight>
+                      <italic>true</italic>
+                      <bold>true</bold>
+                     </font>
+                    </property>
                     <property name="minimum">
                      <number>-1000</number>
                     </property>
@@ -630,80 +876,34 @@ QTableView {
         </item>
         <item>
          <widget class="QLabel" name="label_8">
+          <property name="frameShape">
+           <enum>QFrame::WinPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+          <property name="lineWidth">
+           <number>2</number>
+          </property>
+          <property name="midLineWidth">
+           <number>4</number>
+          </property>
           <property name="text">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;:/img/img/I.jpg&quot;/&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;br/&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:18pt; font-weight:600; font-style:italic;&quot;&gt;Работу выполнил: &lt;/span&gt;&lt;span style=&quot; font-size:18pt;&quot;&gt;Туров Виталий Александрович&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:18pt; font-weight:600; font-style:italic;&quot;&gt;Группа: &lt;/span&gt;&lt;span style=&quot; font-size:18pt;&quot;&gt;05154&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:18pt; font-weight:600; font-style:italic;&quot;&gt;Задание: &lt;/span&gt;&lt;span style=&quot; font-size:18pt;&quot;&gt;№5&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:18pt; font-weight:600; font-style:italic;&quot;&gt;Вариант: &lt;/span&gt;&lt;span style=&quot; font-size:18pt;&quot;&gt;№16&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:18pt; font-weight:600; font-style:italic;&quot;&gt;Суть задания:&lt;/span&gt;&lt;span style=&quot; font-size:18pt;&quot;&gt; написать алгоритм построения аппроксимирующего полинома Y(x);&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:18pt;&quot;&gt;вывести графики исходной функции, аппроксиманта, узлов;&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:18pt;&quot;&gt;вывести значения коэффициентов аппроксиманта, невязки, величину&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:18pt;&quot;&gt;S = ∑[(Y(x[[i]]) - f(x[[i]]))^2,{i, 0, m}] (где m - количество узлов, f - исходная функция)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;:/img/img/I.jpg&quot;/&gt;&lt;br/&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; font-style:italic;&quot;&gt;Работу выполнил: &lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Туров Виталий Александрович&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; font-style:italic;&quot;&gt;Группа: &lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;05154&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; font-style:italic;&quot;&gt;Задание: &lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;№5&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; font-style:italic;&quot;&gt;Вариант: &lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;№16&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; font-style:italic;&quot;&gt;Суть задания:&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt; написать алгоритм построения аппроксимирующего полинома Y(x);&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;вывести графики исходной функции, аппроксиманта, узлов;&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;вывести значения коэффициентов аппроксиманта, невязки, величину&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;S = ∑[(Y(x[[i]]) - f(x[[i]]))^2,{i, 0, m}] (где m - количество узлов, f - исходная функция)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="scaledContents">
+           <bool>true</bool>
           </property>
           <property name="wordWrap">
+           <bool>true</bool>
+          </property>
+          <property name="openExternalLinks">
            <bool>false</bool>
           </property>
          </widget>
         </item>
-        <item>
-         <spacer name="horizontalSpacer">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>503</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
        </layout>
       </widget>
-     </widget>
-    </item>
-    <item row="0" column="0">
-     <widget class="QLabel" name="labelInfo">
-      <property name="font">
-       <font>
-        <pointsize>10</pointsize>
-        <weight>75</weight>
-        <italic>true</italic>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Информация</string>
-      </property>
-      <property name="textFormat">
-       <enum>Qt::PlainText</enum>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="0">
-     <widget class="QPushButton" name="pushButtonGenerate">
-      <property name="font">
-       <font>
-        <pointsize>10</pointsize>
-        <weight>75</weight>
-        <italic>true</italic>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Генерирование новых узлов</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="0">
-     <widget class="QLabel" name="labelApproximant">
-      <property name="font">
-       <font>
-        <pointsize>10</pointsize>
-        <weight>75</weight>
-        <italic>true</italic>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Аппроксимант</string>
-      </property>
-      <property name="wordWrap">
-       <bool>true</bool>
-      </property>
      </widget>
     </item>
    </layout>
@@ -722,7 +922,6 @@ QTableView {
      <string>Справка</string>
     </property>
     <addaction name="action_Qt"/>
-    <addaction name="action_QCustomPlot"/>
    </widget>
    <addaction name="menu"/>
   </widget>
@@ -733,15 +932,16 @@ QTableView {
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="action_QCustomPlot"/>
    <addaction name="action_Qt"/>
    <addaction name="separator"/>
    <addaction name="actionReset"/>
+   <addaction name="separator"/>
+   <addaction name="actionGenerationNewPoints"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="action_Qt">
    <property name="icon">
-    <iconset resource="myresourse.qrc">
+    <iconset resource="res.qrc">
      <normaloff>:/img/img/qt.ico</normaloff>:/img/img/qt.ico</iconset>
    </property>
    <property name="text">
@@ -751,21 +951,9 @@ QTableView {
     <string>Ctrl+Q</string>
    </property>
   </action>
-  <action name="action_QCustomPlot">
-   <property name="icon">
-    <iconset resource="myresourse.qrc">
-     <normaloff>:/img/img/qcustomplot.ico</normaloff>:/img/img/qcustomplot.ico</iconset>
-   </property>
-   <property name="text">
-    <string>Об QCustomPlot</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+P</string>
-   </property>
-  </action>
   <action name="actionReset">
    <property name="icon">
-    <iconset resource="myresourse.qrc">
+    <iconset resource="res.qrc">
      <normaloff>:/img/img/reset.ico</normaloff>:/img/img/reset.ico</iconset>
    </property>
    <property name="text">
@@ -776,6 +964,84 @@ QTableView {
    </property>
    <property name="shortcut">
     <string>Ctrl+R</string>
+   </property>
+  </action>
+  <action name="actionGenerationNewPoints">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/img/img/icon.ico</normaloff>:/img/img/icon.ico</iconset>
+   </property>
+   <property name="text">
+    <string>Генерирование новых узлов</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+P</string>
+   </property>
+  </action>
+  <action name="action_N_increment">
+   <property name="text">
+    <string>Увеличение величины N на единицу</string>
+   </property>
+   <property name="toolTip">
+    <string>Увеличение N на единицу</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+1</string>
+   </property>
+  </action>
+  <action name="action_N_decrement">
+   <property name="text">
+    <string>Уменьшение величины N на единицу</string>
+   </property>
+   <property name="toolTip">
+    <string>Уменьшение величины N на единицу</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+2</string>
+   </property>
+  </action>
+  <action name="action_M_increment">
+   <property name="text">
+    <string>Увеличение величины M на единицу</string>
+   </property>
+   <property name="toolTip">
+    <string>Увеличение величины M на единицу</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+3</string>
+   </property>
+  </action>
+  <action name="action_M_decrement">
+   <property name="text">
+    <string>Уменьшение величины M на единицу</string>
+   </property>
+   <property name="toolTip">
+    <string>Уменьшение величины M на единицу</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+4</string>
+   </property>
+  </action>
+  <action name="action_C_increment">
+   <property name="text">
+    <string>Увеличение величины C на единицу</string>
+   </property>
+   <property name="toolTip">
+    <string>Увеличение величины C на единицу</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+5</string>
+   </property>
+  </action>
+  <action name="action_C_decrement">
+   <property name="text">
+    <string>Уменьшение величины C на единицу</string>
+   </property>
+   <property name="toolTip">
+    <string>Уменьшение величины C на единицу</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+6</string>
    </property>
   </action>
  </widget>
@@ -789,18 +1055,18 @@ QTableView {
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="myresourse.qrc"/>
+  <include location="res.qrc"/>
  </resources>
  <connections>
   <connection>
    <sender>doubleSpinBoxEndSegment</sender>
-   <signal>editingFinished()</signal>
+   <signal>valueChanged(double)</signal>
    <receiver>MainWindow</receiver>
    <slot>updateApproximat()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>439</x>
-     <y>250</y>
+     <x>719</x>
+     <y>241</y>
     </hint>
     <hint type="destinationlabel">
      <x>529</x>
@@ -810,13 +1076,13 @@ QTableView {
   </connection>
   <connection>
    <sender>doubleSpinBoxBeginSegment</sender>
-   <signal>editingFinished()</signal>
+   <signal>valueChanged(double)</signal>
    <receiver>MainWindow</receiver>
    <slot>updateApproximat()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>439</x>
-     <y>218</y>
+     <x>719</x>
+     <y>211</y>
     </hint>
     <hint type="destinationlabel">
      <x>530</x>
@@ -831,8 +1097,8 @@ QTableView {
    <slot>updateApproximat()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>440</x>
-     <y>473</y>
+     <x>720</x>
+     <y>444</y>
     </hint>
     <hint type="destinationlabel">
      <x>30</x>
@@ -847,8 +1113,8 @@ QTableView {
    <slot>updateApproximat()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>440</x>
-     <y>503</y>
+     <x>720</x>
+     <y>470</y>
     </hint>
     <hint type="destinationlabel">
      <x>55</x>
@@ -863,8 +1129,8 @@ QTableView {
    <slot>updateApproximat()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>440</x>
-     <y>533</y>
+     <x>720</x>
+     <y>496</y>
     </hint>
     <hint type="destinationlabel">
      <x>304</x>
@@ -874,13 +1140,13 @@ QTableView {
   </connection>
   <connection>
    <sender>doubleSpinBoxBeginPlotsX</sender>
-   <signal>editingFinished()</signal>
+   <signal>valueChanged(double)</signal>
    <receiver>MainWindow</receiver>
    <slot>updateApproximat()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>440</x>
-     <y>317</y>
+     <x>720</x>
+     <y>304</y>
     </hint>
     <hint type="destinationlabel">
      <x>458</x>
@@ -890,13 +1156,13 @@ QTableView {
   </connection>
   <connection>
    <sender>doubleSpinBoxEndPlotsX</sender>
-   <signal>editingFinished()</signal>
+   <signal>valueChanged(double)</signal>
    <receiver>MainWindow</receiver>
    <slot>updateApproximat()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>440</x>
-     <y>347</y>
+     <x>720</x>
+     <y>330</y>
     </hint>
     <hint type="destinationlabel">
      <x>573</x>
@@ -906,13 +1172,13 @@ QTableView {
   </connection>
   <connection>
    <sender>doubleSpinBoxBeginPlotsY</sender>
-   <signal>editingFinished()</signal>
+   <signal>valueChanged(double)</signal>
    <receiver>MainWindow</receiver>
    <slot>updateApproximat()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>440</x>
-     <y>377</y>
+     <x>720</x>
+     <y>356</y>
     </hint>
     <hint type="destinationlabel">
      <x>700</x>
@@ -922,33 +1188,17 @@ QTableView {
   </connection>
   <connection>
    <sender>doubleSpinBoxEndPlotsY</sender>
-   <signal>editingFinished()</signal>
+   <signal>valueChanged(double)</signal>
    <receiver>MainWindow</receiver>
    <slot>updateApproximat()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>440</x>
-     <y>407</y>
+     <x>720</x>
+     <y>382</y>
     </hint>
     <hint type="destinationlabel">
      <x>823</x>
      <y>701</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButtonGenerate</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>updateApproximat()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>538</x>
-     <y>801</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>530</x>
-     <y>363</y>
     </hint>
    </hints>
   </connection>
@@ -959,12 +1209,28 @@ QTableView {
    <slot>studyDependence()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>784</x>
-     <y>656</y>
+     <x>1489</x>
+     <y>639</y>
     </hint>
     <hint type="destinationlabel">
      <x>395</x>
      <y>772</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBoxCurrentMaxM</sender>
+   <signal>editingFinished()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>studyDependence()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1489</x>
+     <y>667</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>904</x>
+     <y>810</y>
     </hint>
    </hints>
   </connection>

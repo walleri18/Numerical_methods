@@ -55,7 +55,7 @@ private:
 		Для системы решений линейных уравнений
 	*/
 	// Расширенная матрица
-	std::vector< std::vector<double> > matrix;
+    long double **matrix;
 
 	// Вектор коэффициентов апроксимирующего полинома
 	std::vector<double> polynomialCoefficients;
@@ -71,6 +71,9 @@ public:
 						  double beginSegment,
 						  double endSegment,
 						  int n, int m, int c);
+
+	// Деструктор
+	~SolutionApproximation();
 
 	/*
 		Интерфейс для работы с объектом из вне (API)
@@ -143,11 +146,8 @@ private:
 	// Создание расширенной матрицы
 	void createdMatrix();
 
-	// Подсчёт детерминанта методом Гаусса
-    double GaussDeterminant(std::vector< std::vector<double> > matrix);
-
-	// Нахождение коэффициентов (решение системы линейных уравнений методом Крамера)
-	void KramerSolve();
+    // Нахождение коэффициентов (решение системы линейных уравнений матодом Гаусса)
+    void GaussSolve();
 
 	// Нахождение невязок
 	void searchResiduals();
