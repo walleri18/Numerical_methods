@@ -72,6 +72,14 @@ void Matrix::showDeterminantInverseMatrix()
 	cout << "Детерминант обратной матрицы: " << determinant << endl << endl;
 }
 
+// Вывод числа обусловленности
+void Matrix::showConditionNumber()
+{
+	typeElementMatrix conditionNumber = findConditionNumber();
+
+	cout << "Число обусловленности: " << conditionNumber << endl << endl;
+}
+
 // Обновление матрицы и результатов для неё
 void Matrix::update()
 {
@@ -166,6 +174,48 @@ typeElementMatrix Matrix::determinantMatrix(typeMatrix matrix)
 	}
 
 	return determinant;
+}
+
+// Поиск числа обусловленности
+typeElementMatrix Matrix::findConditionNumber()
+{
+	typeElementMatrix result(0);
+
+	// Вектор сумм элементов по столбцу
+	vector<typeElementMatrix> normaASourse;
+	vector<typeElementMatrix> normaAInverse;
+
+	// Считаем суммы
+	for (size_t i = 0; i < n; ++i)
+	{
+		normaASourse.push_back(0);
+		normaAInverse.push_back(0);
+	}
+
+	for (size_t j = 0; j < n; ++j)
+		for (size_t i = 0; i < n; ++i)
+		{
+			normaASourse[j] += fabs((*sourseMatrix[i])[j]);
+			normaAInverse[j] += fabs((*inverseMatrix[i])[j]);
+		}
+
+	// Ищем максимум
+	typeElementMatrix maxNormaSourse = normaASourse[0];
+	typeElementMatrix maxNormaInverse = normaAInverse[0];
+
+	for (size_t i = 0; i < n; ++i)
+	{
+		if (normaASourse[i] > maxNormaSourse)
+			maxNormaSourse = normaASourse[i];
+
+		if (normaAInverse[i] > maxNormaInverse)
+			maxNormaInverse = normaAInverse[i];
+	}
+
+	// Считаем число обусловленности
+	result = (maxNormaSourse * maxNormaInverse);
+
+	return result;
 }
 
 // Создание исходной матрицы

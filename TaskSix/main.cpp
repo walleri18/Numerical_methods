@@ -28,24 +28,27 @@ int main(void)
 	cout << "Задача №6. Вариант №16." << endl << endl;
 
 	// Тестирование нашего класса
-	Matrix matrix(ourFunction, 12);
+	Matrix matrix(ourFunction, 2);
 
 	matrix.update();
 
 	// Попытка вывести матрицы
 	matrix.showSourseMatrix();
 
-	// Попытка вывести детерминант
-	matrix.showDeterminantSourseMatrix();
-
 	// Попытка вывести обратную матрицу
 	matrix.showInverseMatrix();
+
+	// Попытка вывести единичную матрицу (B)
+	matrix.showEMatrix();
+
+	// Попытка вывести детерминант исходной матрицы
+	matrix.showDeterminantSourseMatrix();
 
 	// Попытка вывести детерминант обратной матрицы
 	matrix.showDeterminantInverseMatrix();
 
-	// Попытка вывести единичную матрицу (B)
-	matrix.showEMatrix();
+	// Попытка вывести число обусловленности
+	matrix.showConditionNumber();
 
 	cout << endl;
 

@@ -69,6 +69,9 @@ public:
 	// Вывод детерминанта обратной матрицы
 	void showDeterminantInverseMatrix();
 
+	// Вывод числа обусловленности
+	void showConditionNumber();
+
 	// Обновление матрицы и результатов для неё
 	void update();
 
@@ -82,6 +85,9 @@ private:
 
 	// Функция вычисления детерминанта
 	typeElementMatrix determinantMatrix(typeMatrix matrix);
+
+	// Поиск числа обусловленности
+	typeElementMatrix findConditionNumber();
 
 	// Создание исходной матрицы (A)
 	void createdSourseMatrix();
