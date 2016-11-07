@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <string>
 
 // Тип элементов матрицы
 typedef long double typeElementMatrix;
@@ -72,6 +73,15 @@ public:
 	// Вывод числа обусловленности
 	void showConditionNumber();
 
+	// Вывод исходной матрицы в файл
+	void saveFileSourseMatrix();
+
+	// Вывод обратной матрицы в файл
+	void saveFileInverseMatrix();
+
+	// Вывод единичной матрицы в файл
+	void saveFileEMatrix();
+
 	// Обновление матрицы и результатов для неё
 	void update();
 
@@ -82,6 +92,9 @@ private:
 
 	// Функция вывода матрицы
 	void showMatrix(typeMatrix matrix);
+
+	// Функция вывода матрицы в файл
+	void saveFileMatrix(typeMatrix matrix, std::string fileName);
 
 	// Функция вычисления детерминанта
 	typeElementMatrix determinantMatrix(typeMatrix matrix);

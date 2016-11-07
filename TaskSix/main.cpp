@@ -30,9 +30,21 @@ int main(void)
 	// Тестирование нашего класса
 	Matrix matrix(ourFunction, 2);
 
-	matrix.update();
+	try
+	{
+		matrix.update();
+	}
+	catch (...)
+	{
+		cout << endl << endl << "НЕВОЗМОЖНО НАЙТИ ОБРАТНУЮ МАТРИЦУ" << endl << endl;
 
-	// Попытка вывести матрицы
+		// Попытка вывести исходную матрицы
+		matrix.showSourseMatrix();
+
+		return 1;
+	}
+
+	// Попытка вывести исходную матрицы
 	matrix.showSourseMatrix();
 
 	// Попытка вывести обратную матрицу
@@ -41,14 +53,37 @@ int main(void)
 	// Попытка вывести единичную матрицу (B)
 	matrix.showEMatrix();
 
-	// Попытка вывести детерминант исходной матрицы
-	matrix.showDeterminantSourseMatrix();
+	try
+	{
+		// Попытка вывести детерминант исходной матрицы
+		matrix.showDeterminantSourseMatrix();
+	}
+	catch (...)
+	{
+		cout << endl << endl << "НЕВОЗМОЖНО ВЫЧИСЛИТЬ ДЕТЕРМИНАНТ ИСХОДНОЙ МАТРИЦЫ" << endl << endl;
 
-	// Попытка вывести детерминант обратной матрицы
-	matrix.showDeterminantInverseMatrix();
+		return 1;
+	}
+
+	try
+	{
+		// Попытка вывести детерминант обратной матрицы
+		matrix.showDeterminantInverseMatrix();
+	}
+	catch (...)
+	{
+		cout << endl << endl << "НЕВОЗМОЖНО ВЫЧИСЛИТЬ ДЕТЕРМИНАНТ ОБРАТНОЙ МАТРИЦЫ" << endl << endl;
+
+		return 1;
+	}
 
 	// Попытка вывести число обусловленности
 	matrix.showConditionNumber();
+
+	// Вывод в файлы
+	matrix.saveFileSourseMatrix();
+	matrix.saveFileInverseMatrix();
+	matrix.saveFileEMatrix();
 
 	cout << endl;
 
@@ -62,7 +97,9 @@ typeElementMatrix ourFunction(int i, int j)
 {
 	typeElementMatrix result(0);
 
-	result = static_cast<typeElementMatrix>(1) / static_cast<typeElementMatrix>(cos(static_cast<typeElementMatrix>(i) - j) * cos(static_cast<typeElementMatrix>(i) - j));
+	result = 1 / (cos(i - j) * cos(i - j));
+
+	//result = 1 / sin(i + j);
 
 	return result;
 }
