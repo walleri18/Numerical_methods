@@ -1,4 +1,4 @@
-#include "SolutionIntegrals.h"
+п»ї#include "SolutionIntegrals.h"
 #include <iostream>
 #include <iomanip>
 
@@ -11,7 +11,7 @@ SolutionIntegrals::SolutionIntegrals(double beginSegment,
 	numberSplits(10),
 	resultSolutionIntegral(0)
 {
-	// Если пользователь перепутал один конец отрезка с другим
+	// Р•СЃР»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РїРµСЂРµРїСѓС‚Р°Р» РѕРґРёРЅ РєРѕРЅРµС† РѕС‚СЂРµР·РєР° СЃ РґСЂСѓРіРёРј
 	if (beginSegment > endSegment)
 	{
 		this->beginSegment = endSegment;
@@ -26,13 +26,13 @@ SolutionIntegrals::SolutionIntegrals(double beginSegment,
 
 #ifdef DEBUG
 
-	std::cout << "Интервал [" << this->beginSegment << "; " << this->endSegment << "]" << std::endl
-		<< "Количество знаков после точки " << coutNumber << std::endl << std::endl
-		<< "ОТВЕТЫ В ПРЕДЕЛАХ МАШИННОЙ ТОЧНОСТИ!!!";
+	std::cout << "РРЅС‚РµСЂРІР°Р» [" << this->beginSegment << "; " << this->endSegment << "]" << std::endl
+		<< "РљРѕР»РёС‡РµСЃС‚РІРѕ Р·РЅР°РєРѕРІ РїРѕСЃР»Рµ С‚РѕС‡РєРё " << coutNumber << std::endl << std::endl
+		<< "РћРўР’Р•РўР« Р’ РџР Р•Р”Р•Р›РђРҐ РњРђРЁРРќРќРћР™ РўРћР§РќРћРЎРўР!!!";
 
 #endif // DEBUG
 
-	// Установление коэффициентов квадратурной формулы
+	// РЈСЃС‚Р°РЅРѕРІР»РµРЅРёРµ РєРѕСЌС„С„РёС†РёРµРЅС‚РѕРІ РєРІР°РґСЂР°С‚СѓСЂРЅРѕР№ С„РѕСЂРјСѓР»С‹
 	A.push_back(0.10122854);
 	A.push_back(0.22238104);
 	A.push_back(0.31370664);
@@ -42,7 +42,7 @@ SolutionIntegrals::SolutionIntegrals(double beginSegment,
 	A.push_back(0.22238104);
 	A.push_back(0.10122854);
 
-	// Установление Нулей полинома Лежандра
+	// РЈСЃС‚Р°РЅРѕРІР»РµРЅРёРµ РќСѓР»РµР№ РїРѕР»РёРЅРѕРјР° Р›РµР¶Р°РЅРґСЂР°
 	t.push_back(-0.96028986);
 	t.push_back(-0.79666648);
 	t.push_back(-0.52553242);
@@ -52,38 +52,38 @@ SolutionIntegrals::SolutionIntegrals(double beginSegment,
 	t.push_back(0.79666648);
 	t.push_back(0.96028986);
 
-	// Создание наших дополнительных параметров
+	// РЎРѕР·РґР°РЅРёРµ РЅР°С€РёС… РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹С… РїР°СЂР°РјРµС‚СЂРѕРІ
 	countSplit = new std::vector<int>;
 	resultSplit = new std::vector<double>;
 }
 
 SolutionIntegrals::~SolutionIntegrals()
 {
-	// Очистка памяти
+	// РћС‡РёСЃС‚РєР° РїР°РјСЏС‚Рё
 	delete countSplit;
 	delete resultSplit;
 }
 
-// Метод Симпсона (метод парабол)
+// РњРµС‚РѕРґ РЎРёРјРїСЃРѕРЅР° (РјРµС‚РѕРґ РїР°СЂР°Р±РѕР»)
 void SolutionIntegrals::SimpsonMethod(Function ourFunction)
 {
-	// Очистка дополнительных параметров
+	// РћС‡РёСЃС‚РєР° РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹С… РїР°СЂР°РјРµС‚СЂРѕРІ
 	clear();
 
-	// Вектор результатов
+	// Р’РµРєС‚РѕСЂ СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ
 	std::vector<double> resultIntegral(vectorSegment.size());
 
-	// Считаем резульататы
+	// РЎС‡РёС‚Р°РµРј СЂРµР·СѓР»СЊР°С‚Р°С‚С‹
 	for (int i = 0; i < vectorSegment.size(); ++i)
 	{
 
-		// Первоначальное разбиение (n)
+		// РџРµСЂРІРѕРЅР°С‡Р°Р»СЊРЅРѕРµ СЂР°Р·Р±РёРµРЅРёРµ (n)
 		numberSplits = 4;
 		
-		// Временные переменные
+		// Р’СЂРµРјРµРЅРЅС‹Рµ РїРµСЂРµРјРµРЅРЅС‹Рµ
 		double IPrev(0), INext(0);
 
-		// Флаг говорящий что мы только вошли в цикл
+		// Р¤Р»Р°Рі РіРѕРІРѕСЂСЏС‰РёР№ С‡С‚Рѕ РјС‹ С‚РѕР»СЊРєРѕ РІРѕС€Р»Рё РІ С†РёРєР»
 		bool first(true);
 
 		do
@@ -102,21 +102,21 @@ void SolutionIntegrals::SimpsonMethod(Function ourFunction)
 
 			std::cout << std::endl << std::endl
 				<< "------------------------------" << std::endl
-				<< "Количество разбиений: " << numberSplits * 2
+				<< "РљРѕР»РёС‡РµСЃС‚РІРѕ СЂР°Р·Р±РёРµРЅРёР№: " << numberSplits * 2
 				<< std::endl << std::endl
-				<< "Результат для этого количества разбиений: "
+				<< "Р РµР·СѓР»СЊС‚Р°С‚ РґР»СЏ СЌС‚РѕРіРѕ РєРѕР»РёС‡РµСЃС‚РІР° СЂР°Р·Р±РёРµРЅРёР№: "
 				<< std::setprecision(coutNumber) << INext;
 
-			// Записываем дополнительные параметры
+			// Р—Р°РїРёСЃС‹РІР°РµРј РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Рµ РїР°СЂР°РјРµС‚СЂС‹
 			countSplit->push_back(numberSplits * 2);
 			resultSplit->push_back(INext);
 
 #endif // DEBUG
 
-			// Увеличиваем количество разбиений в два раза
+			// РЈРІРµР»РёС‡РёРІР°РµРј РєРѕР»РёС‡РµСЃС‚РІРѕ СЂР°Р·Р±РёРµРЅРёР№ РІ РґРІР° СЂР°Р·Р°
 			numberSplits *= 2;
 
-			// Ограничение в количестве разбиений
+			// РћРіСЂР°РЅРёС‡РµРЅРёРµ РІ РєРѕР»РёС‡РµСЃС‚РІРµ СЂР°Р·Р±РёРµРЅРёР№
 			if (numberSplits >= INT_MAX)
 				break;
 
@@ -124,15 +124,15 @@ void SolutionIntegrals::SimpsonMethod(Function ourFunction)
 
 		//std::cout << std::endl << "------------------------------";
 
-		// Присвоение нового результата
+		// РџСЂРёСЃРІРѕРµРЅРёРµ РЅРѕРІРѕРіРѕ СЂРµР·СѓР»СЊС‚Р°С‚Р°
 		resultIntegral.push_back(INext);
 
 	}
 
-	// Временная сумма интегралов
+	// Р’СЂРµРјРµРЅРЅР°СЏ СЃСѓРјРјР° РёРЅС‚РµРіСЂР°Р»РѕРІ
 	double tmpSumIntegral(0);
 
-	// Суммируем
+	// РЎСѓРјРјРёСЂСѓРµРј
 	for (int i = 0; i < resultIntegral.size(); i++)
 	{
 		tmpSumIntegral += resultIntegral[i];
@@ -140,43 +140,43 @@ void SolutionIntegrals::SimpsonMethod(Function ourFunction)
 
 	resultSolutionIntegral = tmpSumIntegral;
 
-	// Вывод результатов
+	// Р’С‹РІРѕРґ СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ
 	show();
 }
 
-// Метод Гаусса
+// РњРµС‚РѕРґ Р“Р°СѓСЃСЃР°
 void SolutionIntegrals::GaussMethod(Function ourFunction)
 {
-	// Очистка дополнительных параметров
+	// РћС‡РёСЃС‚РєР° РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹С… РїР°СЂР°РјРµС‚СЂРѕРІ
 	clear();
 
-	// Первоначальное разбиение (n)
+	// РџРµСЂРІРѕРЅР°С‡Р°Р»СЊРЅРѕРµ СЂР°Р·Р±РёРµРЅРёРµ (n)
 	numberSplits = 8;
 
-	// Вектор результатов интегралов
+	// Р’РµРєС‚РѕСЂ СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ РёРЅС‚РµРіСЂР°Р»РѕРІ
 	std::vector<double> resultIntegral;
 
 	int tmp = vectorSegment.size();
 
-	// Подсчёт интегралов
+	// РџРѕРґСЃС‡С‘С‚ РёРЅС‚РµРіСЂР°Р»РѕРІ
 	for (int i = 0; i < vectorSegment.size(); ++i)
 	{
 		resultIntegral.push_back(GaussFormula(ourFunction, numberSplits, vectorSegment[i].beginSegment, vectorSegment[i].endSegment));
 	}
 
-	// Временная переменная суммы интегралов
+	// Р’СЂРµРјРµРЅРЅР°СЏ РїРµСЂРµРјРµРЅРЅР°СЏ СЃСѓРјРјС‹ РёРЅС‚РµРіСЂР°Р»РѕРІ
 	double tmpSumIntegral(0);
 
-	// Получаем сумму интегрлов
+	// РџРѕР»СѓС‡Р°РµРј СЃСѓРјРјСѓ РёРЅС‚РµРіСЂР»РѕРІ
 	for (int i = 0; i < resultIntegral.size(); i++)
 	{
 		tmpSumIntegral += resultIntegral[i];
 	}
 	
-	// Присвоение результата объекту
+	// РџСЂРёСЃРІРѕРµРЅРёРµ СЂРµР·СѓР»СЊС‚Р°С‚Р° РѕР±СЉРµРєС‚Сѓ
 	resultSolutionIntegral = tmpSumIntegral;
 
-	// Вывод результатов
+	// Р’С‹РІРѕРґ СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ
 	show();
 }
 
@@ -184,7 +184,7 @@ void SolutionIntegrals::show()
 {
 #ifdef DEBUG
 	std::cout << std::endl << std::endl
-		<< "Окончательный результат численного интегрирования: "
+		<< "РћРєРѕРЅС‡Р°С‚РµР»СЊРЅС‹Р№ СЂРµР·СѓР»СЊС‚Р°С‚ С‡РёСЃР»РµРЅРЅРѕРіРѕ РёРЅС‚РµРіСЂРёСЂРѕРІР°РЅРёСЏ: "
 		<< std::setprecision(coutNumber)
 		<< resultSolutionIntegral << std::endl
 		<< std::endl;
@@ -197,10 +197,10 @@ void SolutionIntegrals::clear()
 	resultSplit->clear();
 	resultSolutionIntegral = 0;
 
-	// Очистка
+	// РћС‡РёСЃС‚РєР°
 	vectorSegment.clear();
 
-	// Разбиение на несколько отрезков
+	// Р Р°Р·Р±РёРµРЅРёРµ РЅР° РЅРµСЃРєРѕР»СЊРєРѕ РѕС‚СЂРµР·РєРѕРІ
 	vectorSegment.push_back(Segment(beginSegment, -0.5));
 	vectorSegment.push_back(Segment(-0.5, -0.3));
 	vectorSegment.push_back(Segment(-0.3, -0.1));
@@ -225,38 +225,38 @@ std::vector<double>* SolutionIntegrals::getResultSplit() const
 	return resultSplit;
 }
 
-// Сеттер
+// РЎРµС‚С‚РµСЂ
 void SolutionIntegrals::setEndSegment(double newEndSegment)
 {
 	this->endSegment = newEndSegment;
 }
 
-// Формула Симпсона
+// Р¤РѕСЂРјСѓР»Р° РЎРёРјРїСЃРѕРЅР°
 double SolutionIntegrals::SimpsonFormula(Function ourFunction, unsigned int N, double beginSegment, double endSegment)
 {
-	// Переменная результата работы формулы Симпсона
+	// РџРµСЂРµРјРµРЅРЅР°СЏ СЂРµР·СѓР»СЊС‚Р°С‚Р° СЂР°Р±РѕС‚С‹ С„РѕСЂРјСѓР»С‹ РЎРёРјРїСЃРѕРЅР°
 	double resultSimpsonFormula(0);
 
-	// Временная переменная суммы
+	// Р’СЂРµРјРµРЅРЅР°СЏ РїРµСЂРµРјРµРЅРЅР°СЏ СЃСѓРјРјС‹
 	double tmpSum(0);
 
-	// Переменная шага
+	// РџРµСЂРµРјРµРЅРЅР°СЏ С€Р°РіР°
 	double h = (endSegment - beginSegment) / N;
 
-	// Вычисляем сумму на концах отрезка
+	// Р’С‹С‡РёСЃР»СЏРµРј СЃСѓРјРјСѓ РЅР° РєРѕРЅС†Р°С… РѕС‚СЂРµР·РєР°
 	resultSimpsonFormula = (ourFunction(beginSegment) + ourFunction(endSegment));
 
-	// Вычисляем первую сумму
+	// Р’С‹С‡РёСЃР»СЏРµРј РїРµСЂРІСѓСЋ СЃСѓРјРјСѓ
 	for (unsigned int i = 1; i <= (N / 2); i++)
 	{
 		tmpSum += ourFunction(beginSegment + h * (2 * i - 1));
 	}
 
-	// Заканчиваем вычислять второе слагаемое
+	// Р—Р°РєР°РЅС‡РёРІР°РµРј РІС‹С‡РёСЃР»СЏС‚СЊ РІС‚РѕСЂРѕРµ СЃР»Р°РіР°РµРјРѕРµ
 	tmpSum *= 4;
 	resultSimpsonFormula += tmpSum;
 
-	// Вычисляем третье слагаемое
+	// Р’С‹С‡РёСЃР»СЏРµРј С‚СЂРµС‚СЊРµ СЃР»Р°РіР°РµРјРѕРµ
 	tmpSum = 0;
 
 	for (unsigned int i = 2; i <= (N / 2); i++)
@@ -264,7 +264,7 @@ double SolutionIntegrals::SimpsonFormula(Function ourFunction, unsigned int N, d
 		tmpSum += ourFunction(beginSegment + h * (2 * i - 2));
 	}
 
-	// Заканчиваем вычислять третье слагаемое
+	// Р—Р°РєР°РЅС‡РёРІР°РµРј РІС‹С‡РёСЃР»СЏС‚СЊ С‚СЂРµС‚СЊРµ СЃР»Р°РіР°РµРјРѕРµ
 	tmpSum *= 2;
 	resultSimpsonFormula += tmpSum;
 
@@ -275,10 +275,10 @@ double SolutionIntegrals::SimpsonFormula(Function ourFunction, unsigned int N, d
 
 double SolutionIntegrals::GaussFormula(Function ourFunction, unsigned int N, double beginSegment, double endSegment)
 {
-	// Временные переменные
+	// Р’СЂРµРјРµРЅРЅС‹Рµ РїРµСЂРµРјРµРЅРЅС‹Рµ
 	double resultGaussFormula(0);
 
-	// Суммирование
+	// РЎСѓРјРјРёСЂРѕРІР°РЅРёРµ
 	for (unsigned int i = 0; i < N; i++)
 	{
 		resultGaussFormula += A[i] * ourFunction((beginSegment + endSegment)
@@ -291,17 +291,17 @@ double SolutionIntegrals::GaussFormula(Function ourFunction, unsigned int N, dou
 	return resultGaussFormula;
 }
 
-// Функция проверки 
+// Р¤СѓРЅРєС†РёСЏ РїСЂРѕРІРµСЂРєРё 
 double SolutionIntegrals::ExpIntegrateEi(double X)
 {
-	// Функция факториала
+	// Р¤СѓРЅРєС†РёСЏ С„Р°РєС‚РѕСЂРёР°Р»Р°
 	long double Factorial(int n);
 
 	double resultExpIntegrateEi(1);
 
 	resultExpIntegrateEi = C + log(X);
 
-	// Временная переменная суммы
+	// Р’СЂРµРјРµРЅРЅР°СЏ РїРµСЂРµРјРµРЅРЅР°СЏ СЃСѓРјРјС‹
 	long double tmpSum(0);
 
 	for (int n = 1; n <= 5 * (int)((X / 2) + 0.5); n++)
@@ -314,7 +314,7 @@ double SolutionIntegrals::ExpIntegrateEi(double X)
 	return resultExpIntegrateEi;
 }
 
-// Функция факториала
+// Р¤СѓРЅРєС†РёСЏ С„Р°РєС‚РѕСЂРёР°Р»Р°
 long double Factorial(int n)
 {
 	long double tmpResult(1);
