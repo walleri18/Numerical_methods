@@ -52,11 +52,29 @@ void SolutionSystemNonlinearEquations::setPrecision(double precision)
 	this->precision = precision;
 }
 
+// Геттер точности
+double SolutionSystemNonlinearEquations::getPrecision() const
+{
+	return this->precision;
+}
+
 // Сеттер начального приближения
 void SolutionSystemNonlinearEquations::setZeroApproximations(double xZero, double yZero)
 {
 	currentX = xZero;
 	currentY = yZero;
+}
+
+// Сеттер начального приближения X
+void SolutionSystemNonlinearEquations::setZeroX(double xZero)
+{
+	this->currentX = xZero;
+}
+
+// Сеттер начального приближения Y
+void SolutionSystemNonlinearEquations::setZeroY(double yZero)
+{
+	this->currentY = yZero;
 }
 
 // Форматированный вывод результата и приближений
@@ -94,6 +112,9 @@ void SolutionSystemNonlinearEquations::calculateDeterminantJacobian()
 // Генерируем значения обратной матрицы Якоби
 void SolutionSystemNonlinearEquations::createdInverseJacobian()
 {
+	if (determinantJacobian == 0)
+		throw new std::string("Невозможно вычислить обратную матрицу Якоби => Детерминант матрицы Якоби равен нулю!!!");
+
 	inverseJacobian[0][0] = jacobian[1][1] / determinantJacobian;
 	inverseJacobian[0][1] = -jacobian[0][1] / determinantJacobian;
 	inverseJacobian[1][0] = -jacobian[1][0] / determinantJacobian;
@@ -146,6 +167,9 @@ void SolutionSystemNonlinearEquations::calculateApproximations()
 		approximationsX.push_back(currentX);
 		approximationsY.push_back(currentY);
 
+		if (approximationsX.size() > maxCountApproximations)
+			throw new std::string("Достигнут предел количеством итераций: " + maxCountApproximations);
+
 	} while ((std::fabs(currentX - previousX) > precision)
-		&& (std::fabs(currentY - previousY) > precision) && (approximationsX.size() < maxCountApproximations));
+		&& (std::fabs(currentY - previousY) > precision));
 }

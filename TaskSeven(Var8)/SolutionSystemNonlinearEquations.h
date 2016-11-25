@@ -98,9 +98,18 @@ public:
 	// Сеттер точности
 	void setPrecision(double precision);
 
+	// Геттер точности
+	double getPrecision() const;
+
 	// Сеттер начального приближения
 	void setZeroApproximations(double xZero, double yZero);
-	
+
+	// Сеттер начального приближения X
+	void setZeroX(double xZero);
+
+	// Сеттер начального приближения Y
+	void setZeroY(double yZero);
+
 	// Форматированный вывод результата и приближений
 	void showResult();
 
