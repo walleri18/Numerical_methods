@@ -1,124 +1,124 @@
-#include "Matrix.h"
+п»ї#include "Matrix.h"
 #include <iostream>
 #include <fstream>
 #include <iomanip>
 
 using namespace std;
 
-// Конструктор
+// РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 Matrix::Matrix(Function ourFunction, int n) : ourFunction(ourFunction), n(n)
 {}
 
-// Геттер исходной матрицы
+// Р“РµС‚С‚РµСЂ РёСЃС…РѕРґРЅРѕР№ РјР°С‚СЂРёС†С‹
 typeMatrix Matrix::getSourseMatrix() const
 {
 	return this->sourseMatrix;
 }
 
-// Геттер обратной матрицы
+// Р“РµС‚С‚РµСЂ РѕР±СЂР°С‚РЅРѕР№ РјР°С‚СЂРёС†С‹
 typeMatrix Matrix::getInverseMatrix() const
 {
 	return this->inverseMatrix;
 }
 
-// Геттер единичной матрицы
+// Р“РµС‚С‚РµСЂ РµРґРёРЅРёС‡РЅРѕР№ РјР°С‚СЂРёС†С‹
 typeMatrix Matrix::getEMatrix() const
 {
 	return this->EMatrix;
 }
 
-// Вывод исходной матрицы
+// Р’С‹РІРѕРґ РёСЃС…РѕРґРЅРѕР№ РјР°С‚СЂРёС†С‹
 void Matrix::showSourseMatrix()
 {
-	// Вывод заголовка вывода
-	cout << "Исходная матрица: " << endl << endl;
+	// Р’С‹РІРѕРґ Р·Р°РіРѕР»РѕРІРєР° РІС‹РІРѕРґР°
+	cout << "РСЃС…РѕРґРЅР°СЏ РјР°С‚СЂРёС†Р°: " << endl << endl;
 
-	// Вывод самой матрицы
+	// Р’С‹РІРѕРґ СЃР°РјРѕР№ РјР°С‚СЂРёС†С‹
 	showMatrix(sourseMatrix);
 }
 
-// Вывод обратной матрицы
+// Р’С‹РІРѕРґ РѕР±СЂР°С‚РЅРѕР№ РјР°С‚СЂРёС†С‹
 void Matrix::showInverseMatrix()
 {
-	// Вывод заголовка вывода
-	cout << "Обратная матрица: " << endl << endl;
+	// Р’С‹РІРѕРґ Р·Р°РіРѕР»РѕРІРєР° РІС‹РІРѕРґР°
+	cout << "РћР±СЂР°С‚РЅР°СЏ РјР°С‚СЂРёС†Р°: " << endl << endl;
 
-	// Вывод самой матрицы
+	// Р’С‹РІРѕРґ СЃР°РјРѕР№ РјР°С‚СЂРёС†С‹
 	showMatrix(inverseMatrix);
 }
 
-// Вывод единичной матрицы
+// Р’С‹РІРѕРґ РµРґРёРЅРёС‡РЅРѕР№ РјР°С‚СЂРёС†С‹
 void Matrix::showEMatrix()
 {
-	// Вывод заголовка вывода
-	cout << "Единичная матрица: " << endl << endl;
+	// Р’С‹РІРѕРґ Р·Р°РіРѕР»РѕРІРєР° РІС‹РІРѕРґР°
+	cout << "Р•РґРёРЅРёС‡РЅР°СЏ РјР°С‚СЂРёС†Р°: " << endl << endl;
 
-	// Вывод самой матрицы
+	// Р’С‹РІРѕРґ СЃР°РјРѕР№ РјР°С‚СЂРёС†С‹
 	showMatrix(EMatrix);
 }
 
-// Вывод детерминанта исходной матрицы
+// Р’С‹РІРѕРґ РґРµС‚РµСЂРјРёРЅР°РЅС‚Р° РёСЃС…РѕРґРЅРѕР№ РјР°С‚СЂРёС†С‹
 void Matrix::showDeterminantSourseMatrix()
 {
 	typeElementMatrix determinant = determinantMatrix(sourseMatrix);
 
-	cout << "Детерминант исходной матрицы: " << determinant << endl << endl;
+	cout << "Р”РµС‚РµСЂРјРёРЅР°РЅС‚ РёСЃС…РѕРґРЅРѕР№ РјР°С‚СЂРёС†С‹: " << determinant << endl << endl;
 }
 
-// Вывод детерминанта обратной матрицы
+// Р’С‹РІРѕРґ РґРµС‚РµСЂРјРёРЅР°РЅС‚Р° РѕР±СЂР°С‚РЅРѕР№ РјР°С‚СЂРёС†С‹
 void Matrix::showDeterminantInverseMatrix()
 {
 	typeElementMatrix determinant = determinantMatrix(inverseMatrix);
 
-	cout << "Детерминант обратной матрицы: " << determinant << endl << endl;
+	cout << "Р”РµС‚РµСЂРјРёРЅР°РЅС‚ РѕР±СЂР°С‚РЅРѕР№ РјР°С‚СЂРёС†С‹: " << determinant << endl << endl;
 }
 
-// Вывод числа обусловленности
+// Р’С‹РІРѕРґ С‡РёСЃР»Р° РѕР±СѓСЃР»РѕРІР»РµРЅРЅРѕСЃС‚Рё
 void Matrix::showConditionNumber()
 {
 	typeElementMatrix conditionNumber = findConditionNumber();
 
-	cout << "Число обусловленности: " << conditionNumber << endl << endl;
+	cout << "Р§РёСЃР»Рѕ РѕР±СѓСЃР»РѕРІР»РµРЅРЅРѕСЃС‚Рё: " << conditionNumber << endl << endl;
 }
 
-// Вывод исходной матрицы в файл
+// Р’С‹РІРѕРґ РёСЃС…РѕРґРЅРѕР№ РјР°С‚СЂРёС†С‹ РІ С„Р°Р№Р»
 void Matrix::saveFileSourseMatrix()
 {
 	saveFileMatrix(sourseMatrix, "SourseMatrix");
 }
 
-// Вывод обратной матрицы в файл
+// Р’С‹РІРѕРґ РѕР±СЂР°С‚РЅРѕР№ РјР°С‚СЂРёС†С‹ РІ С„Р°Р№Р»
 void Matrix::saveFileInverseMatrix()
 {
 	saveFileMatrix(inverseMatrix, "InverseMatrix");
 }
 
-// Вывод единичной матрицы в файл
+// Р’С‹РІРѕРґ РµРґРёРЅРёС‡РЅРѕР№ РјР°С‚СЂРёС†С‹ РІ С„Р°Р№Р»
 void Matrix::saveFileEMatrix()
 {
 	saveFileMatrix(EMatrix, "EMatrix");
 }
 
-// Обновление матрицы и результатов для неё
+// РћР±РЅРѕРІР»РµРЅРёРµ РјР°С‚СЂРёС†С‹ Рё СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ РґР»СЏ РЅРµС‘
 void Matrix::update()
 {
-	// Очистка
+	// РћС‡РёСЃС‚РєР°
 	clear();
 
-	// Создание исходной матрицы (A)
+	// РЎРѕР·РґР°РЅРёРµ РёСЃС…РѕРґРЅРѕР№ РјР°С‚СЂРёС†С‹ (A)
 	createdSourseMatrix();
 
-	// Создание обратной матрицы (A^(-1))
+	// РЎРѕР·РґР°РЅРёРµ РѕР±СЂР°С‚РЅРѕР№ РјР°С‚СЂРёС†С‹ (A^(-1))
 	createdInverseMatrix();
 
-	// Создание единичной матрицы (B)
+	// РЎРѕР·РґР°РЅРёРµ РµРґРёРЅРёС‡РЅРѕР№ РјР°С‚СЂРёС†С‹ (B)
 	createdEMatrix();
 }
 
-// Функция очистки матриц
+// Р¤СѓРЅРєС†РёСЏ РѕС‡РёСЃС‚РєРё РјР°С‚СЂРёС†
 void Matrix::clear()
 {
-	// Очистка исходной матрицы
+	// РћС‡РёСЃС‚РєР° РёСЃС…РѕРґРЅРѕР№ РјР°С‚СЂРёС†С‹
 	if (!sourseMatrix.empty())
 		for (size_t i = 0, maxI(sourseMatrix.size()); i < maxI; ++i)
 			if (sourseMatrix[i] != nullptr)
@@ -126,7 +126,7 @@ void Matrix::clear()
 
 	sourseMatrix.clear();
 
-	// Очистка обратной матрицы
+	// РћС‡РёСЃС‚РєР° РѕР±СЂР°С‚РЅРѕР№ РјР°С‚СЂРёС†С‹
 	if (!inverseMatrix.empty())
 		for (size_t i = 0, maxI(inverseMatrix.size()); i < maxI; ++i)
 			if (inverseMatrix[i] != nullptr)
@@ -134,7 +134,7 @@ void Matrix::clear()
 
 	inverseMatrix.clear();
 
-	// Очистка единичной матрицы
+	// РћС‡РёСЃС‚РєР° РµРґРёРЅРёС‡РЅРѕР№ РјР°С‚СЂРёС†С‹
 	if (!EMatrix.empty())
 		for (size_t i = 0, maxI(EMatrix.size()); i < maxI; ++i)
 			if (EMatrix[i] != nullptr)
@@ -143,7 +143,7 @@ void Matrix::clear()
 	EMatrix.clear();
 }
 
-// Функция вывода матрицы
+// Р¤СѓРЅРєС†РёСЏ РІС‹РІРѕРґР° РјР°С‚СЂРёС†С‹
 void Matrix::showMatrix(typeMatrix matrix)
 {
 	for (size_t i = 0, maxI(matrix.size()); i < maxI; ++i)
@@ -157,10 +157,10 @@ void Matrix::showMatrix(typeMatrix matrix)
 	}
 }
 
-// Функция вывода матрицы в файл
+// Р¤СѓРЅРєС†РёСЏ РІС‹РІРѕРґР° РјР°С‚СЂРёС†С‹ РІ С„Р°Р№Р»
 void Matrix::saveFileMatrix(typeMatrix matrix, string fileName)
 {
-	// Создание файла с именем fileName
+	// РЎРѕР·РґР°РЅРёРµ С„Р°Р№Р»Р° СЃ РёРјРµРЅРµРј fileName
 	ofstream file(fileName + ".txt");
 
 	file << fileName << endl << endl;
@@ -174,13 +174,13 @@ void Matrix::saveFileMatrix(typeMatrix matrix, string fileName)
 	}
 }
 
-// Функция вычисления детерминанта
+// Р¤СѓРЅРєС†РёСЏ РІС‹С‡РёСЃР»РµРЅРёСЏ РґРµС‚РµСЂРјРёРЅР°РЅС‚Р°
 typeElementMatrix Matrix::determinantMatrix(typeMatrix matrix)
 {
-	// Результат детерминанта нашей матрицы
+	// Р РµР·СѓР»СЊС‚Р°С‚ РґРµС‚РµСЂРјРёРЅР°РЅС‚Р° РЅР°С€РµР№ РјР°С‚СЂРёС†С‹
 	typeElementMatrix determinant(1);
 
-	// Копия матрицы
+	// РљРѕРїРёСЏ РјР°С‚СЂРёС†С‹
 	typeMatrix copyMatrix;
 
 	for (size_t i = 0; i < n; ++i)
@@ -191,10 +191,10 @@ typeElementMatrix Matrix::determinantMatrix(typeMatrix matrix)
 			copyMatrix[i]->push_back((*matrix[i])[j]);
 	}
 
-	// Коэффициент деления
+	// РљРѕСЌС„С„РёС†РёРµРЅС‚ РґРµР»РµРЅРёСЏ
 	double b(0);
 
-	// Прямой ход метода Гаусса
+	// РџСЂСЏРјРѕР№ С…РѕРґ РјРµС‚РѕРґР° Р“Р°СѓСЃСЃР°
 	for (size_t i = 0; i < n; ++i)
 	{
 		for (size_t j = i + 1; j < n; ++j)
@@ -204,7 +204,7 @@ typeElementMatrix Matrix::determinantMatrix(typeMatrix matrix)
 				if ((*copyMatrix[i])[j] == 0)
 					b = 0;
 
-				// В случае ошибки выбрасываем исключение
+				// Р’ СЃР»СѓС‡Р°Рµ РѕС€РёР±РєРё РІС‹Р±СЂР°СЃС‹РІР°РµРј РёСЃРєР»СЋС‡РµРЅРёРµ
 				else
 					throw new int;
 			}
@@ -216,26 +216,26 @@ typeElementMatrix Matrix::determinantMatrix(typeMatrix matrix)
 				(*copyMatrix[j])[k] = (*copyMatrix[j])[k] - (*copyMatrix[i])[k] * b;
 		}
 
-		// Вычисляем детерминант
+		// Р’С‹С‡РёСЃР»СЏРµРј РґРµС‚РµСЂРјРёРЅР°РЅС‚
 		determinant *= (*copyMatrix[i])[i];
 	}
 
 	return determinant;
 }
 
-// Поиск числа обусловленности
+// РџРѕРёСЃРє С‡РёСЃР»Р° РѕР±СѓСЃР»РѕРІР»РµРЅРЅРѕСЃС‚Рё
 typeElementMatrix Matrix::findConditionNumber()
 {
-	// Число обусловленности
+	// Р§РёСЃР»Рѕ РѕР±СѓСЃР»РѕРІР»РµРЅРЅРѕСЃС‚Рё
 	typeElementMatrix result(0);
 
-	// Норма sourseMatrix
+	// РќРѕСЂРјР° sourseMatrix
 	typeElementMatrix normaSourseMatrix(0);
 
-	// Норма inverseMatrix;
+	// РќРѕСЂРјР° inverseMatrix;
 	typeElementMatrix normaInverseMatrix(0);
 
-	// Вычисление норм
+	// Р’С‹С‡РёСЃР»РµРЅРёРµ РЅРѕСЂРј
 	for (int j = 0; j < n; ++j)
 	{
 		typeElementMatrix tmpOne(0);
@@ -258,31 +258,31 @@ typeElementMatrix Matrix::findConditionNumber()
 			normaInverseMatrix = tmpTwo;
 	}
 
-	// Считаем число обусловленности
+	// РЎС‡РёС‚Р°РµРј С‡РёСЃР»Рѕ РѕР±СѓСЃР»РѕРІР»РµРЅРЅРѕСЃС‚Рё
 	result = (normaSourseMatrix * normaInverseMatrix);
 
 	return result;
 }
 
-// Создание исходной матрицы
+// РЎРѕР·РґР°РЅРёРµ РёСЃС…РѕРґРЅРѕР№ РјР°С‚СЂРёС†С‹
 void Matrix::createdSourseMatrix()
 {
 	for (size_t i = 0, maxI(n); i < maxI; ++i)
 	{
-		// Создание строк матрицы
+		// РЎРѕР·РґР°РЅРёРµ СЃС‚СЂРѕРє РјР°С‚СЂРёС†С‹
 		sourseMatrix.push_back(new vector<typeElementMatrix>);
 
-		// Заполнение строк
+		// Р—Р°РїРѕР»РЅРµРЅРёРµ СЃС‚СЂРѕРє
 		for (size_t j = 0, maxJ(n); j < maxJ; ++j)
 			(*sourseMatrix[i]).push_back(ourFunction(i, j));
 	}
 }
 
-// Вычисление обратной матрицы
+// Р’С‹С‡РёСЃР»РµРЅРёРµ РѕР±СЂР°С‚РЅРѕР№ РјР°С‚СЂРёС†С‹
 void Matrix::createdInverseMatrix()
 {
-	// Метод LU разложения
-	// Создаём массив под матрицу LU
+	// РњРµС‚РѕРґ LU СЂР°Р·Р»РѕР¶РµРЅРёСЏ
+	// РЎРѕР·РґР°С‘Рј РјР°СЃСЃРёРІ РїРѕРґ РјР°С‚СЂРёС†Сѓ LU
 	typeElementMatrix **LU = new typeElementMatrix *[n];
 
 	for (int i = 0; i < n; i++)
@@ -299,7 +299,7 @@ void Matrix::createdInverseMatrix()
 				for (int k = 0; k < i; k++)
 					sum += LU[i][k] * LU[k][j];
 
-				// Вычисляем элементы верхней треугольной матрицы
+				// Р’С‹С‡РёСЃР»СЏРµРј СЌР»РµРјРµРЅС‚С‹ РІРµСЂС…РЅРµР№ С‚СЂРµСѓРіРѕР»СЊРЅРѕР№ РјР°С‚СЂРёС†С‹
 				LU[i][j] = (*sourseMatrix[i])[j] - sum;
 			}
 			else
@@ -310,20 +310,20 @@ void Matrix::createdInverseMatrix()
 				if (LU[j][j] == 0)
 					throw new int;
 
-				// Вычисляем элементы нижней треугольной матрицы
+				// Р’С‹С‡РёСЃР»СЏРµРј СЌР»РµРјРµРЅС‚С‹ РЅРёР¶РЅРµР№ С‚СЂРµСѓРіРѕР»СЊРЅРѕР№ РјР°С‚СЂРёС†С‹
 				LU[i][j] = ((*sourseMatrix[i])[j] - sum) / LU[j][j];
 			}
 		}
 
 	}
 
-	// Создаём массив для обратной матрицы
+	// РЎРѕР·РґР°С‘Рј РјР°СЃСЃРёРІ РґР»СЏ РѕР±СЂР°С‚РЅРѕР№ РјР°С‚СЂРёС†С‹
 	typeElementMatrix **M_obr = new typeElementMatrix *[n]; 
 
 	for (int i = 0; i < n; i++)
 		M_obr[i] = new typeElementMatrix[n];
 
-	// Нахождение обратной матрицы
+	// РќР°С…РѕР¶РґРµРЅРёРµ РѕР±СЂР°С‚РЅРѕР№ РјР°С‚СЂРёС†С‹
 	for (int i = n - 1; i >= 0; i--)
 	{
 		for (int j = n - 1; j >= 0; j--)
@@ -356,7 +356,7 @@ void Matrix::createdInverseMatrix()
 		}
 	}
 
-	// Копирование
+	// РљРѕРїРёСЂРѕРІР°РЅРёРµ
 	for (int i = 0; i < n; i++)
 	{
 		inverseMatrix.push_back(new vector<typeElementMatrix>);
@@ -365,7 +365,7 @@ void Matrix::createdInverseMatrix()
 			inverseMatrix[i]->push_back(M_obr[i][j]);
 	}
 
-	// Освобождение памяти
+	// РћСЃРІРѕР±РѕР¶РґРµРЅРёРµ РїР°РјСЏС‚Рё
 	for (int i = 0; i < n; i++)
 	{
 		delete[] M_obr[i];
@@ -375,8 +375,8 @@ void Matrix::createdInverseMatrix()
 	delete[] M_obr;
 	delete[] LU;
 
-	// Метод Гаусса
-	//// Копирование исходной матрицы
+	// РњРµС‚РѕРґ Р“Р°СѓСЃСЃР°
+	//// РљРѕРїРёСЂРѕРІР°РЅРёРµ РёСЃС…РѕРґРЅРѕР№ РјР°С‚СЂРёС†С‹
 	//typeMatrix matrix;
 
 	//for (int i = 0; i < n; ++i)
@@ -389,7 +389,7 @@ void Matrix::createdInverseMatrix()
 	//	}
 	//}
 
-	//// Создание единичной матрицы 
+	//// РЎРѕР·РґР°РЅРёРµ РµРґРёРЅРёС‡РЅРѕР№ РјР°С‚СЂРёС†С‹ 
 	//typeElementMatrix **M_obr = new typeElementMatrix*[n];
 
 	//for (int i = 0; i < n; i++)
@@ -404,7 +404,7 @@ void Matrix::createdInverseMatrix()
 	//	M_obr[i][i] = 1;
 	//}
 
-	//// Прямой ход методом Гаусса
+	//// РџСЂСЏРјРѕР№ С…РѕРґ РјРµС‚РѕРґРѕРј Р“Р°СѓСЃСЃР°
 	//double a(0), b(0);
 
 	//for (int i = 0; i < n; i++)
@@ -423,7 +423,7 @@ void Matrix::createdInverseMatrix()
 	//		}
 	//	}
 	//}
-	////обратный ход нахождения элементов обратной матрицы
+	////РѕР±СЂР°С‚РЅС‹Р№ С…РѕРґ РЅР°С…РѕР¶РґРµРЅРёСЏ СЌР»РµРјРµРЅС‚РѕРІ РѕР±СЂР°С‚РЅРѕР№ РјР°С‚СЂРёС†С‹
 	//double sum(0);
 	//for (int i = 0; i < n; i++)
 	//{
@@ -441,34 +441,34 @@ void Matrix::createdInverseMatrix()
 	//	}
 	//}
 
-	//// Копирование
+	//// РљРѕРїРёСЂРѕРІР°РЅРёРµ
 	//for (int i = 0; i < n; i++)
 	//{
 	//	for (int j = 0; j < n; j++)
 	//		inverseMatrix[i]->push_back(M_obr[i][j]);
 	//}
 
-	//// Освобождение памяти
+	//// РћСЃРІРѕР±РѕР¶РґРµРЅРёРµ РїР°РјСЏС‚Рё
 	//for (int i = 0; i < n; i++)
 	//	delete[]M_obr[i];
 
 	//delete[]M_obr;
 }
 
-// Вычисление единичной матрицы. (B)
+// Р’С‹С‡РёСЃР»РµРЅРёРµ РµРґРёРЅРёС‡РЅРѕР№ РјР°С‚СЂРёС†С‹. (B)
 void Matrix::createdEMatrix()
 {
-	// Создание единичной матрицы
+	// РЎРѕР·РґР°РЅРёРµ РµРґРёРЅРёС‡РЅРѕР№ РјР°С‚СЂРёС†С‹
 	for (size_t i = 0; i < n; ++i)
 	{
-		// Создание строк единичной матрицы
+		// РЎРѕР·РґР°РЅРёРµ СЃС‚СЂРѕРє РµРґРёРЅРёС‡РЅРѕР№ РјР°С‚СЂРёС†С‹
 		EMatrix.push_back(new vector<typeElementMatrix>);
 
 		for (size_t j = 0; j < n; ++j)
 			EMatrix[i]->push_back(0);
 	}
 
-	// Умножение A * A^(-1)
+	// РЈРјРЅРѕР¶РµРЅРёРµ A * A^(-1)
 	for (size_t i = 0; i < n; ++i)
 		for (size_t j = 0; j < n; ++j)
 			for (size_t k = 0; k < n; ++k)
