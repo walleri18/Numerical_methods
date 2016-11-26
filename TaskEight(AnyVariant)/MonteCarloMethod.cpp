@@ -4,15 +4,22 @@
 
 // Конструктор
 MonteCarloMethod::MonteCarloMethod(Function FourFunction, double minX,
-								   double maxX, double minY, double maxY, int N) :
+								   double maxX, double minY, double maxY, int N,
+								   std::vector<Comporator> vectorComporator) :
 	FourFunction(FourFunction), minX(minX), maxX(maxX), minY(minY), maxY(maxY), N(N),
-	n(0), mediumHeight(0), volumeCylindroid(0)
+	n(0), mediumHeight(0), volumeCylindroid(0), vectorComporator(vectorComporator)
 {}
 
 // Сеттер нашей функции
 void MonteCarloMethod::setFourFunction(Function FourFunction)
 {
 	this->FourFunction = FourFunction;
+}
+
+// Сеттер компараторов
+void MonteCarloMethod::setComparator(std::vector<Comporator> vectorComporator)
+{
+	this->vectorComporator = vectorComporator;
 }
 
 // Сеттер минимума X
@@ -138,17 +145,27 @@ void MonteCarloMethod::findValueLittleN()
 	// удовлетворяет условиям попадания в область D
 	for (int i = 0; i < N; ++i)
 	{
-		// Если точка попадает в область
-		if (vectorX_i[i] > minX && vectorX_i[i] < maxX
-			&& vectorY_i[i] > minY && vectorY_i[i] < maxY)
-		{
-			// Количество попавших точек возрастает
-			n++;
+		// Флаг сигнализирующий о следующей точке
+		static bool flag = false;
 
-			// Заносим точку попадающюю в область
-			vectorInDX_i.push_back(vectorX_i[i]);
-			vectorInDY_i.push_back(vectorY_i[i]);
-		}
+		// Если точка попадает в область
+		for (int j = 0; j < vectorComporator.size(); ++j)
+			if (!vectorComporator[j](vectorX_i[i], vectorY_i[i]))
+				flag = true;
+			else
+				flag = false;
+
+		// Если точка не входит в область D
+		if (flag)
+			continue;
+
+		// Количество попавших точек возрастает
+		n++;
+
+		// Заносим точку попадающюю в область
+		vectorInDX_i.push_back(vectorX_i[i]);
+		vectorInDY_i.push_back(vectorY_i[i]);
+		
 	}
 }
 

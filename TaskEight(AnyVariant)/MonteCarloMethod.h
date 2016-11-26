@@ -5,6 +5,9 @@
 // Указатель на функцию двух пременных
 typedef double (*Function)(double, double);
 
+// Указатель на функцию проверки вхождения точки в область D
+typedef bool (*Comporator)(double, double);
+
 /*
 	Класс реализующий метод 
 	Монте-Карло для вычисления
@@ -17,6 +20,9 @@ private:
 
 	// Наша функция поверхности F(x, y)
 	Function FourFunction;
+
+	// Вектор функций проверок на вхождение точки в область D
+	std::vector<Comporator> vectorComporator;
 
 	/*
 		Данные об поверхности D
@@ -72,10 +78,14 @@ public:
 
 	// Конструктор
 	MonteCarloMethod(Function FourFunction, double minX, 
-					 double maxX, double minY, double maxY, int N);
+					 double maxX, double minY, double maxY, int N,
+					 std::vector<Comporator> vectorComporator);
 
 	// Сеттер нашей функции
 	void setFourFunction(Function FourFunction);
+
+	// Сеттер компараторов
+	void setComparator(std::vector<Comporator> vectorComporator);
 
 	// Сеттер минимума X
 	void setMinX(double minX);
