@@ -6,6 +6,9 @@
 SolutionSystemNonlinearEquations::SolutionSystemNonlinearEquations(Function FourFunction, Function GourFunction, Function dFdxOurFunction, Function dFdyOurFunction, Function dGdxOurFunction, Function dGdyOurFunction, double xZero, double yZero, double precision)
 	: FourFunction(FourFunction), GourFunction(GourFunction), dFdxOurFunction(dFdxOurFunction), dFdyOurFunction(dFdyOurFunction), dGdxOurFunction(dGdxOurFunction), dGdyOurFunction(dGdyOurFunction), precision(precision)
 {
+	this->xZero = xZero;
+	this->yZero = yZero;
+
 	currentX = xZero;
 	currentY = yZero;
 }
@@ -63,18 +66,35 @@ void SolutionSystemNonlinearEquations::setZeroApproximations(double xZero, doubl
 {
 	currentX = xZero;
 	currentY = yZero;
+
+	this->xZero = xZero;
+	this->yZero = yZero;
 }
 
 // Сеттер начального приближения X
 void SolutionSystemNonlinearEquations::setZeroX(double xZero)
 {
 	this->currentX = xZero;
+	this->xZero = xZero;
+}
+
+// Геттер начального приближения X
+double SolutionSystemNonlinearEquations::getXZero() const
+{
+	return this->xZero;
 }
 
 // Сеттер начального приближения Y
 void SolutionSystemNonlinearEquations::setZeroY(double yZero)
 {
 	this->currentY = yZero;
+	this->yZero = yZero;
+}
+
+// Геттер начального приближения Y
+double SolutionSystemNonlinearEquations::getYZero() const
+{
+	return this->yZero;
 }
 
 // Форматированный вывод результата и приближений

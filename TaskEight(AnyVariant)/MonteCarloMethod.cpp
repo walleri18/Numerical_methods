@@ -70,18 +70,30 @@ double MonteCarloMethod::getMaxY() const
 	return this->maxY;
 }
 
+// Сеттер количества точек необходимых пользователю. (N)
+void MonteCarloMethod::setN(int N)
+{
+	this->N = N;
+}
+
+// Геттер площади поверхности D
+double MonteCarloMethod::getS() const
+{
+	return this->S;
+}
+
 // Вывод результата
 void MonteCarloMethod::showResultVolumeCylindroid()
 {
 	// Обновление и вычисления
 	update();
 
-	// Вывод результата
+	// вывод результата
 	std::cout << std::endl << std::endl << "Количество сгенерированных точек: " << N
-		<< std::endl << "Количество точек попавших в область D: " << n << std::endl
-		<< "Выроятность попадания в область D: " << (n / static_cast<double>(N)) * 100 
+		<< std::endl << "Количество точек попавших в область d: " << n << std::endl
+		<< "Вероятность попадания в область d: " << (n / static_cast<double>(N)) * 100 
 		<< "%" << std::endl
-		<< "Объём цилиндроида в данный момент: " << volumeCylindroid << std::endl;
+		<< "Объём цилиндроида в данный момент: " << this->volumeCylindroid << std::endl;
 }
 
 // Обновление данных объекта
@@ -110,9 +122,10 @@ void MonteCarloMethod::clear()
 	this->vectorY_i.clear();
 	this->vectorInDX_i.clear();
 	this->vectorInDY_i.clear();
-	n = 0;
-	mediumHeight = 0;
-	volumeCylindroid = 0;
+	this->n = 0;
+	this->mediumHeight = 0;
+	this->S = 0;
+	this->volumeCylindroid = 0;
 }
 
 // Генерация точек
@@ -184,6 +197,9 @@ void MonteCarloMethod::calculateVolume()
 {
 	// Вычисляем площадь основания цилинда. Площадь D.
 	double S = (maxX - minX) * (maxY - minY) * (n / static_cast<double>(N));
+
+	// Передаём посчитанное значение площади D в нашу "глобальную переменную" S
+	this->S = S;
 
 	// Вычисляем объём цилиндра
 	volumeCylindroid = S * mediumHeight;

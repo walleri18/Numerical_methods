@@ -63,7 +63,7 @@ int main(void)
 		{
 			double tmpXZero(0);
 
-			cout << endl << endl << "Введите желаемое начальное приближение X: ";
+			cout << endl << endl << "Текущее приближение X: " << sol.getXZero() << endl << "Введите желаемое начальное приближение X: ";
 			cin >> tmpXZero;
 
 			sol.setZeroX(tmpXZero);
@@ -78,7 +78,7 @@ int main(void)
 		{
 			double tmpYZero(0);
 
-			cout << endl << endl << "Введите желаемое начальное приближение Y: ";
+			cout << endl << endl << "Текущее приближение Y: " << sol.getYZero() << endl << "Введите желаемое начальное приближение Y: ";
 			cin >> tmpYZero;
 
 			sol.setZeroY(tmpYZero);

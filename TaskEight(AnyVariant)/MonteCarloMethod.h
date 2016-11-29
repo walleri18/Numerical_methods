@@ -70,6 +70,9 @@ private:
 	/*
 		Результат работы программы
 	*/
+	// Площадь поверхности D
+	double S;
+
 	// Объём цилиндроида
 	double volumeCylindroid;
 
@@ -110,6 +113,12 @@ public:
 
 	// Геттер максимума Y
 	double getMaxY() const;
+
+	// Сеттер количества точек необходимых пользователю. (N)
+	void setN(int N);
+
+	// Геттер площади поверхности D
+	double getS() const;
 
 	// Вывод результата
 	void showResultVolumeCylindroid();

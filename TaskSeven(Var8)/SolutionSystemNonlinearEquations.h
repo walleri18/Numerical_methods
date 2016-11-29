@@ -46,6 +46,12 @@ private:
 	// Максимальное количество приближений
 	const int maxCountApproximations = 1000;
 
+	// Нулевое приближение X
+	double xZero;
+
+	// Нулевое приближение Y
+	double yZero;
+
 	// Текущее приближение Xk
 	double currentX;
 
@@ -107,8 +113,14 @@ public:
 	// Сеттер начального приближения X
 	void setZeroX(double xZero);
 
+	// Геттер начального приближения X
+	double getXZero() const;
+
 	// Сеттер начального приближения Y
 	void setZeroY(double yZero);
+
+	// Геттер начального приближения Y
+	double getYZero() const;
 
 	// Форматированный вывод результата и приближений
 	void showResult();
