@@ -1,25 +1,25 @@
-#include <iostream>
+п»ї#include <iostream>
 #include "SolutionSystemNonlinearEquations.h"
 
 /*
-	Прототипы
+	РџСЂРѕС‚РѕС‚РёРїС‹
 */
-// Функция F(x, y)
+// Р¤СѓРЅРєС†РёСЏ F(x, y)
 double FourFunction(double, double);
 
-// Функция G(x, y)
+// Р¤СѓРЅРєС†РёСЏ G(x, y)
 double GourFunction(double, double);
 
-// Частная производная dF/dx
+// Р§Р°СЃС‚РЅР°СЏ РїСЂРѕРёР·РІРѕРґРЅР°СЏ dF/dx
 double dFdxOurFunction(double ,double);
 
-// Частная производная dF/dy
+// Р§Р°СЃС‚РЅР°СЏ РїСЂРѕРёР·РІРѕРґРЅР°СЏ dF/dy
 double dFdyOurFunction(double, double);
 
-// Частная производная dG/dx
+// Р§Р°СЃС‚РЅР°СЏ РїСЂРѕРёР·РІРѕРґРЅР°СЏ dG/dx
 double dGdxOurFunction(double, double);
 
-// Частная производная dG/dy
+// Р§Р°СЃС‚РЅР°СЏ РїСЂРѕРёР·РІРѕРґРЅР°СЏ dG/dy
 double dGdyOurFunction(double, double);
 
 using namespace std;
@@ -28,57 +28,57 @@ int main(void)
 {
 	setlocale(LC_ALL, ".1251");
 
-	// Класс по решению системы нелинейных уравнений
+	// РљР»Р°СЃСЃ РїРѕ СЂРµС€РµРЅРёСЋ СЃРёСЃС‚РµРјС‹ РЅРµР»РёРЅРµР№РЅС‹С… СѓСЂР°РІРЅРµРЅРёР№
 	SolutionSystemNonlinearEquations sol(FourFunction, GourFunction, dFdxOurFunction, dFdyOurFunction, dGdxOurFunction, dGdyOurFunction, 0.3, 3.7, 1.e-6);
 	
-	// Переменная выбора
+	// РџРµСЂРµРјРµРЅРЅР°СЏ РІС‹Р±РѕСЂР°
 	char select(' ');
 
 	do
 	{
-		// Очистка окна от предыдущих выходных данных
+		// РћС‡РёСЃС‚РєР° РѕРєРЅР° РѕС‚ РїСЂРµРґС‹РґСѓС‰РёС… РІС‹С…РѕРґРЅС‹С… РґР°РЅРЅС‹С…
 		system("cls");
 
-		// Вопрос об изменении точности вычислений
-		cout << endl << endl << "Желаете изменить точность вычислений? (y/n or Y/N): ";
+		// Р’РѕРїСЂРѕСЃ РѕР± РёР·РјРµРЅРµРЅРёРё С‚РѕС‡РЅРѕСЃС‚Рё РІС‹С‡РёСЃР»РµРЅРёР№
+		cout << endl << endl << "Р–РµР»Р°РµС‚Рµ РёР·РјРµРЅРёС‚СЊ С‚РѕС‡РЅРѕСЃС‚СЊ РІС‹С‡РёСЃР»РµРЅРёР№? (y/n or Y/N): ";
 		cin >> select;
 
-		// Изменяем точность на необходимую
+		// РР·РјРµРЅСЏРµРј С‚РѕС‡РЅРѕСЃС‚СЊ РЅР° РЅРµРѕР±С…РѕРґРёРјСѓСЋ
 		if (select == 'Y' || select == 'y')
 		{
 			double tmpPrecision(0);
 
-			cout << endl << endl << "Текущая точность: " << sol.getPrecision() << endl << "Введите желаемую точность: ";
+			cout << endl << endl << "РўРµРєСѓС‰Р°СЏ С‚РѕС‡РЅРѕСЃС‚СЊ: " << sol.getPrecision() << endl << "Р’РІРµРґРёС‚Рµ Р¶РµР»Р°РµРјСѓСЋ С‚РѕС‡РЅРѕСЃС‚СЊ: ";
 			cin >> tmpPrecision;
 
 			sol.setPrecision(tmpPrecision);
 		}
 
-		// Вопрос об изменении начального приближения X
-		cout << endl << endl << "Желаете изменить начальное приближение X? (y/n or Y/N): ";
+		// Р’РѕРїСЂРѕСЃ РѕР± РёР·РјРµРЅРµРЅРёРё РЅР°С‡Р°Р»СЊРЅРѕРіРѕ РїСЂРёР±Р»РёР¶РµРЅРёСЏ X
+		cout << endl << endl << "Р–РµР»Р°РµС‚Рµ РёР·РјРµРЅРёС‚СЊ РЅР°С‡Р°Р»СЊРЅРѕРµ РїСЂРёР±Р»РёР¶РµРЅРёРµ X? (y/n or Y/N): ";
 		cin >> select;
 
-		// Изменение начального приближения X
+		// РР·РјРµРЅРµРЅРёРµ РЅР°С‡Р°Р»СЊРЅРѕРіРѕ РїСЂРёР±Р»РёР¶РµРЅРёСЏ X
 		if (select == 'y' || select == 'Y')
 		{
 			double tmpXZero(0);
 
-			cout << endl << endl << "Текущее приближение X: " << sol.getXZero() << endl << "Введите желаемое начальное приближение X: ";
+			cout << endl << endl << "РўРµРєСѓС‰РµРµ РїСЂРёР±Р»РёР¶РµРЅРёРµ X: " << sol.getXZero() << endl << "Р’РІРµРґРёС‚Рµ Р¶РµР»Р°РµРјРѕРµ РЅР°С‡Р°Р»СЊРЅРѕРµ РїСЂРёР±Р»РёР¶РµРЅРёРµ X: ";
 			cin >> tmpXZero;
 
 			sol.setZeroX(tmpXZero);
 		}
 
-		// Вопрос об изменении начального приближения Y
-		cout << endl << endl << "Желаете изменить начальное приближение Y?(y/n or Y/N): ";
+		// Р’РѕРїСЂРѕСЃ РѕР± РёР·РјРµРЅРµРЅРёРё РЅР°С‡Р°Р»СЊРЅРѕРіРѕ РїСЂРёР±Р»РёР¶РµРЅРёСЏ Y
+		cout << endl << endl << "Р–РµР»Р°РµС‚Рµ РёР·РјРµРЅРёС‚СЊ РЅР°С‡Р°Р»СЊРЅРѕРµ РїСЂРёР±Р»РёР¶РµРЅРёРµ Y?(y/n or Y/N): ";
 		cin >> select;
 
-		// Изменение начального приближения Y
+		// РР·РјРµРЅРµРЅРёРµ РЅР°С‡Р°Р»СЊРЅРѕРіРѕ РїСЂРёР±Р»РёР¶РµРЅРёСЏ Y
 		if (select == 'y' || select == 'Y')
 		{
 			double tmpYZero(0);
 
-			cout << endl << endl << "Текущее приближение Y: " << sol.getYZero() << endl << "Введите желаемое начальное приближение Y: ";
+			cout << endl << endl << "РўРµРєСѓС‰РµРµ РїСЂРёР±Р»РёР¶РµРЅРёРµ Y: " << sol.getYZero() << endl << "Р’РІРµРґРёС‚Рµ Р¶РµР»Р°РµРјРѕРµ РЅР°С‡Р°Р»СЊРЅРѕРµ РїСЂРёР±Р»РёР¶РµРЅРёРµ Y: ";
 			cin >> tmpYZero;
 
 			sol.setZeroY(tmpYZero);
@@ -93,8 +93,8 @@ int main(void)
 			cout << endl << endl << message->c_str() << endl << endl;
 		}
 
-		// Вопрос о выходе из программы
-		cout << endl << endl << "Желаете выйти из программы? (y/n or Y/N): ";
+		// Р’РѕРїСЂРѕСЃ Рѕ РІС‹С…РѕРґРµ РёР· РїСЂРѕРіСЂР°РјРјС‹
+		cout << endl << endl << "Р–РµР»Р°РµС‚Рµ РІС‹Р№С‚Рё РёР· РїСЂРѕРіСЂР°РјРјС‹? (y/n or Y/N): ";
 		cin >> select;
 
 		if (select == 'y' || select == 'Y')
@@ -105,39 +105,39 @@ int main(void)
 	return 0;
 }
 /*
-	Реализация
+	Р РµР°Р»РёР·Р°С†РёСЏ
 */
-// Функция F(x, y)
+// Р¤СѓРЅРєС†РёСЏ F(x, y)
 double FourFunction(double x, double y)
 {
 	return (std::sin(y) - x + 1);
 }
 
-// Функция G(x, y)
+// Р¤СѓРЅРєС†РёСЏ G(x, y)
 double GourFunction(double x, double y)
 {
 	return (std::tan(x * y) - x - 0.5);
 }
 
-// Частная производная dF/dx
+// Р§Р°СЃС‚РЅР°СЏ РїСЂРѕРёР·РІРѕРґРЅР°СЏ dF/dx
 double dFdxOurFunction(double x, double y)
 {
 	return -1;
 }
 
-// Частная производная dF/dy
+// Р§Р°СЃС‚РЅР°СЏ РїСЂРѕРёР·РІРѕРґРЅР°СЏ dF/dy
 double dFdyOurFunction(double x, double y)
 {
 	return (std::cos(y));
 }
 
-// Частная производная dG/dx
+// Р§Р°СЃС‚РЅР°СЏ РїСЂРѕРёР·РІРѕРґРЅР°СЏ dG/dx
 double dGdxOurFunction(double x, double y)
 {
 	return (-1 + y * (1 / std::cos(x * y)) * (1 / std::cos(x * y)));
 }
 
-// Частная производная dG/dy
+// Р§Р°СЃС‚РЅР°СЏ РїСЂРѕРёР·РІРѕРґРЅР°СЏ dG/dy
 double dGdyOurFunction(double x, double y)
 {
 	return (x * (1 / std::cos(x * y)) * (1 / std::cos(x * y)));

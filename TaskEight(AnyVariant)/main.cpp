@@ -1,15 +1,15 @@
-#include <iostream>
+п»ї#include <iostream>
 #include <iomanip>
 #include "MonteCarloMethod.h"
 
 /*
-	Прототипы
+	РџСЂРѕС‚РѕС‚РёРїС‹
 */
-// Наша функция F(x, y)
+// РќР°С€Р° С„СѓРЅРєС†РёСЏ F(x, y)
 double FourFunction(double x, double y);
 
 /*
-	Компораторы
+	РљРѕРјРїРѕСЂР°С‚РѕСЂС‹
 */
 bool ComOne(double x, double y);
 bool ComTwo(double x, double y);
@@ -20,33 +20,33 @@ int main(void)
 {
 	setlocale(LC_ALL, ".1251");
 
-	// Векторов компараторов
+	// Р’РµРєС‚РѕСЂРѕРІ РєРѕРјРїР°СЂР°С‚РѕСЂРѕРІ
 	vector<Comporator> vectorComporator;
 
 	vectorComporator.push_back(ComOne);
 	vectorComporator.push_back(ComTwo);
 
-	// Объект для расчёта объёма цилиндроида
+	// РћР±СЉРµРєС‚ РґР»СЏ СЂР°СЃС‡С‘С‚Р° РѕР±СЉС‘РјР° С†РёР»РёРЅРґСЂРѕРёРґР°
 	MonteCarloMethod solve(FourFunction, -1, 1, -1, 1, 1000, vectorComporator);
 
-	// Результаты числа при разных количествах разбиениях
+	// Р РµР·СѓР»СЊС‚Р°С‚С‹ С‡РёСЃР»Р° РїСЂРё СЂР°Р·РЅС‹С… РєРѕР»РёС‡РµСЃС‚РІР°С… СЂР°Р·Р±РёРµРЅРёСЏС…
 	vector<double> vectorPI;
 
-	// Вычисление числа PI при разном количестве точек и вывод
+	// Р’С‹С‡РёСЃР»РµРЅРёРµ С‡РёСЃР»Р° PI РїСЂРё СЂР°Р·РЅРѕРј РєРѕР»РёС‡РµСЃС‚РІРµ С‚РѕС‡РµРє Рё РІС‹РІРѕРґ
 	for (int i = 0, N = 100; i < 5; i++)
 	{
-		// Устанавливаем величину N
+		// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј РІРµР»РёС‡РёРЅСѓ N
 		solve.setN(N *= 10);
 
-		// Обновляем данные объекта и считаем
+		// РћР±РЅРѕРІР»СЏРµРј РґР°РЅРЅС‹Рµ РѕР±СЉРµРєС‚Р° Рё СЃС‡РёС‚Р°РµРј
 		solve.showResultVolumeCylindroid();
 
-		// Вычисляем число PI
+		// Р’С‹С‡РёСЃР»СЏРµРј С‡РёСЃР»Рѕ PI
 		vectorPI.push_back(solve.getS());
 
-		// Выводим число PI
-		cout << endl << endl << "При количестве сгенерированных точек: " << N << endl
-			<< "Число PI: " << setprecision(16) << vectorPI[i];
+		// Р’С‹РІРѕРґРёРј С‡РёСЃР»Рѕ PI
+		cout << endl << endl << "РџСЂРё РєРѕР»РёС‡РµСЃС‚РІРµ СЃРіРµРЅРµСЂРёСЂРѕРІР°РЅРЅС‹С… С‚РѕС‡РµРє: " << N << endl
+			<< "Р§РёСЃР»Рѕ PI: " << setprecision(16) << vectorPI[i];
 	}
 
 	cout << endl;
@@ -54,16 +54,16 @@ int main(void)
 	return 0;
 }
 /*
-	Реализации
+	Р РµР°Р»РёР·Р°С†РёРё
 */
-// Наша функция F(x, y)
+// РќР°С€Р° С„СѓРЅРєС†РёСЏ F(x, y)
 double FourFunction(double x, double y)
 {
 	return sqrt(1 - x * x - y * y);
 }
 
 /*
-	Компораторы
+	РљРѕРјРїРѕСЂР°С‚РѕСЂС‹
 */
 bool ComOne(double x, double y)
 {

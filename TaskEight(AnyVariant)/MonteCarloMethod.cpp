@@ -1,8 +1,8 @@
-#include "MonteCarloMethod.h"
+п»ї#include "MonteCarloMethod.h"
 #include <time.h>
 #include <iostream>
 
-// Конструктор
+// РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 MonteCarloMethod::MonteCarloMethod(Function FourFunction, double minX,
 								   double maxX, double minY, double maxY, int N,
 								   std::vector<Comporator> vectorComporator) :
@@ -10,112 +10,112 @@ MonteCarloMethod::MonteCarloMethod(Function FourFunction, double minX,
 	n(0), mediumHeight(0), volumeCylindroid(0), vectorComporator(vectorComporator)
 {}
 
-// Сеттер нашей функции
+// РЎРµС‚С‚РµСЂ РЅР°С€РµР№ С„СѓРЅРєС†РёРё
 void MonteCarloMethod::setFourFunction(Function FourFunction)
 {
 	this->FourFunction = FourFunction;
 }
 
-// Сеттер компараторов
+// РЎРµС‚С‚РµСЂ РєРѕРјРїР°СЂР°С‚РѕСЂРѕРІ
 void MonteCarloMethod::setComparator(std::vector<Comporator> vectorComporator)
 {
 	this->vectorComporator = vectorComporator;
 }
 
-// Сеттер минимума X
+// РЎРµС‚С‚РµСЂ РјРёРЅРёРјСѓРјР° X
 void MonteCarloMethod::setMinX(double minX)
 {
 	this->minX = minX;
 }
 
-// Геттер минимума X
+// Р“РµС‚С‚РµСЂ РјРёРЅРёРјСѓРјР° X
 double MonteCarloMethod::getMinX() const
 {
 	return this->minX;
 }
 
-// Сеттер максимума X
+// РЎРµС‚С‚РµСЂ РјР°РєСЃРёРјСѓРјР° X
 void MonteCarloMethod::setMaxX(double maxX)
 {
 	this->maxX = maxX;
 }
 
-// Геттер максимума X
+// Р“РµС‚С‚РµСЂ РјР°РєСЃРёРјСѓРјР° X
 double MonteCarloMethod::getMaxX() const
 {
 	return this->maxX;
 }
 
-// Сеттер минимума Y
+// РЎРµС‚С‚РµСЂ РјРёРЅРёРјСѓРјР° Y
 void MonteCarloMethod::setMinY(double minY)
 {
 	this->minY = minY;
 }
 
-// Геттер минимума Y
+// Р“РµС‚С‚РµСЂ РјРёРЅРёРјСѓРјР° Y
 double MonteCarloMethod::getMinY() const
 {
 	return this->minY;
 }
 
-// Сеттер максимума Y
+// РЎРµС‚С‚РµСЂ РјР°РєСЃРёРјСѓРјР° Y
 void MonteCarloMethod::setMaxY(double maxY)
 {
 	this->maxY = maxY;
 }
 
-// Геттер максимума Y
+// Р“РµС‚С‚РµСЂ РјР°РєСЃРёРјСѓРјР° Y
 double MonteCarloMethod::getMaxY() const
 {
 	return this->maxY;
 }
 
-// Сеттер количества точек необходимых пользователю. (N)
+// РЎРµС‚С‚РµСЂ РєРѕР»РёС‡РµСЃС‚РІР° С‚РѕС‡РµРє РЅРµРѕР±С…РѕРґРёРјС‹С… РїРѕР»СЊР·РѕРІР°С‚РµР»СЋ. (N)
 void MonteCarloMethod::setN(int N)
 {
 	this->N = N;
 }
 
-// Геттер площади поверхности D
+// Р“РµС‚С‚РµСЂ РїР»РѕС‰Р°РґРё РїРѕРІРµСЂС…РЅРѕСЃС‚Рё D
 double MonteCarloMethod::getS() const
 {
 	return this->S;
 }
 
-// Вывод результата
+// Р’С‹РІРѕРґ СЂРµР·СѓР»СЊС‚Р°С‚Р°
 void MonteCarloMethod::showResultVolumeCylindroid()
 {
-	// Обновление и вычисления
+	// РћР±РЅРѕРІР»РµРЅРёРµ Рё РІС‹С‡РёСЃР»РµРЅРёСЏ
 	update();
 
-	// вывод результата
-	std::cout << std::endl << std::endl << "Количество сгенерированных точек: " << N
-		<< std::endl << "Количество точек попавших в область d: " << n << std::endl
-		<< "Вероятность попадания в область d: " << (n / static_cast<double>(N)) * 100 
+	// РІС‹РІРѕРґ СЂРµР·СѓР»СЊС‚Р°С‚Р°
+	std::cout << std::endl << std::endl << "РљРѕР»РёС‡РµСЃС‚РІРѕ СЃРіРµРЅРµСЂРёСЂРѕРІР°РЅРЅС‹С… С‚РѕС‡РµРє: " << N
+		<< std::endl << "РљРѕР»РёС‡РµСЃС‚РІРѕ С‚РѕС‡РµРє РїРѕРїР°РІС€РёС… РІ РѕР±Р»Р°СЃС‚СЊ d: " << n << std::endl
+		<< "Р’РµСЂРѕСЏС‚РЅРѕСЃС‚СЊ РїРѕРїР°РґР°РЅРёСЏ РІ РѕР±Р»Р°СЃС‚СЊ d: " << (n / static_cast<double>(N)) * 100 
 		<< "%" << std::endl
-		<< "Объём цилиндроида в данный момент: " << this->volumeCylindroid << std::endl;
+		<< "РћР±СЉС‘Рј С†РёР»РёРЅРґСЂРѕРёРґР° РІ РґР°РЅРЅС‹Р№ РјРѕРјРµРЅС‚: " << this->volumeCylindroid << std::endl;
 }
 
-// Обновление данных объекта
+// РћР±РЅРѕРІР»РµРЅРёРµ РґР°РЅРЅС‹С… РѕР±СЉРµРєС‚Р°
 void MonteCarloMethod::update()
 {
-	// Очистка
+	// РћС‡РёСЃС‚РєР°
 	clear();
 
-	// Генерация точек
+	// Р“РµРЅРµСЂР°С†РёСЏ С‚РѕС‡РµРє
 	generationVectorPoints();
 
-	// Выясняем какое количество и какие точки попало в область D
+	// Р’С‹СЏСЃРЅСЏРµРј РєР°РєРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ Рё РєР°РєРёРµ С‚РѕС‡РєРё РїРѕРїР°Р»Рѕ РІ РѕР±Р»Р°СЃС‚СЊ D
 	findValueLittleN();
 
-	// Считаём среднюю высоту
+	// РЎС‡РёС‚Р°С‘Рј СЃСЂРµРґРЅСЋСЋ РІС‹СЃРѕС‚Сѓ
 	calculateMediumHeight();
 
-	// Считаем объём цилиндроида
+	// РЎС‡РёС‚Р°РµРј РѕР±СЉС‘Рј С†РёР»РёРЅРґСЂРѕРёРґР°
 	calculateVolume();
 }
 
-// Очистка
+// РћС‡РёСЃС‚РєР°
 void MonteCarloMethod::clear()
 {
 	this->vectorX_i.clear();
@@ -128,79 +128,79 @@ void MonteCarloMethod::clear()
 	this->volumeCylindroid = 0;
 }
 
-// Генерация точек
+// Р“РµРЅРµСЂР°С†РёСЏ С‚РѕС‡РµРє
 void MonteCarloMethod::generationVectorPoints()
 {
-	// Задаём зерно рандома
+	// Р—Р°РґР°С‘Рј Р·РµСЂРЅРѕ СЂР°РЅРґРѕРјР°
 	srand(time(NULL));
 
-	// Заполняем вектора X_i и Y_i
+	// Р—Р°РїРѕР»РЅСЏРµРј РІРµРєС‚РѕСЂР° X_i Рё Y_i
 	for (int i = 0; i < N; ++i)
 	{
-		// Случайное число r в диапозоне [0; 1]
+		// РЎР»СѓС‡Р°Р№РЅРѕРµ С‡РёСЃР»Рѕ r РІ РґРёР°РїРѕР·РѕРЅРµ [0; 1]
 		double r = rand() / static_cast<double>(RAND_MAX);
 
-		// Заполняем вектор X_i
+		// Р—Р°РїРѕР»РЅСЏРµРј РІРµРєС‚РѕСЂ X_i
 		vectorX_i.push_back(minX + r * (maxX - minX));
 
-		// Заново генерируем число r
+		// Р—Р°РЅРѕРІРѕ РіРµРЅРµСЂРёСЂСѓРµРј С‡РёСЃР»Рѕ r
 		r = rand() / static_cast<double>(RAND_MAX);
 
-		// Заполняем вектор Y_i
+		// Р—Р°РїРѕР»РЅСЏРµРј РІРµРєС‚РѕСЂ Y_i
 		vectorY_i.push_back(minY + r * (maxY - minY));
 	}
 }
 
-// Выясняем какое количество и какие точки попало в область D
+// Р’С‹СЏСЃРЅСЏРµРј РєР°РєРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ Рё РєР°РєРёРµ С‚РѕС‡РєРё РїРѕРїР°Р»Рѕ РІ РѕР±Р»Р°СЃС‚СЊ D
 void MonteCarloMethod::findValueLittleN()
 {
-	// Выясняем какое количество точек 
-	// удовлетворяет условиям попадания в область D
+	// Р’С‹СЏСЃРЅСЏРµРј РєР°РєРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ С‚РѕС‡РµРє 
+	// СѓРґРѕРІР»РµС‚РІРѕСЂСЏРµС‚ СѓСЃР»РѕРІРёСЏРј РїРѕРїР°РґР°РЅРёСЏ РІ РѕР±Р»Р°СЃС‚СЊ D
 	for (int i = 0; i < N; ++i)
 	{
-		// Флаг сигнализирующий о следующей точке
+		// Р¤Р»Р°Рі СЃРёРіРЅР°Р»РёР·РёСЂСѓСЋС‰РёР№ Рѕ СЃР»РµРґСѓСЋС‰РµР№ С‚РѕС‡РєРµ
 		static bool flag = false;
 
-		// Если точка попадает в область
+		// Р•СЃР»Рё С‚РѕС‡РєР° РїРѕРїР°РґР°РµС‚ РІ РѕР±Р»Р°СЃС‚СЊ
 		for (int j = 0; j < vectorComporator.size(); ++j)
 			if (!vectorComporator[j](vectorX_i[i], vectorY_i[i]))
 				flag = true;
 			else
 				flag = false;
 
-		// Если точка не входит в область D
+		// Р•СЃР»Рё С‚РѕС‡РєР° РЅРµ РІС…РѕРґРёС‚ РІ РѕР±Р»Р°СЃС‚СЊ D
 		if (flag)
 			continue;
 
-		// Количество попавших точек возрастает
+		// РљРѕР»РёС‡РµСЃС‚РІРѕ РїРѕРїР°РІС€РёС… С‚РѕС‡РµРє РІРѕР·СЂР°СЃС‚Р°РµС‚
 		n++;
 
-		// Заносим точку попадающюю в область
+		// Р—Р°РЅРѕСЃРёРј С‚РѕС‡РєСѓ РїРѕРїР°РґР°СЋС‰СЋСЋ РІ РѕР±Р»Р°СЃС‚СЊ
 		vectorInDX_i.push_back(vectorX_i[i]);
 		vectorInDY_i.push_back(vectorY_i[i]);
 		
 	}
 }
 
-// Считаем среднюю высоту
+// РЎС‡РёС‚Р°РµРј СЃСЂРµРґРЅСЋСЋ РІС‹СЃРѕС‚Сѓ
 void MonteCarloMethod::calculateMediumHeight()
 {
-	// Вычисляем среднюю высоту
+	// Р’С‹С‡РёСЃР»СЏРµРј СЃСЂРµРґРЅСЋСЋ РІС‹СЃРѕС‚Сѓ
 	for (int i = 0; i < n; ++i)
 		mediumHeight += (FourFunction(vectorInDX_i[i], vectorInDY_i[i]));
 
 	mediumHeight /= n;
 }
 
-// Считаем объём цилиндроида
+// РЎС‡РёС‚Р°РµРј РѕР±СЉС‘Рј С†РёР»РёРЅРґСЂРѕРёРґР°
 void MonteCarloMethod::calculateVolume()
 {
-	// Вычисляем площадь основания цилинда. Площадь D.
+	// Р’С‹С‡РёСЃР»СЏРµРј РїР»РѕС‰Р°РґСЊ РѕСЃРЅРѕРІР°РЅРёСЏ С†РёР»РёРЅРґР°. РџР»РѕС‰Р°РґСЊ D.
 	double S = (maxX - minX) * (maxY - minY) * (n / static_cast<double>(N));
 
-	// Передаём посчитанное значение площади D в нашу "глобальную переменную" S
+	// РџРµСЂРµРґР°С‘Рј РїРѕСЃС‡РёС‚Р°РЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РїР»РѕС‰Р°РґРё D РІ РЅР°С€Сѓ "РіР»РѕР±Р°Р»СЊРЅСѓСЋ РїРµСЂРµРјРµРЅРЅСѓСЋ" S
 	this->S = S;
 
-	// Вычисляем объём цилиндра
+	// Р’С‹С‡РёСЃР»СЏРµРј РѕР±СЉС‘Рј С†РёР»РёРЅРґСЂР°
 	volumeCylindroid = S * mediumHeight;
 }

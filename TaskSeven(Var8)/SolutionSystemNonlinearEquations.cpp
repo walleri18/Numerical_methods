@@ -1,8 +1,8 @@
-#include "SolutionSystemNonlinearEquations.h"
+п»ї#include "SolutionSystemNonlinearEquations.h"
 #include <iostream>
 #include <iomanip>
 
-// Конструктор
+// РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 SolutionSystemNonlinearEquations::SolutionSystemNonlinearEquations(Function FourFunction, Function GourFunction, Function dFdxOurFunction, Function dFdyOurFunction, Function dGdxOurFunction, Function dGdyOurFunction, double xZero, double yZero, double precision)
 	: FourFunction(FourFunction), GourFunction(GourFunction), dFdxOurFunction(dFdxOurFunction), dFdyOurFunction(dFdyOurFunction), dGdxOurFunction(dGdxOurFunction), dGdyOurFunction(dGdyOurFunction), precision(precision)
 {
@@ -13,55 +13,55 @@ SolutionSystemNonlinearEquations::SolutionSystemNonlinearEquations(Function Four
 	currentY = yZero;
 }
 
-// Сеттер функции F(x, y)
+// РЎРµС‚С‚РµСЂ С„СѓРЅРєС†РёРё F(x, y)
 void SolutionSystemNonlinearEquations::setFourFunction(Function FourFunction)
 {
 	this->FourFunction = FourFunction;
 }
 
-// Сеттер функции G(x, y)
+// РЎРµС‚С‚РµСЂ С„СѓРЅРєС†РёРё G(x, y)
 void SolutionSystemNonlinearEquations::setGourFunction(Function GourFunction)
 {
 	this->GourFunction = GourFunction;
 }
 
-// Сеттер частной производной dF/dx
+// РЎРµС‚С‚РµСЂ С‡Р°СЃС‚РЅРѕР№ РїСЂРѕРёР·РІРѕРґРЅРѕР№ dF/dx
 void SolutionSystemNonlinearEquations::setdFdxOurFunction(Function dFdxOurFunction)
 {
 	this->dFdxOurFunction = dFdxOurFunction;
 }
 
-// Сеттер частной производной dF/dy
+// РЎРµС‚С‚РµСЂ С‡Р°СЃС‚РЅРѕР№ РїСЂРѕРёР·РІРѕРґРЅРѕР№ dF/dy
 void SolutionSystemNonlinearEquations::setdFdyOurFunction(Function dFdyOurFunction)
 {
 	this->dFdyOurFunction = dFdyOurFunction;
 }
 
-// Сеттер частной производной dG/dx
+// РЎРµС‚С‚РµСЂ С‡Р°СЃС‚РЅРѕР№ РїСЂРѕРёР·РІРѕРґРЅРѕР№ dG/dx
 void SolutionSystemNonlinearEquations::setdGdxOurFunction(Function dGdxOurFunction)
 {
 	this->dGdxOurFunction = dGdxOurFunction;
 }
 
-// Сеттер частной производной dG/dy
+// РЎРµС‚С‚РµСЂ С‡Р°СЃС‚РЅРѕР№ РїСЂРѕРёР·РІРѕРґРЅРѕР№ dG/dy
 void SolutionSystemNonlinearEquations::setdGdyOurFunction(Function dGdyOurFunction)
 {
 	this->dGdyOurFunction = dGdyOurFunction;
 }
 
-// Сеттер точности
+// РЎРµС‚С‚РµСЂ С‚РѕС‡РЅРѕСЃС‚Рё
 void SolutionSystemNonlinearEquations::setPrecision(double precision)
 {
 	this->precision = precision;
 }
 
-// Геттер точности
+// Р“РµС‚С‚РµСЂ С‚РѕС‡РЅРѕСЃС‚Рё
 double SolutionSystemNonlinearEquations::getPrecision() const
 {
 	return this->precision;
 }
 
-// Сеттер начального приближения
+// РЎРµС‚С‚РµСЂ РЅР°С‡Р°Р»СЊРЅРѕРіРѕ РїСЂРёР±Р»РёР¶РµРЅРёСЏ
 void SolutionSystemNonlinearEquations::setZeroApproximations(double xZero, double yZero)
 {
 	currentX = xZero;
@@ -71,50 +71,50 @@ void SolutionSystemNonlinearEquations::setZeroApproximations(double xZero, doubl
 	this->yZero = yZero;
 }
 
-// Сеттер начального приближения X
+// РЎРµС‚С‚РµСЂ РЅР°С‡Р°Р»СЊРЅРѕРіРѕ РїСЂРёР±Р»РёР¶РµРЅРёСЏ X
 void SolutionSystemNonlinearEquations::setZeroX(double xZero)
 {
 	this->currentX = xZero;
 	this->xZero = xZero;
 }
 
-// Геттер начального приближения X
+// Р“РµС‚С‚РµСЂ РЅР°С‡Р°Р»СЊРЅРѕРіРѕ РїСЂРёР±Р»РёР¶РµРЅРёСЏ X
 double SolutionSystemNonlinearEquations::getXZero() const
 {
 	return this->xZero;
 }
 
-// Сеттер начального приближения Y
+// РЎРµС‚С‚РµСЂ РЅР°С‡Р°Р»СЊРЅРѕРіРѕ РїСЂРёР±Р»РёР¶РµРЅРёСЏ Y
 void SolutionSystemNonlinearEquations::setZeroY(double yZero)
 {
 	this->currentY = yZero;
 	this->yZero = yZero;
 }
 
-// Геттер начального приближения Y
+// Р“РµС‚С‚РµСЂ РЅР°С‡Р°Р»СЊРЅРѕРіРѕ РїСЂРёР±Р»РёР¶РµРЅРёСЏ Y
 double SolutionSystemNonlinearEquations::getYZero() const
 {
 	return this->yZero;
 }
 
-// Форматированный вывод результата и приближений
+// Р¤РѕСЂРјР°С‚РёСЂРѕРІР°РЅРЅС‹Р№ РІС‹РІРѕРґ СЂРµР·СѓР»СЊС‚Р°С‚Р° Рё РїСЂРёР±Р»РёР¶РµРЅРёР№
 void SolutionSystemNonlinearEquations::showResult()
 {
-	// Вычисление приближений
+	// Р’С‹С‡РёСЃР»РµРЅРёРµ РїСЂРёР±Р»РёР¶РµРЅРёР№
 	calculateApproximations();
 
-	// Вывод данных
-	std::cout << std::endl << std::endl << "Количество итераций: " << approximationsX.size() << std::endl << std::endl;
+	// Р’С‹РІРѕРґ РґР°РЅРЅС‹С…
+	std::cout << std::endl << std::endl << "РљРѕР»РёС‡РµСЃС‚РІРѕ РёС‚РµСЂР°С†РёР№: " << approximationsX.size() << std::endl << std::endl;
 	for (int i = 0; i < approximationsX.size(); i++)
 	{
-		std::cout << "Итерация № " << i  << ":" << std::endl
+		std::cout << "РС‚РµСЂР°С†РёСЏ в„– " << i  << ":" << std::endl
 			<< "X = " << std::setprecision(6) << approximationsX[i] << std::endl
 			<< "Y = " << std::setprecision(6) << approximationsY[i] << std::endl << std::endl;
 	}
-	std::cout << "Результат: X = " << approximationsX[approximationsX.size() - 1] << "; Y = " << approximationsY[approximationsY.size() - 1] << std::endl << std::endl;
+	std::cout << "Р РµР·СѓР»СЊС‚Р°С‚: X = " << approximationsX[approximationsX.size() - 1] << "; Y = " << approximationsY[approximationsY.size() - 1] << std::endl << std::endl;
 }
 
-// Генерируем значение Якоби
+// Р“РµРЅРµСЂРёСЂСѓРµРј Р·РЅР°С‡РµРЅРёРµ РЇРєРѕР±Рё
 void SolutionSystemNonlinearEquations::createdJacobian()
 {
 	jacobian[0][0] = dFdxOurFunction(currentX, currentY);
@@ -123,17 +123,17 @@ void SolutionSystemNonlinearEquations::createdJacobian()
 	jacobian[1][1] = dGdyOurFunction(currentX, currentY);
 }
 
-// Вычисляем детерминант матрицы Якоби
+// Р’С‹С‡РёСЃР»СЏРµРј РґРµС‚РµСЂРјРёРЅР°РЅС‚ РјР°С‚СЂРёС†С‹ РЇРєРѕР±Рё
 void SolutionSystemNonlinearEquations::calculateDeterminantJacobian()
 {
 	determinantJacobian = (jacobian[0][0] * jacobian[1][1]) - (jacobian[0][1] * jacobian[1][0]);
 }
 
-// Генерируем значения обратной матрицы Якоби
+// Р“РµРЅРµСЂРёСЂСѓРµРј Р·РЅР°С‡РµРЅРёСЏ РѕР±СЂР°С‚РЅРѕР№ РјР°С‚СЂРёС†С‹ РЇРєРѕР±Рё
 void SolutionSystemNonlinearEquations::createdInverseJacobian()
 {
 	if (determinantJacobian == 0)
-		throw new std::string("Невозможно вычислить обратную матрицу Якоби => Детерминант матрицы Якоби равен нулю!!!");
+		throw new std::string("РќРµРІРѕР·РјРѕР¶РЅРѕ РІС‹С‡РёСЃР»РёС‚СЊ РѕР±СЂР°С‚РЅСѓСЋ РјР°С‚СЂРёС†Сѓ РЇРєРѕР±Рё => Р”РµС‚РµСЂРјРёРЅР°РЅС‚ РјР°С‚СЂРёС†С‹ РЇРєРѕР±Рё СЂР°РІРµРЅ РЅСѓР»СЋ!!!");
 
 	inverseJacobian[0][0] = jacobian[1][1] / determinantJacobian;
 	inverseJacobian[0][1] = -jacobian[0][1] / determinantJacobian;
@@ -141,54 +141,54 @@ void SolutionSystemNonlinearEquations::createdInverseJacobian()
 	inverseJacobian[1][1] = jacobian[0][0] / determinantJacobian;
 }
 
-// Вычисления приближений
+// Р’С‹С‡РёСЃР»РµРЅРёСЏ РїСЂРёР±Р»РёР¶РµРЅРёР№
 void SolutionSystemNonlinearEquations::calculateApproximations()
 {
-	// Очистка векторов
+	// РћС‡РёСЃС‚РєР° РІРµРєС‚РѕСЂРѕРІ
 	approximationsX.clear();
 	approximationsY.clear();
 
-	// Сохранение нулевого приближения
+	// РЎРѕС…СЂР°РЅРµРЅРёРµ РЅСѓР»РµРІРѕРіРѕ РїСЂРёР±Р»РёР¶РµРЅРёСЏ
 	approximationsX.push_back(currentX);
 	approximationsY.push_back(currentY);
 
-	// Предыдущее преближение
+	// РџСЂРµРґС‹РґСѓС‰РµРµ РїСЂРµР±Р»РёР¶РµРЅРёРµ
 	previousX = currentX;
 	previousY = currentY;
 	
-	// Матрица умножения
+	// РњР°С‚СЂРёС†Р° СѓРјРЅРѕР¶РµРЅРёСЏ
 	std::array<double, 2> multiResult;
 
 	do
 	{
-		// Создаём матрицу Якоби
+		// РЎРѕР·РґР°С‘Рј РјР°С‚СЂРёС†Сѓ РЇРєРѕР±Рё
 		createdJacobian();
 
-		// Вычисляем детерминант матрицы Якоби
+		// Р’С‹С‡РёСЃР»СЏРµРј РґРµС‚РµСЂРјРёРЅР°РЅС‚ РјР°С‚СЂРёС†С‹ РЇРєРѕР±Рё
 		calculateDeterminantJacobian();
 
-		// Вычисляем обратную матрицу Якоби
+		// Р’С‹С‡РёСЃР»СЏРµРј РѕР±СЂР°С‚РЅСѓСЋ РјР°С‚СЂРёС†Сѓ РЇРєРѕР±Рё
 		createdInverseJacobian();
 
-		// Умножение обратной матрицы Якоби на значения исходных значений
+		// РЈРјРЅРѕР¶РµРЅРёРµ РѕР±СЂР°С‚РЅРѕР№ РјР°С‚СЂРёС†С‹ РЇРєРѕР±Рё РЅР° Р·РЅР°С‡РµРЅРёСЏ РёСЃС…РѕРґРЅС‹С… Р·РЅР°С‡РµРЅРёР№
 		multiResult[0] = (inverseJacobian[0][0] * FourFunction(currentX, currentY) + inverseJacobian[0][1] * GourFunction(currentX, currentY));
 
 		multiResult[1] = (inverseJacobian[1][0] * FourFunction(currentX, currentY) + inverseJacobian[1][1] * GourFunction(currentX, currentY));
 
-		// Предыдущий результат равен нынешнему текущему
+		// РџСЂРµРґС‹РґСѓС‰РёР№ СЂРµР·СѓР»СЊС‚Р°С‚ СЂР°РІРµРЅ РЅС‹РЅРµС€РЅРµРјСѓ С‚РµРєСѓС‰РµРјСѓ
 		previousX = currentX;
 		previousY = currentY;
 
-		// Окончательное вычисление нового текущего приближения
+		// РћРєРѕРЅС‡Р°С‚РµР»СЊРЅРѕРµ РІС‹С‡РёСЃР»РµРЅРёРµ РЅРѕРІРѕРіРѕ С‚РµРєСѓС‰РµРіРѕ РїСЂРёР±Р»РёР¶РµРЅРёСЏ
 		currentX = previousX - multiResult[0];
 		currentY = previousY - multiResult[1];
 
-		// Сохраняем новое приближение в вектор
+		// РЎРѕС…СЂР°РЅСЏРµРј РЅРѕРІРѕРµ РїСЂРёР±Р»РёР¶РµРЅРёРµ РІ РІРµРєС‚РѕСЂ
 		approximationsX.push_back(currentX);
 		approximationsY.push_back(currentY);
 
 		if (approximationsX.size() > maxCountApproximations)
-			throw new std::string("Достигнут предел количеством итераций: " + maxCountApproximations);
+			throw new std::string("Р”РѕСЃС‚РёРіРЅСѓС‚ РїСЂРµРґРµР» РєРѕР»РёС‡РµСЃС‚РІРѕРј РёС‚РµСЂР°С†РёР№: " + maxCountApproximations);
 
 	} while ((std::fabs(currentX - previousX) > precision)
 		&& (std::fabs(currentY - previousY) > precision));
